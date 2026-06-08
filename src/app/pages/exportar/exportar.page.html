@@ -1,0 +1,191 @@
+<ion-content class="ion-no-padding bg-gray-50 dark:bg-[#0C121E]">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Header Minimalista -->
+    <div class="sticky top-0 z-40 bg-white/80 dark:bg-[#1C2434]/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-[#2D313A]/60">
+      <div class="px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <button 
+            routerLink="/pages/dashboard" 
+            class="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 dark:border-[#2D313A] text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#171F2C] transition-all"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+          
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#3C50E0] to-blue-600 flex items-center justify-center shadow-md shadow-blue-500/20">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">Exportar Datos</h1>
+              <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Genera reportes Excel o PDF</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats compactos -->
+        <div class="hidden sm:flex items-center gap-4 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <span class="text-gray-500 dark:text-gray-400">{{ stats.totalRegistros }} registros</span>
+          </div>
+          <div class="w-px h-4 bg-gray-200 dark:bg-[#2D313A]"></div>
+          <span class="text-gray-500 dark:text-gray-400">
+            Último: {{ stats.ultimoRegistro ? (stats.ultimoRegistro | date:'dd/MM/yy') : '—' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="px-6 py-6">
+      
+      <!-- Filtros Compactos -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-4 mb-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Filtros</h3>
+          <button 
+            (click)="clearFilters()"
+            class="text-[11px] font-medium text-[#3C50E0] hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
+          >
+            Limpiar
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+          <!-- Fecha Inicio -->
+          <div>
+            <label class="block text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
+              Desde
+            </label>
+            <input 
+              type="date" 
+              [(ngModel)]="filters.startDate"
+              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2.5 py-2 text-xs font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+            >
+          </div>
+
+          <!-- Fecha Fin -->
+          <div>
+            <label class="block text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
+              Hasta
+            </label>
+            <input 
+              type="date" 
+              [(ngModel)]="filters.endDate"
+              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2.5 py-2 text-xs font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+            >
+          </div>
+
+          <!-- Formato -->
+          <div>
+            <label class="block text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
+              Formato
+            </label>
+            <select 
+              [(ngModel)]="filters.formatType"
+              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2.5 py-2 text-xs font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all appearance-none cursor-pointer pr-7"
+              style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%239CA3AF\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/></svg>'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1rem;"
+            >
+              <option value="">Todos</option>
+              <option *ngFor="let fmt of formatOptions" [value]="fmt.value">
+                {{ fmt.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Estado -->
+          <div>
+            <label class="block text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
+              Estado
+            </label>
+            <select 
+              [(ngModel)]="filters.status"
+              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2.5 py-2 text-xs font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all appearance-none cursor-pointer pr-7"
+              style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%239CA3AF\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'/></svg>'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1rem;"
+            >
+              <option value="">Todos</option>
+              <option *ngFor="let status of statusOptions" [value]="status.value">
+                {{ status.label }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Establecimiento -->
+          <div>
+            <label class="block text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
+              Establecimiento
+            </label>
+            <input 
+              type="text" 
+              [(ngModel)]="filters.establishment"
+              placeholder="Buscar..."
+              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2.5 py-2 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de Exportación -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Excel -->
+        <button 
+          (click)="exportExcel()"
+          [disabled]="exporting"
+          class="group flex items-center justify-between bg-white dark:bg-[#1C2434] border border-gray-200 dark:border-[#2D313A] hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed rounded-xl p-4 transition-all"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <div class="text-left">
+              <div class="text-sm font-semibold text-gray-900 dark:text-white">Excel</div>
+              <div class="text-[11px] text-gray-500 dark:text-gray-400">Hoja de cálculo</div>
+            </div>
+          </div>
+          <svg class="w-4 h-4 text-gray-400 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+
+        <!-- PDF -->
+        <button 
+          (click)="exportPDF()"
+          [disabled]="exporting"
+          class="group flex items-center justify-between bg-white dark:bg-[#1C2434] border border-gray-200 dark:border-[#2D313A] hover:border-rose-500 dark:hover:border-rose-500 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed rounded-xl p-4 transition-all"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-rose-50 dark:bg-rose-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5 text-rose-600 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div class="text-left">
+              <div class="text-sm font-semibold text-gray-900 dark:text-white">PDF</div>
+              <div class="text-[11px] text-gray-500 dark:text-gray-400">Reporte profesional</div>
+            </div>
+          </div>
+          <svg class="w-4 h-4 text-gray-400 group-hover:text-rose-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Hint sutil -->
+      <div class="mt-4 flex items-center gap-2 text-[11px] text-gray-400 dark:text-gray-500">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span>Deja los filtros vacíos para exportar todos los registros</span>
+      </div>
+
+    </div>
+
+  </div>
+</ion-content>

@@ -1,0 +1,338 @@
+/* =========================================================================
+   IMPORTS BASE
+   ========================================================================= */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* =========================================================================
+   VARIABLES CSS DINÁMICAS
+   ========================================================================= */
+
+:root {
+  // Variables de color primario (se actualizan desde ConfigService)
+  --color-primary: #3C50E0;
+  --color-primary-hover: #2D42D0;
+  --color-primary-light: rgba(60, 80, 224, 0.1);
+  
+  // Variables de tipografía
+  --font-family-base: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-size-base: 14px;
+  
+  // Variables de iconos
+  --icon-size: 20px;
+  
+  // Variables de Ionic
+  --ion-font-family: var(--font-family-base);
+}
+
+/* =========================================================================
+   RESET Y BASE
+   ========================================================================= */
+
+* {
+  font-family: var(--font-family-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html, body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+}
+
+/* =========================================================================
+   CLASES UTILITARIAS DINÁMICAS
+   ========================================================================= */
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-primary-light {
+  background-color: var(--color-primary-light);
+}
+
+.border-primary {
+  border-color: var(--color-primary);
+}
+
+.hover\:text-primary:hover {
+  color: var(--color-primary);
+}
+
+.hover\:bg-primary:hover {
+  background-color: var(--color-primary);
+}
+
+.hover\:border-primary:hover {
+  border-color: var(--color-primary);
+}
+
+.focus\:border-primary:focus {
+  border-color: var(--color-primary);
+}
+
+.focus\:ring-primary:focus {
+  --tw-ring-color: var(--color-primary);
+}
+
+.ring-primary {
+  --tw-ring-color: var(--color-primary);
+}
+
+.from-primary {
+  --tw-gradient-from: var(--color-primary);
+}
+
+.to-primary {
+  --tw-gradient-to: var(--color-primary-hover);
+}
+
+.shadow-primary {
+  --tw-shadow-color: var(--color-primary);
+}
+
+/* =========================================================================
+   TAMAÑOS DE ICONOS
+   ========================================================================= */
+
+.icon-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.icon-md {
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+.icon-lg {
+  width: 24px;
+  height: 24px;
+}
+
+/* =========================================================================
+   ACCESIBILIDAD
+   ========================================================================= */
+
+.reduce-animations * {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
+}
+
+.high-contrast {
+  --color-primary: #0000FF;
+  --color-primary-hover: #0000CC;
+}
+
+/* =========================================================================
+   ESTRUCTURA IONIC
+   ========================================================================= */
+
+ion-app {
+  height: 100vh;
+  height: 100dvh;
+}
+
+ion-split-pane {
+  height: 100%;
+  --side-width: 280px;
+  --side-max-width: 280px;
+}
+
+ion-menu {
+  --width: 280px;
+  --max-width: 280px;
+}
+
+#main-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  
+  > header {
+    flex-shrink: 0;
+    z-index: 50;
+    position: sticky;
+    top: 0;
+  }
+  
+  > ion-router-outlet {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+}
+
+.ion-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  
+  > ion-content {
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+}
+
+/* =========================================================================
+   MODO CLARO
+   ========================================================================= */
+
+html:not(.dark) {
+  .ion-page > ion-content {
+    --background: #F9FAFB;
+  }
+  
+  ion-content.bg-gray-50 {
+    --background: #F9FAFB;
+  }
+  
+  .bg-white {
+    background-color: #FFFFFF;
+  }
+  
+  .text-gray-800, h1, h2, h3, h4, h5, h6 {
+    color: #1F2937;
+  }
+  
+  .text-gray-600, .text-gray-700 {
+    color: #4B5563;
+  }
+  
+  .text-gray-500 {
+    color: #6B7280;
+  }
+  
+  .border-gray-200 {
+    border-color: #E5E7EB;
+  }
+}
+
+/* =========================================================================
+   MODO OSCURO
+   ========================================================================= */
+
+html.dark {
+  .ion-page > ion-content {
+    --background: #0C121E;
+  }
+  
+  ion-content.bg-gray-50,
+  ion-content {
+    --background: #0C121E;
+  }
+  
+  .bg-white {
+    background-color: #1C2434;
+  }
+  
+  .text-gray-800,
+  h1, h2, h3, h4, h5, h6 {
+    color: #FFFFFF;
+  }
+  
+  .text-gray-600,
+  .text-gray-700 {
+    color: #CBD5E1;
+  }
+  
+  .text-gray-500 {
+    color: #94A3B8;
+  }
+  
+  .border-gray-200 {
+    border-color: #2D313A;
+  }
+  
+  input,
+  .bg-gray-50 {
+    background-color: #171F2C;
+    color: #FFFFFF;
+    
+    &::placeholder {
+      color: #64748B;
+    }
+  }
+  
+  .hover\:bg-gray-50:hover {
+    background-color: #171F2C;
+  }
+}
+
+/* =========================================================================
+   SCROLLBAR PERSONALIZADO
+   ========================================================================= */
+
+.ion-page > ion-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.3);
+    border-radius: 20px;
+  }
+}
+
+/* =========================================================================
+   RESPONSIVE
+   ========================================================================= */
+
+@media (min-width: 768px) {
+  ion-content {
+    overflow-y: auto;
+    height: calc(100vh - 73px);
+  }
+}
+
+@media (max-width: 767px) {
+  ion-menu {
+    --width: 260px;
+    --max-width: 260px;
+  }
+  
+  ion-content {
+    overflow-y: auto;
+    height: calc(100dvh - 65px);
+  }
+}

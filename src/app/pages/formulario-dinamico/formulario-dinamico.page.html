@@ -1,0 +1,146 @@
+<ion-content class="ion-no-padding bg-gray-50 dark:bg-[#0C121E]">
+  <div class="min-h-screen">
+    
+    <!-- Header Compacto -->
+    <div class="sticky top-0 z-40 bg-white/80 dark:bg-[#1C2434]/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-[#2D313A]/60">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3">
+        <div class="flex items-center justify-between gap-4">
+          
+          <div class="flex items-center gap-3">
+            <button 
+              routerLink="/pages/dashboard" 
+              class="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 dark:border-[#2D313A] text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#171F2C] transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#3C50E0] to-blue-600 flex items-center justify-center shadow-md shadow-blue-500/20">
+                <span class="text-lg">{{ currentConfig?.icon }}</span>
+              </div>
+              <div>
+                <h1 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">
+                  {{ currentConfig?.title }}
+                </h1>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                  {{ formatType | titlecase }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selector de Fecha -->
+          <div class="flex items-center gap-2 bg-gray-100 dark:bg-[#121824] rounded-lg px-2.5 py-1.5 border border-gray-200 dark:border-[#2D313A]">
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <input 
+              type="date" 
+              [value]="selectedDate"
+              (change)="onDateChange($event)"
+              class="bg-transparent text-xs font-semibold text-gray-700 dark:text-gray-300 focus:outline-none cursor-pointer"
+            >
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-5">
+      
+      <!-- Loading -->
+      <div *ngIf="loading" class="flex flex-col items-center justify-center py-16">
+        <div class="w-8 h-8 border-2 border-[#3C50E0] border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-3">Cargando...</p>
+      </div>
+
+      <!-- Formulario -->
+      <form *ngIf="!loading" (ngSubmit)="guardarFormulario()">
+        
+        <!-- Grid de campos -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div *ngFor="let field of currentConfig?.fields; let i = index"
+               [class.sm:col-span-2]="field.type === 'textarea' || (field.type === 'text' && field.key === 'observaciones')"
+               [class.lg:col-span-3]="field.type === 'textarea' || (field.type === 'text' && field.key === 'observaciones')">
+            
+            <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+              <span class="text-[#3C50E0] mr-1">{{ i + 1 }}.</span>
+              {{ field.label }}
+            </label>
+
+            <!-- Input text/number -->
+            <div *ngIf="field.type === 'text' || field.type === 'number'" class="relative">
+              <input 
+                [type]="field.type"
+                [(ngModel)]="formData[field.key]"
+                [name]="field.key"
+                class="w-full bg-white dark:bg-[#1C2434] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+                [placeholder]="'Ingrese ' + field.label"
+              >
+              <span *ngIf="field.unit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-gray-400 bg-gray-100 dark:bg-[#121824] px-1.5 py-0.5 rounded">
+                {{ field.unit }}
+              </span>
+            </div>
+
+            <!-- Textarea -->
+            <textarea 
+              *ngIf="field.type === 'textarea'"
+              [(ngModel)]="formData[field.key]"
+              [name]="field.key"
+              rows="3"
+              class="w-full bg-white dark:bg-[#1C2434] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all resize-none"
+              [placeholder]="'Ingrese ' + field.label"
+            ></textarea>
+
+            <!-- Select -->
+            <div *ngIf="field.type === 'select'" class="relative">
+              <select 
+                [(ngModel)]="formData[field.key]"
+                [name]="field.key"
+                class="w-full bg-white dark:bg-[#1C2434] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all appearance-none cursor-pointer pr-8"
+              >
+                <option value="" disabled>Seleccione...</option>
+                <option *ngFor="let option of field.options" [value]="option">
+                  {{ option }}
+                </option>
+              </select>
+              <svg class="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+       <div class="flex items-center gap-3 mt-5 pt-4 border-t border-gray-200 dark:border-[#2D313A]">
+          <button 
+            type="button"
+            routerLink="/pages/dashboard"
+            class="flex-1 flex items-center justify-center gap-2 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs py-2.5 px-4 rounded-lg border border-rose-200 dark:border-rose-500/20 transition-all"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+            Cancelar
+          </button>
+          <button 
+            type="submit"
+            class="flex-1 flex items-center justify-center gap-2 bg-[#1c2434] hover:bg-[#2a3347] text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm transition-all"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            {{ isEditing ? 'Actualizar' : 'Guardar' }}
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+</ion-content>

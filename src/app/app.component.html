@@ -1,0 +1,444 @@
+<!-- Dashboard - Se muestra cuando está logueado -->
+<ion-app *ngIf="isLoggedIn">
+  <ion-split-pane contentId="main-content" when="md">
+    
+    <!-- Sidebar -->
+    <ion-menu contentId="main-content" type="overlay" side="start">
+      <ion-content class="ion-no-padding">
+        <div class="flex flex-col h-full bg-white dark:bg-[#1C2434] select-none">
+          
+          <!-- Logo Section -->
+          <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-200 dark:border-[#2D313A] flex-shrink-0">
+            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-[#3C50E0] text-white">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 18V9a6 6 0 0 1 12 0v9M3 20h18a1 1 0 0 0 1-1v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1a1 1 0 0 0 1 1z" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-xl font-bold text-gray-800 dark:text-white tracking-wide">Sistema BPM</h1>
+              <p class="text-xs font-medium text-gray-500 dark:text-slate-400">Control de Calidad</p>
+            </div>
+          </div>
+
+          <!-- Menu Section -->
+          <nav class="flex-1 px-4 py-6 overflow-y-auto space-y-5">
+  
+            <!-- Dashboard -->
+            <div>
+              <a routerLink="/pages/dashboard" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                class="group flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all duration-200">
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="9" rx="1"/>
+                    <rect x="14" y="3" width="7" height="5" rx="1"/>
+                    <rect x="14" y="12" width="7" height="9" rx="1"/>
+                    <rect x="3" y="16" width="7" height="5" rx="1"/>
+                  </svg>
+                  <span>Dashboard General</span>
+                </div>
+              </a>
+            </div>
+
+            <!-- Section Title -->
+            <div class="pt-4">
+              <h3 class="px-4 text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-3">Formatos de Control</h3>
+              
+              <ul class="space-y-1">
+                
+                <li>
+                  <a [routerLink]="'/pages/limpiezaydesinfeccion'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                      <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                    <span class="truncate">Limpieza y Desinfección</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a [routerLink]="'/pages/verificacion'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 11l3 3L22 4"/>
+                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                    <span class="truncate">Verificación de Limpieza</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a [routerLink]="'/pages/hornos'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                    </svg>
+                    <span class="truncate">Temperatura de Hornos</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a [routerLink]="'/pages/higienicas'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 3v18"/>
+                      <path d="m8 7 4-4 4 4"/>
+                      <path d="M18 11c0 2-1 3-2 4s-2 2-2 4"/>
+                      <path d="M6 11c0 2 1 3 2 4s2 2 2 4"/>
+                    </svg>
+                    <span class="truncate">Prácticas Higiénicas</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a [routerLink]="'/pages/residuos'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 6h18"/>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                      <line x1="10" x2="10" y1="11" y2="17"/>
+                      <line x1="14" x2="14" y1="11" y2="17"/>
+                    </svg>
+                    <span class="truncate">Inspección de Residuos</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a [routerLink]="'/pages/plagas'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m8 2 1.88 1.88"/>
+                      <path d="M14.12 3.88 16 2"/>
+                      <path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/>
+                      <path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/>
+                      <path d="M12 20v-9"/>
+                      <path d="M6.53 9C4.6 8.8 3 7.1 3 5"/>
+                      <path d="M6 13H2"/>
+                      <path d="M3 21c0-2.1 1.7-3.9 3.8-4"/>
+                      <path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/>
+                      <path d="M22 13h-4"/>
+                      <path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/>
+                    </svg>
+                    <span class="truncate">Control de Plagas</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a [routerLink]="'/pages/ph-cloro'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/>
+                      <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>
+                    </svg>
+                    <span class="truncate">Seguimiento pH y Cloro</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a [routerLink]="'/pages/devolucion'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                      <path d="M3 3v5h5"/>
+                    </svg>
+                    <span class="truncate">Devolución de Producto</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a [routerLink]="'/pages/materia-prima'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M16.5 9.4 7.55 4.24"/>
+                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                      <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                      <line x1="12" x2="12" y1="22.08" y2="12"/>
+                    </svg>
+                    <span class="truncate">Control de MP</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a [routerLink]="'/pages/temp-hr'" [queryParams]="{ date: getCurrentDateForUrl() }" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>
+                    </svg>
+                    <span class="truncate">Registro Temp y HR CC</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a routerLink="/pages/exportar" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" x2="12" y1="15" y2="3"/>
+                    </svg>
+                    <span class="truncate">Exportar Datos</span>
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+
+            <!-- Sección de Herramientas -->
+            <div class="pt-4">
+              <h3 class="px-4 text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-3">Herramientas</h3>
+              
+              <ul class="space-y-1">
+                <li>
+                  <a routerLink="/pages/settings" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span class="truncate">Configuración</span>
+                  </a>
+                </li>
+
+                <li>
+                  <a routerLink="/pages/profile" routerLinkActive="bg-primary-light text-primary dark:text-white" 
+                    class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] hover:text-primary dark:hover:text-white transition-all">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span class="truncate">Mi Perfil</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          
+          <!-- User Profile Section - Fixed at bottom -->
+          <div class="p-4 border-t border-gray-200 dark:border-[#2D313A] flex-shrink-0">
+            <div class="flex items-center gap-2">
+              
+              <!-- Botón de Perfil -->
+              <button 
+                routerLink="/pages/profile"
+                class="flex items-center gap-3 flex-1 min-w-0 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors group"
+              >
+                <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 dark:border-[#2D313A] flex-shrink-0 bg-[#3C50E0] flex items-center justify-center group-hover:border-[#3C50E0] transition-colors">
+                  <span class="text-white font-bold text-sm">{{ userInitials }}</span>
+                </div>
+                <div class="flex-1 min-w-0 text-left">
+                  <p class="text-sm font-semibold text-gray-800 dark:text-white truncate group-hover:text-primary dark:group-hover:text-blue-400 transition-colors">{{ userName }}</p>
+                  <p class="text-xs text-gray-500 dark:text-slate-400 truncate">{{ userEmail }}</p>
+                </div>
+                <svg class="w-4 h-4 text-gray-400 group-hover:text-primary group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+
+              <!-- Botón de Logout -->
+              <button 
+                (click)="logout()" 
+                class="flex items-center justify-center w-9 h-9 rounded-lg text-gray-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors flex-shrink-0" 
+                title="Cerrar Sesión"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
+              </button>
+              
+            </div>
+          </div>
+          
+        </div>
+      </ion-content>
+    </ion-menu>
+
+    <!-- Main Content -->
+    <div class="ion-page" id="main-content">
+      
+      <!-- Header -->
+      <header class="sticky top-0 z-50 flex w-full bg-white dark:bg-[#1C2434] border-b border-gray-200 dark:border-[#2D313A] shadow-sm flex-shrink-0">
+        <div class="flex flex-grow items-center justify-between px-4 py-4 md:px-6 2xl:px-11">
+          
+          <div class="flex items-center gap-4">
+            <div class="lg:hidden">
+              <ion-menu-button class="text-gray-700 dark:text-white"></ion-menu-button>
+            </div>
+            
+            <div class="hidden md:block">
+              <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Sistema BPM</h2>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ currentDate }}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 md:gap-5">
+            
+            <!-- Dark Mode Toggle -->
+            <button (click)="toggleDarkMode()" class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 dark:border-[#2D313A] bg-white dark:bg-[#171F2C] text-gray-600 dark:text-slate-400 hover:text-primary dark:hover:text-white hover:border-[#3C50E0] dark:hover:border-white transition-all">
+              <span class="block dark:hidden">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+              </span>
+              <span class="hidden dark:block">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2"/>
+                  <path d="M12 20v2"/>
+                  <path d="m4.93 4.93 1.41 1.41"/>
+                  <path d="m17.66 17.66 1.41 1.41"/>
+                  <path d="M2 12h2"/>
+                  <path d="M20 12h2"/>
+                  <path d="m6.34 17.66-1.41 1.41"/>
+                  <path d="m19.07 4.93-1.41 1.41"/>
+                </svg>
+              </span>
+            </button>
+
+            <!-- ALERTAS DESDE SUPABASE -->
+            <div class="relative">
+              <button 
+                (click)="showAlerts = !showAlerts"
+                class="relative flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 dark:border-[#2D313A] bg-white dark:bg-[#171F2C] text-gray-600 dark:text-slate-400 hover:text-primary dark:hover:text-white hover:border-[#3C50E0] dark:hover:border-white transition-all"
+              >
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                </svg>
+                <span 
+                  *ngIf="unreadCount > 0" 
+                  class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-[#171F2C] animate-pulse"
+                >
+                  {{ unreadCount > 9 ? '9+' : unreadCount }}
+                </span>
+              </button>
+
+              <!-- Popover de Alertas -->
+              <div 
+                *ngIf="showAlerts" 
+                class="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-white dark:bg-[#1C2434] rounded-2xl shadow-2xl border border-gray-200 dark:border-[#2D313A] z-50 overflow-hidden"
+              >
+                <!-- Header -->
+                <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-[#2D313A] flex-shrink-0">
+                  <div class="min-w-0 flex-1">
+                    <h4 class="text-sm font-bold text-gray-800 dark:text-white truncate">Alertas del Sistema</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5">{{ unreadCount }} sin reconocer</p>
+                  </div>
+                  <button 
+                    *ngIf="unreadCount > 0"
+                    (click)="reconocerTodas()" 
+                    class="text-xs font-semibold text-[#3C50E0] hover:text-blue-700 dark:hover:text-blue-400 flex-shrink-0 ml-2"
+                  >
+                    Reconocer todas
+                  </button>
+                </div>
+
+                <!-- Lista de alertas -->
+                <div class="max-h-[60vh] sm:max-h-[28rem] overflow-y-auto">
+                  
+                  <!-- Sin alertas -->
+                  <div *ngIf="alerts.length === 0" class="px-4 py-8 text-center">
+                    <svg class="w-12 h-12 mx-auto mb-2 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                      <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Sin alertas activas</p>
+                    <p class="text-xs text-gray-400 mt-1">Todo está bajo control</p>
+                  </div>
+
+                  <!-- Alertas -->
+                  <div *ngFor="let alert of alerts" 
+                       class="px-4 py-3 border-b border-gray-100 dark:border-[#2D313A] hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors cursor-pointer"
+                       [class.bg-rose-50/50]="alert.severity === 'critical' && !alert.acknowledged"
+                       [class.dark:bg-rose-900/10]="alert.severity === 'critical' && !alert.acknowledged"
+                       (click)="alertaClic(alert)"
+                  >
+                    <div class="flex items-start gap-2.5">
+                      <!-- Icono según severidad -->
+                      <div class="flex-shrink-0 mt-0.5">
+                        <span class="text-xl">{{ notificationService.getAlertIcon(alert.severity) }}</span>
+                      </div>
+                      
+                      <!-- Contenido -->
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-start justify-between gap-2">
+                          <p class="text-sm font-bold text-gray-900 dark:text-white leading-tight line-clamp-2">
+                            {{ alert.message }}
+                          </p>
+                        </div>
+                        
+                        <!-- Detalles de la alerta -->
+                        <div class="mt-1.5 space-y-1">
+                          <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border whitespace-nowrap"
+                                  [ngClass]="notificationService.getAlertColor(alert.severity)">
+                              {{ notificationService.getSeverityLabel(alert.severity) }}
+                            </span>
+                            <span class="text-gray-500 dark:text-gray-400 truncate">
+                              {{ notificationService.formatValueRange(alert) }}
+                            </span>
+                          </div>
+                          
+                          <p class="text-xs text-gray-600 dark:text-gray-400 truncate">
+                            <span class="font-semibold">{{ alert.parameter }}</span>
+                            <span class="mx-1">•</span>
+                            <span>{{ alert.format_type }}</span>
+                          </p>
+                        </div>
+
+                        <p class="text-[10px] text-gray-400 mt-1.5">
+                          {{ getTimeAgo(alert.created_at) }}
+                        </p>
+                      </div>
+
+                      <!-- Indicador de no reconocida -->
+                      <div *ngIf="!alert.acknowledged" 
+                           class="flex-shrink-0 w-2 h-2 rounded-full bg-[#3C50E0] mt-2 animate-pulse"></div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="px-4 py-3 border-t border-gray-200 dark:border-[#2D313A] bg-gray-50 dark:bg-[#171F2C] flex-shrink-0">
+                  <button 
+                    routerLink="/pages/dashboard"
+                    (click)="showAlerts = false"
+                    class="w-full text-center text-xs font-semibold text-[#3C50E0] hover:text-blue-700 dark:hover:text-blue-400"
+                  >
+                    Ver dashboard completo →
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- User Avatar -->
+           <button 
+              routerLink="/pages/profile"
+              class="flex items-center gap-3 pl-3 border-l border-gray-200 dark:border-[#2D313A] hover:bg-gray-50 dark:hover:bg-[#171F2C] rounded-lg px-2 py-1.5 transition-all cursor-pointer group"
+            >
+              <div class="hidden text-right lg:block">
+                <p class="text-sm font-semibold text-gray-800 dark:text-white group-hover:text-primary dark:group-hover:text-blue-400 transition-colors">{{ userName }}</p>
+                <p class="text-xs text-gray-500 dark:text-slate-400">{{ userRole }}</p>
+              </div>
+              <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 dark:border-[#2D313A] bg-[#3C50E0] flex items-center justify-center flex-shrink-0 group-hover:border-[#3C50E0] transition-colors">
+                <span class="text-white font-bold text-sm">{{ userInitials }}</span>
+              </div>
+            </button>
+
+          </div>
+        </div>
+      </header>
+
+      <!-- Router Outlet -->
+      <ion-router-outlet class="flex-1 overflow-hidden"></ion-router-outlet>
+
+    </div>
+
+  </ion-split-pane>
+</ion-app>
+
+<!-- Login - Se muestra cuando NO está logueado -->
+<ion-app *ngIf="!isLoggedIn">
+  <ion-router-outlet></ion-router-outlet>
+</ion-app>
