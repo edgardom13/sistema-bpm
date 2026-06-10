@@ -1,179 +1,296 @@
-<ion-content class="ion-padding bg-gray-50 dark:bg-[#0C121E]">
+<ion-content class="ion-no-padding bg-gray-50 dark:bg-[#0C121E]">
   <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
     
     <!-- Header -->
-    <div class="mb-6 flex items-center justify-between">
+    <div class="mb-6 flex items-center justify-between flex-wrap gap-3">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard General</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Bienvenido, {{ userName }}</p>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard BPM</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          Hola, <span class="font-semibold text-[#3C50E0]">{{ userName }}</span> • 
+          <span class="text-gray-400">{{ fechaHoy }}</span>
+        </p>
       </div>
-      <button (click)="refreshData()" class="flex items-center gap-2 px-4 py-2 bg-[#3C50E0] hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button 
+        (click)="refreshData()" 
+        [disabled]="loading"
+        class="flex items-center gap-2 px-4 py-2 bg-[#3C50E0] hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
+        <svg class="w-4 h-4" [class.animate-spin]="loading" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </svg>
-        
+        Actualizar
       </button>
     </div>
 
-    <!-- Loading State -->
+    <!-- Loading -->
     <div *ngIf="loading" class="flex items-center justify-center py-12">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3C50E0]"></div>
     </div>
 
-    <!-- Contenido Principal -->
-    <div *ngIf="!loading">
-      
-      <!-- Tarjetas de Estadísticas -->
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+    <!-- Contenido -->
+    <div *ngIf="!loading" class="space-y-6">
+
+      <!-- ============================================ -->
+      <!-- KPIs PRINCIPALES -->
+      <!-- ============================================ -->
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         
-        <!-- Total Registros -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Total Registros</p>
-              <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ stats.totalRegistros }}</h3>
-              <p class="text-xs text-gray-500 mt-1">Todos los checklists</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
-              <span class="text-2xl">📊</span>
+        <!-- Registros Hoy -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+              <span class="text-xl">📝</span>
             </div>
           </div>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Registros Hoy</p>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.registrosHoy }}</h3>
+          <p class="text-[10px] text-gray-500 mt-1">Total del día</p>
         </div>
 
-        <!-- Pendientes -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Pendientes</p>
-              <h3 class="text-2xl font-bold text-amber-500 mt-1">{{ stats.pendientes }}</h3>
-              <p class="text-xs text-amber-500 mt-1">Requieren atención</p>
+        <!-- Cumplimiento Verificación -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+              <span class="text-xl">✅</span>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
-              <span class="text-2xl">⏳</span>
-            </div>
+            <span [class]="kpis.cumplimientoVerificacion >= 80 ? 'text-emerald-500' : kpis.cumplimientoVerificacion >= 60 ? 'text-amber-500' : 'text-rose-500'" 
+                  class="text-[10px] font-bold">
+              {{ kpis.cumplimientoVerificacion >= 80 ? '↑' : kpis.cumplimientoVerificacion >= 60 ? '→' : '↓' }}
+            </span>
           </div>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Cumplimiento Verif.</p>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.cumplimientoVerificacion }}%</h3>
+          <p class="text-[10px] text-gray-500 mt-1">Limpieza verificada</p>
         </div>
 
-        <!-- Completados -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Completados</p>
-              <h3 class="text-2xl font-bold text-emerald-500 mt-1">{{ stats.completados }}</h3>
-              <p class="text-xs text-emerald-500 mt-1">Aprobados</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-              <span class="text-2xl">✅</span>
+        <!-- Cumplimiento Higiénicas -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
+              <span class="text-xl">✨</span>
             </div>
           </div>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Cumplimiento Hig.</p>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.cumplimientoHigienicas }}%</h3>
+          <p class="text-[10px] text-gray-500 mt-1">18 ítems evaluados</p>
         </div>
 
-        <!-- Cumplimiento -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Cumplimiento</p>
-              <h3 class="text-2xl font-bold text-purple-500 mt-1">{{ stats.cumplimiento }}%</h3>
-              <p class="text-xs text-purple-500 mt-1">Tasa de aprobación</p>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
-              <span class="text-2xl">📈</span>
+        <!-- Hornos Monitoreados -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
+              <span class="text-xl">🌡️</span>
             </div>
           </div>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Hornos</p>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.hornosMonitoreados }}</h3>
+          <p class="text-[10px] text-gray-500 mt-1">Registros AM/PM</p>
         </div>
+
+        <!-- Alertas Activas -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm relative overflow-hidden">
+          <div *ngIf="kpis.alertasActivas > 0" class="absolute top-0 right-0 w-2 h-full bg-rose-500"></div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center">
+              <span class="text-xl">🚨</span>
+            </div>
+          </div>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Alertas</p>
+          <h3 class="text-2xl font-bold mt-1" 
+              [class.text-rose-500]="kpis.alertasActivas > 0"
+              [class.text-emerald-500]="kpis.alertasActivas === 0">
+            {{ kpis.alertasActivas }}
+          </h3>
+          <p class="text-[10px] text-gray-500 mt-1">{{ kpis.alertasActivas === 0 ? 'Todo OK' : 'Requieren atención' }}</p>
+        </div>
+
+        <!-- Empleados Evaluados -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+              <span class="text-xl">👥</span>
+            </div>
+          </div>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Evaluados</p>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.empleadosEvaluados }}</h3>
+          <p class="text-[10px] text-gray-500 mt-1">Empleados hoy</p>
+        </div>
+
       </div>
 
-      <!-- Acciones Rápidas -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm mb-6">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Acciones Rápidas</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <!-- ============================================ -->
+      <!-- GRÁFICOS -->
+      <!-- ============================================ -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        
+        <!-- Tendencia Semanal -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white">📈 Tendencia Semanal</h3>
+              <p class="text-[10px] text-gray-500">Registros por formulario (últimos 7 días)</p>
+            </div>
+          </div>
+          <div class="h-64">
+            <canvas #tendenciaChart></canvas>
+          </div>
+        </div>
+
+        <!-- Distribución por Formulario -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white">🍩 Distribución Hoy</h3>
+              <p class="text-[10px] text-gray-500">Registros por tipo de formulario</p>
+            </div>
+          </div>
+          <div class="h-64">
+            <canvas #distribucionChart></canvas>
+          </div>
+        </div>
+
+        <!-- Cumplimiento por Área -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white">🎯 Cumplimiento por Área</h3>
+              <p class="text-[10px] text-gray-500">Verificación de limpieza</p>
+            </div>
+          </div>
+          <div class="h-64">
+            <canvas #cumplimientoChart></canvas>
+          </div>
+          <div *ngIf="cumplimientoPorArea.length === 0" class="h-64 flex items-center justify-center text-gray-400 text-xs">
+            No hay datos de verificación
+          </div>
+        </div>
+
+        <!-- Temperatura de Hornos -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white">🌡️ Temperatura de Hornos</h3>
+              <p class="text-[10px] text-gray-500">Monitoreo de hoy (AM/PM)</p>
+            </div>
+          </div>
+          <div class="h-64">
+            <canvas #hornosChart></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================================ -->
+      <!-- ALERTAS Y ACTIVIDAD -->
+      <!-- ============================================ -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        
+        <!-- Panel de Alertas -->
+        <div class="lg:col-span-2 bg-white dark:bg-[#1C2434] rounded-2xl border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="p-5 border-b border-gray-200 dark:border-[#2D313A] flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🚨</span>
+              <h2 class="text-sm font-bold text-gray-900 dark:text-white">Alertas y Notificaciones</h2>
+              <span *ngIf="alertas.length > 0" class="bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                {{ alertas.length }}
+              </span>
+            </div>
+          </div>
           
-          <button routerLink="/pages/limpiezaydesinfeccion" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 dark:border-[#2D313A] hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
-            <span class="text-3xl">🛡️</span>
-            <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Limpieza</span>
-          </button>
-
-          <button routerLink="/pages/hornos" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 dark:border-[#2D313A] hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
-            <span class="text-3xl">🔥</span>
-            <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Hornos</span>
-          </button>
-
-          <button routerLink="/pages/verificacion" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 dark:border-[#2D313A] hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
-            <span class="text-3xl">📋</span>
-            <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Verificación</span>
-          </button>
-
-          <button routerLink="/pages/higienicas" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 dark:border-[#2D313A] hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
-            <span class="text-3xl">✨</span>
-            <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Higiénicas</span>
-          </button>
-
-          <button routerLink="/pages/plagas" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 dark:border-[#2D313A] hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
-            <span class="text-3xl">🪰</span>
-            <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Plagas</span>
-          </button>
-
-          <button routerLink="/pages/residuos" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-200 dark:border-[#2D313A] hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
-            <span class="text-3xl">🗑️</span>
-            <span class="text-xs font-medium text-gray-700 dark:text-gray-300 text-center">Residuos</span>
-          </button>
-
+          <div class="divide-y divide-gray-200 dark:divide-[#2D313A] max-h-96 overflow-y-auto">
+            <div *ngFor="let alerta of alertas" 
+                 class="p-4 border-l-4" 
+                 [class]="getAlertColor(alerta.tipo)">
+              <div class="flex items-start gap-3">
+                <span class="text-2xl">{{ alerta.icono }}</span>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <h4 class="text-xs font-bold text-gray-900 dark:text-white">{{ alerta.titulo }}</h4>
+                    <span class="text-[10px] text-gray-400">{{ alerta.fecha }}</span>
+                  </div>
+                  <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">{{ alerta.descripcion }}</p>
+                  <p class="text-[10px] text-gray-500 mt-0.5">{{ alerta.subtitulo }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="alertas.length === 0" class="p-8 text-center">
+              <div class="flex flex-col items-center gap-2">
+                <span class="text-4xl">✅</span>
+                <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">Todo en orden</p>
+                <p class="text-xs text-gray-500">No hay alertas pendientes</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Actividad Reciente -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="p-5 border-b border-gray-200 dark:border-[#2D313A]">
+            <h2 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <span class="text-xl">📋</span>
+              Actividad Reciente
+            </h2>
+          </div>
+          
+          <div class="divide-y divide-gray-200 dark:divide-[#2D313A] max-h-96 overflow-y-auto">
+            <div *ngFor="let reg of registrosRecientes" class="p-3 hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
+              <div class="flex items-start gap-2">
+                <span class="text-lg">{{ reg.formatoIcono }}</span>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-bold text-gray-900 dark:text-white truncate">{{ reg.formato }}</p>
+                  <p class="text-[10px] text-gray-500 truncate">{{ reg.resumen }}</p>
+                  <p class="text-[10px] text-gray-400 mt-0.5">{{ reg.fecha }} • {{ reg.hora }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div *ngIf="registrosRecientes.length === 0" class="p-8 text-center">
+              <span class="text-3xl">📭</span>
+              <p class="text-xs text-gray-500 mt-2">Sin actividad reciente</p>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Registros Recientes -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl border border-gray-200 dark:border-[#2D313A] shadow-sm">
-        <div class="p-5 border-b border-gray-200 dark:border-[#2D313A] flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Registros Recientes</h2>
-          <button routerLink="/pages/limpiezaydesinfeccion" class="text-sm font-semibold text-[#3C50E0] hover:text-blue-700 dark:hover:text-blue-400">
-            Ver todos →
+      <!-- ============================================ -->
+      <!-- ACCIONES RÁPIDAS -->
+      <!-- ============================================ -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+        <h2 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <span class="text-xl">⚡</span>
+          Acciones Rápidas
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          
+          <button routerLink="/pages/limpiezaydesinfeccion" 
+                  class="flex flex-col items-center gap-2 p-4 rounded-xl border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors group">
+            <span class="text-3xl group-hover:scale-110 transition-transform">🧹</span>
+            <span class="text-xs font-semibold text-blue-700 dark:text-blue-400 text-center">Limpieza</span>
+            <span class="text-[10px] text-blue-500">{{ statsPorFormulario.limpieza }} hoy</span>
           </button>
-        </div>
-        
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-gray-50 dark:bg-[#171F2C]">
-              <tr>
-                <th class="px-5 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Fecha</th>
-                <th class="px-5 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Formato</th>
-                <th class="px-5 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Establecimiento</th>
-                <th class="px-5 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Estado</th>
-                <th class="px-5 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Responsable</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
-              <tr *ngFor="let registro of registrosRecientes" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
-                <td class="px-5 py-4 text-sm text-gray-900 dark:text-white">{{ registro.fecha }}</td>
-                <td class="px-5 py-4 text-sm font-medium text-gray-700 dark:text-gray-300">{{ registro.formato }}</td>
-                <td class="px-5 py-4 text-sm text-gray-700 dark:text-gray-300">{{ registro.establecimiento }}</td>
-                <td class="px-5 py-4">
-                  <span [class.bg-emerald-500/10]="registro.estadoClass === 'approved' || registro.estadoClass === 'completed'"
-                        [class.text-emerald-500]="registro.estadoClass === 'approved' || registro.estadoClass === 'completed'"
-                        [class.bg-amber-500/10]="registro.estadoClass === 'pending'"
-                        [class.text-amber-500]="registro.estadoClass === 'pending'"
-                        [class.bg-rose-500/10]="registro.estadoClass === 'rejected'"
-                        [class.text-rose-500]="registro.estadoClass === 'rejected'"
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase">
-                    {{ registro.estado }}
-                  </span>
-                </td>
-                <td class="px-5 py-4 text-sm text-gray-700 dark:text-gray-300">{{ registro.responsable }}</td>
-              </tr>
-              
-              <!-- Mensaje si no hay registros -->
-              <tr *ngIf="registrosRecientes.length === 0">
-                <td colspan="5" class="px-5 py-8 text-center text-gray-500 dark:text-gray-400">
-                  <div class="flex flex-col items-center gap-2">
-                    <span class="text-4xl">📭</span>
-                    <p>No hay registros recientes</p>
-                    <button routerLink="/pages/limpiezaydesinfeccion" class="mt-2 text-sm font-semibold text-[#3C50E0] hover:text-blue-700">
-                      Crear primer registro →
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+
+          <button routerLink="/pages/verificacion" 
+                  class="flex flex-col items-center gap-2 p-4 rounded-xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors group">
+            <span class="text-3xl group-hover:scale-110 transition-transform">🔍</span>
+            <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 text-center">Verificación</span>
+            <span class="text-[10px] text-emerald-500">{{ statsPorFormulario.verificacion }} hoy</span>
+          </button>
+
+          <button routerLink="/pages/hornos" 
+                  class="flex flex-col items-center gap-2 p-4 rounded-xl border border-orange-200 dark:border-orange-500/30 bg-orange-50 dark:bg-orange-500/10 hover:bg-orange-100 dark:hover:bg-orange-500/20 transition-colors group">
+            <span class="text-3xl group-hover:scale-110 transition-transform">🔥</span>
+            <span class="text-xs font-semibold text-orange-700 dark:text-orange-400 text-center">Hornos</span>
+            <span class="text-[10px] text-orange-500">{{ statsPorFormulario.hornos }} hoy</span>
+          </button>
+
+          <button routerLink="/pages/higienicas" 
+                  class="flex flex-col items-center gap-2 p-4 rounded-xl border border-purple-200 dark:border-purple-500/30 bg-purple-50 dark:bg-purple-500/10 hover:bg-purple-100 dark:hover:bg-purple-500/20 transition-colors group">
+            <span class="text-3xl group-hover:scale-110 transition-transform">✨</span>
+            <span class="text-xs font-semibold text-purple-700 dark:text-purple-400 text-center">Higiénicas</span>
+            <span class="text-[10px] text-purple-500">{{ statsPorFormulario.higienicas }} hoy</span>
+          </button>
+
         </div>
       </div>
 
