@@ -12,9 +12,7 @@ export class ExportarPage implements OnInit {
   filters = {
     startDate: '',
     endDate: '',
-    formatType: '',
-    status: '',
-    establishment: ''
+    formatType: ''
   };
 
   formatOptions = [
@@ -39,6 +37,10 @@ export class ExportarPage implements OnInit {
   ];
 
   exporting = false;
+  loadingPreview = false;
+  previewCount = 0;
+  activeFilters: { key: string; label: string }[] = [];
+
   stats = {
     totalRegistros: 0,
     ultimoRegistro: null as string | null
@@ -52,6 +54,7 @@ export class ExportarPage implements OnInit {
 
   ngOnInit() {
     this.cargarEstadisticas();
+    this.previewData();
   }
 
   async cargarEstadisticas() {
@@ -62,66 +65,171 @@ export class ExportarPage implements OnInit {
         .order('created_at', { ascending: false })
         .limit(1);
 
-      if (!error && data && data.length > 0) {
-        this.stats.totalRegistros = data.length;
-        this.stats.ultimoRegistro = data[0].created_at;
+      if (!error && data) {
+        const { count } = await this.exportService.getSupabase()
+          .from('checklists')
+          .select('*', { count: 'exact', head: true });
+
+        this.stats.totalRegistros = count || 0;
+        if (data.length > 0) {
+          this.stats.ultimoRegistro = data[0].created_at;
+        }
       }
     } catch (error) {
       console.error('Error cargando estadísticas:', error);
     }
   }
 
-  async exportExcel() {
-    const loading = await this.loadingCtrl.create({
-      message: '📊 Exportando a Excel...',
-      duration: 0
-    });
-    await loading.present();
+  async previewData() {
+  this.loadingPreview = true;
+  
+  try {
+    let query = this.exportService.getSupabase()
+      .from('checklists')
+      .select('*', { count: 'exact', head: true });
 
-    try {
-      this.exporting = true;
-      const result = await this.exportService.exportToExcel(this.filters);
-      
-      await loading.dismiss();
-      
-      if (result.success) {
-        await this.showToast(`✅ Exportados ${result.count} registros a Excel`, 'success');
-      } else {
-        await this.showToast('❌ Error al exportar: ' + (result.error as any).message, 'error');
-      }
-    } catch (error) {
-      await loading.dismiss();
-      await this.showToast('❌ Error: ' + (error as any).message, 'error');
-    } finally {
-      this.exporting = false;
+    // Aplicar filtros (solo fecha y formato)
+    if (this.filters.startDate) {
+      query = query.gte('data->>dia', this.filters.startDate);
     }
+    if (this.filters.endDate) {
+      query = query.lte('data->>dia', this.filters.endDate);
+    }
+    if (this.filters.formatType) {
+      query = query.eq('format_type', this.filters.formatType);
+    }
+    // ❌ Eliminamos filtros de status y establishment
+
+    const { count, error } = await query;
+
+    if (!error) {
+      this.previewCount = count || 0;
+    }
+
+    this.updateActiveFilters();
+
+  } catch (error) {
+    console.error('Error en vista previa:', error);
+  } finally {
+    this.loadingPreview = false;
+  }
+}
+
+ updateActiveFilters() {
+  this.activeFilters = [];
+  
+  if (this.filters.startDate) {
+    const label = this.filters.endDate && this.filters.startDate === this.filters.endDate
+      ? `📅 Fecha: ${this.formatDate(this.filters.startDate)}`
+      : `📅 Desde: ${this.formatDate(this.filters.startDate)}`;
+    this.activeFilters.push({ key: 'startDate', label });
+  }
+  
+  if (this.filters.endDate && this.filters.endDate !== this.filters.startDate) {
+    this.activeFilters.push({ key: 'endDate', label: `📅 Hasta: ${this.formatDate(this.filters.endDate)}` });
+  }
+  
+  if (this.filters.formatType) {
+    const format = this.formatOptions.find(f => f.value === this.filters.formatType);
+    this.activeFilters.push({ key: 'formatType', label: `📋 ${format?.label || this.filters.formatType}` });
+  }
+  
+  // ❌ Eliminamos los filtros de status y establishment
+}
+
+  removeFilter(key: string) {
+  if (key === 'startDate') {
+    this.filters.startDate = '';
+  } else if (key === 'endDate') {
+    this.filters.endDate = '';
+  } else if (key === 'formatType') {
+    this.filters.formatType = '';
+  }
+  this.previewData();
+}
+
+  formatDate(dateStr: string): string {
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
 
-  async exportPDF() {
-    const loading = await this.loadingCtrl.create({
-      message: '📄 Generando PDF...',
-      duration: 0
-    });
-    await loading.present();
-
-    try {
-      this.exporting = true;
-      const result = await this.exportService.exportToPDF(this.filters);
-      
-      await loading.dismiss();
-      
-      if (result.success) {
-        await this.showToast(`✅ PDF generado con ${result.count} registros`, 'success');
-      } else {
-        await this.showToast('❌ Error al generar PDF: ' + (result.error as any).message, 'error');
-      }
-    } catch (error) {
-      await loading.dismiss();
-      await this.showToast('❌ Error: ' + (error as any).message, 'error');
-    } finally {
-      this.exporting = false;
-    }
+ async exportExcel() {
+  if (this.previewCount === 0) {
+    await this.showToast('No hay registros que coincidan con los filtros', 'error');
+    return;
   }
+
+  const loading = await this.loadingCtrl.create({
+    message: `📊 Exportando ${this.previewCount} registros a Excel...`,
+    duration: 0
+  });
+  await loading.present();
+
+  try {
+    this.exporting = true;
+    
+    // Pasar solo los filtros necesarios
+    const filters = {
+      startDate: this.filters.startDate,
+      endDate: this.filters.endDate,
+      formatType: this.filters.formatType
+    };
+    
+    const result = await this.exportService.exportToExcel(filters);
+    
+    await loading.dismiss();
+    
+    if (result.success) {
+      await this.showToast(`✅ Exportados ${result.count} registros a Excel`, 'success');
+    } else {
+      await this.showToast('❌ Error al exportar: ' + (result.error as any).message, 'error');
+    }
+  } catch (error) {
+    await loading.dismiss();
+    await this.showToast('❌ Error: ' + (error as any).message, 'error');
+  } finally {
+    this.exporting = false;
+  }
+}
+
+async exportPDF() {
+  if (this.previewCount === 0) {
+    await this.showToast('No hay registros que coincidan con los filtros', 'error');
+    return;
+  }
+
+  const loading = await this.loadingCtrl.create({
+    message: `📄 Generando PDF con ${this.previewCount} registros...`,
+    duration: 0
+  });
+  await loading.present();
+
+  try {
+    this.exporting = true;
+    
+    // Pasar solo los filtros necesarios
+    const filters = {
+      startDate: this.filters.startDate,
+      endDate: this.filters.endDate,
+      formatType: this.filters.formatType
+    };
+    
+    const result = await this.exportService.exportToPDF(filters);
+    
+    await loading.dismiss();
+    
+    if (result.success) {
+      await this.showToast(`✅ PDF generado con ${result.count} registros`, 'success');
+    } else {
+      await this.showToast('❌ Error al generar PDF: ' + (result.error as any).message, 'error');
+    }
+  } catch (error) {
+    await loading.dismiss();
+    await this.showToast('❌ Error: ' + (error as any).message, 'error');
+  } finally {
+    this.exporting = false;
+  }
+}
 
   async showToast(message: string, color: 'success' | 'error') {
     const toast = await this.toastCtrl.create({
@@ -138,10 +246,7 @@ export class ExportarPage implements OnInit {
       startDate: '',
       endDate: '',
       formatType: '',
-      status: '',
-      establishment: ''
     };
+    this.previewData();
   }
-
-  
 }
