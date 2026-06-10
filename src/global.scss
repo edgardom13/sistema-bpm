@@ -18,23 +18,38 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 /* =========================================================================
-   VARIABLES CSS DINÁMICAS
+   VARIABLES CSS DINÁMICAS - SISTEMA DE CONFIGURACIÓN
    ========================================================================= */
 
 :root {
-  // Variables de color primario (se actualizan desde ConfigService)
+  /* Colores principales */
   --color-primary: #3C50E0;
   --color-primary-hover: #2D42D0;
   --color-primary-light: rgba(60, 80, 224, 0.1);
   
-  // Variables de tipografía
+  /* Sidebar */
+  --sidebar-bg: #FFFFFF;
+  --sidebar-text: #374151;
+  --sidebar-hover: #F9FAFB;
+  --sidebar-active: rgba(60, 80, 224, 0.1);
+  
+  /* Header */
+  --header-bg: #FFFFFF;
+  --header-text: #1F2937;
+  
+  /* Tipografía */
   --font-family-base: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-size-base: 14px;
+  --font-size-small: 12px;
+  --font-size-large: 16px;
   
-  // Variables de iconos
+  /* Iconos */
   --icon-size: 20px;
   
-  // Variables de Ionic
+  /* Bordes */
+  --border-radius: 8px;
+  
+  /* Ionic */
   --ion-font-family: var(--font-family-base);
 }
 
@@ -54,65 +69,77 @@ html, body {
   font-size: var(--font-size-base);
 }
 
-body {
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-base);
-}
-
 /* =========================================================================
    CLASES UTILITARIAS DINÁMICAS
    ========================================================================= */
 
-.text-primary {
-  color: var(--color-primary);
+.text-primary { color: var(--color-primary) !important; }
+.bg-primary { background-color: var(--color-primary) !important; }
+.bg-primary-light { background-color: var(--color-primary-light) !important; }
+.border-primary { border-color: var(--color-primary) !important; }
+.hover\:text-primary:hover { color: var(--color-primary) !important; }
+.hover\:bg-primary:hover { background-color: var(--color-primary) !important; }
+.hover\:border-primary:hover { border-color: var(--color-primary) !important; }
+.focus\:border-primary:focus { border-color: var(--color-primary) !important; }
+.focus\:ring-primary:focus { --tw-ring-color: var(--color-primary); }
+.ring-primary { --tw-ring-color: var(--color-primary); }
+.from-primary { --tw-gradient-from: var(--color-primary); }
+.to-primary { --tw-gradient-to: var(--color-primary-hover); }
+.shadow-primary { --tw-shadow-color: var(--color-primary); }
+
+/* =========================================================================
+   APLICAR CONFIGURACIÓN AL SIDEBAR
+   ========================================================================= */
+
+ion-menu .flex.flex-col.h-full {
+  background-color: var(--sidebar-bg) !important;
 }
 
-.bg-primary {
-  background-color: var(--color-primary);
+ion-menu nav a {
+  color: var(--sidebar-text) !important;
 }
 
-.bg-primary-light {
-  background-color: var(--color-primary-light);
+ion-menu nav a:hover {
+  background-color: var(--sidebar-hover) !important;
+  color: var(--color-primary) !important;
 }
 
-.border-primary {
-  border-color: var(--color-primary);
+ion-menu nav a.router-link-active {
+  background-color: var(--sidebar-active) !important;
+  color: var(--color-primary) !important;
 }
 
-.hover\:text-primary:hover {
-  color: var(--color-primary);
+/* Logo del sidebar */
+ion-menu .bg-\[\#3C50E0\] {
+  background-color: var(--color-primary) !important;
 }
 
-.hover\:bg-primary:hover {
-  background-color: var(--color-primary);
+/* Avatar del usuario en el sidebar */
+ion-menu .bg-\[\#3C50E0\].flex.items-center.justify-center {
+  background-color: var(--color-primary) !important;
 }
 
-.hover\:border-primary:hover {
-  border-color: var(--color-primary);
+ion-menu button:hover .bg-\[\#3C50E0\] {
+  border-color: var(--color-primary) !important;
 }
 
-.focus\:border-primary:focus {
-  border-color: var(--color-primary);
+/* =========================================================================
+   APLICAR CONFIGURACIÓN AL HEADER
+   ========================================================================= */
+
+#main-content > header {
+  background-color: var(--header-bg) !important;
+  color: var(--header-text) !important;
 }
 
-.focus\:ring-primary:focus {
-  --tw-ring-color: var(--color-primary);
+#main-content > header h2,
+#main-content > header .text-gray-800 {
+  color: var(--header-text) !important;
 }
 
-.ring-primary {
-  --tw-ring-color: var(--color-primary);
-}
-
-.from-primary {
-  --tw-gradient-from: var(--color-primary);
-}
-
-.to-primary {
-  --tw-gradient-to: var(--color-primary-hover);
-}
-
-.shadow-primary {
-  --tw-shadow-color: var(--color-primary);
+#main-content > header .text-gray-500 {
+  color: var(--header-text) !important;
+  opacity: 0.7;
 }
 
 /* =========================================================================
@@ -335,4 +362,38 @@ html.dark {
     overflow-y: auto;
     height: calc(100dvh - 65px);
   }
+}
+
+/* =========================================================================
+   MENÚ ACTIVO (routerLinkActive)
+   ========================================================================= */
+
+.active-menu-item {
+  background-color: var(--sidebar-active) !important;
+  color: var(--color-primary) !important;
+  font-weight: 600;
+}
+
+.active-menu-item:hover {
+  background-color: var(--sidebar-active) !important;
+  color: var(--color-primary) !important;
+}
+
+/* =========================================================================
+   MENÚ ACTIVO (routerLinkActive)
+   ========================================================================= */
+
+/* =========================================================================
+   MENÚ ACTIVO (routerLinkActive)
+   ========================================================================= */
+
+.active-menu-item {
+  background-color: var(--sidebar-active) !important;
+  color: var(--color-primary) !important;
+  font-weight: 600;
+}
+
+.active-menu-item:hover {
+  background-color: var(--sidebar-active) !important;
+  color: var(--color-primary) !important;
 }

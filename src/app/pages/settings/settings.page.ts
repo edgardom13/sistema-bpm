@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { ConfigService, AppConfig } from '../../services/config.service';
-import { ToastController, AlertController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { ConfigService, ThemeConfig } from '../../services/config.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-settings',
@@ -9,108 +8,82 @@ import { ToastController, AlertController } from '@ionic/angular';
   styleUrls: ['./settings.page.scss'],
   standalone: false
 })
-export class SettingsPage implements OnInit, OnDestroy {
-  config!: AppConfig;
-  private configSubscription?: Subscription;
+export class SettingsPage implements OnInit {
+  config!: ThemeConfig;
+  presets: { key: string; name: string; color: string }[] = [];
   
-  activeSection = 'appearance';
-  saving = false;
-
-  // Opciones
-  colorPresets = [
-    { name: 'Azul', value: '#3C50E0' },
-    { name: 'Verde', value: '#10B981' },
-    { name: 'Púrpura', value: '#8B5CF6' },
-    { name: 'Naranja', value: '#F59E0B' },
-    { name: 'Rojo', value: '#EF4444' },
-    { name: 'Rosa', value: '#EC4899' }
-  ];
-
-  fontFamilies = [
-    { name: 'Inter', value: 'Inter' },
-    { name: 'Roboto', value: 'Roboto' },
-    { name: 'Poppins', value: 'Poppins' },
-    { name: 'Open Sans', value: 'Open Sans' },
-    { name: 'System', value: 'system-ui' }
-  ];
-
-  timezones = [
-    { name: 'Ciudad de México', value: 'America/Mexico_City' },
-    { name: 'Bogotá', value: 'America/Bogota' },
-    { name: 'Buenos Aires', value: 'America/Argentina/Buenos_Aires' },
-    { name: 'Santiago', value: 'America/Santiago' },
-    { name: 'Lima', value: 'America/Lima' }
-  ];
+  fontFamilies = ['Inter', 'Roboto', 'Poppins', 'Open Sans', 'Montserrat', 'Lato'];
+  
+  presetNames: { [key: string]: string } = {
+    'azul-corporativo': 'Azul Corporativo',
+    'verde-esmeralda': 'Verde Esmeralda',
+    'naranja-panaderia': 'Naranja Panadería',
+    'morado-elegante': 'Morado Elegante',
+    'rojo-intenso': 'Rojo Intenso',
+    'cyan-moderno': 'Cyan Moderno',
+    'rosa-suave': 'Rosa Suave',
+    'oscuro-profesional': 'Oscuro Profesional',
+    'slate-oscuro': 'Slate Oscuro',
+    'marron-calido': 'Marrón Cálido'
+  };
 
   constructor(
-    private configService: ConfigService,
-    private toastCtrl: ToastController,
-    private alertCtrl: AlertController
+    public configService: ConfigService,
+    private toastCtrl: ToastController
   ) {}
 
   ngOnInit() {
-    this.configSubscription = this.configService.config$.subscribe(config => {
-      this.config = config;
-    });
+    this.config = { ...this.configService.getConfig() };
+    
+    const presetConfigs = this.configService.getPresets();
+    this.presets = Object.keys(presetConfigs).map(key => ({
+      key,
+      name: this.presetNames[key] || key,
+      color: presetConfigs[key].primaryColor || '#3C50E0'
+    }));
   }
 
-  ngOnDestroy() {
-    this.configSubscription?.unsubscribe();
+  onPresetSelect(presetKey: string) {
+    this.configService.applyPreset(presetKey);
+    this.config = { ...this.configService.getConfig() };
+    this.showToast(`Tema "${this.presetNames[presetKey]}" aplicado`, 'success');
   }
 
-  async updateConfig(partial: Partial<AppConfig>) {
-    await this.configService.updateConfig(partial);
+  onColorChange(property: keyof ThemeConfig, value: string) {
+    this.configService.updateConfig({ [property]: value } as any);
+    this.config = { ...this.configService.getConfig() };
   }
 
-  async resetToDefaults() {
-    const alert = await this.alertCtrl.create({
-      header: 'Restablecer Configuración',
-      message: '¿Estás seguro? Se perderán todas tus personalizaciones.',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Restablecer',
-          role: 'destructive',
-          handler: async () => {
-            await this.configService.saveConfig(this.configService.getDefaultConfig());
-            await this.showToast('Configuración restablecida', 'success');
-          }
-        }
-      ]
-    });
-    await alert.present();
+  onNumberChange(property: keyof ThemeConfig, value: number) {
+    this.configService.updateConfig({ [property]: value } as any);
+    this.config = { ...this.configService.getConfig() };
   }
 
-  async exportConfig() {
-    const configJson = JSON.stringify(this.config, null, 2);
-    const blob = new Blob([configJson], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `configuracion_bpm_${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    await this.showToast('Configuración exportada', 'success');
+  onFontChange(fontFamily: string) {
+    this.configService.updateConfig({ fontFamily });
+    this.config = { ...this.configService.getConfig() };
   }
 
-  async importConfig(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
+  setLightMode() {
+    this.configService.updateConfig({ darkMode: false });
+    this.config = { ...this.configService.getConfig() };
+  }
 
-    try {
-      const text = await file.text();
-      const config = JSON.parse(text);
-      await this.configService.saveConfig(config);
-      await this.showToast('Configuración importada', 'success');
-    } catch (error) {
-      await this.showToast('Error al importar configuración', 'error');
-    }
+  setDarkMode() {
+    this.configService.updateConfig({ darkMode: true });
+    this.config = { ...this.configService.getConfig() };
+  }
+
+  resetConfig() {
+    this.configService.resetToDefault();
+    this.config = { ...this.configService.getConfig() };
+    this.showToast('Configuración restablecida', 'success');
   }
 
   async showToast(message: string, color: 'success' | 'error') {
     const toast = await this.toastCtrl.create({
       message,
-      duration: 3000,
+      duration: 2000,
       position: 'top',
       color
     });

@@ -1,679 +1,498 @@
 <ion-content class="ion-no-padding bg-gray-50 dark:bg-[#0C121E]">
-  <div class="max-w-6xl mx-auto">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
     
     <!-- Header -->
-    <div class="sticky top-0 z-40 bg-white/80 dark:bg-[#1C2434]/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-[#2D313A]/60">
-      <div class="px-6 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <button 
-            routerLink="/pages/dashboard" 
-            class="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 dark:border-[#2D313A] text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#171F2C] transition-all"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </button>
-          
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#3C50E0] to-blue-600 flex items-center justify-center shadow-md shadow-blue-500/20">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              </svg>
-            </div>
-            <div>
-              <h1 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">Configuración</h1>
-              <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Personaliza tu experiencia</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Acciones rápidas -->
-        <div class="flex items-center gap-2">
-          <button 
-            (click)="exportConfig()"
-            class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#171F2C] rounded-lg transition-colors"
-          >
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-            </svg>
-            Exportar
-          </button>
-          <button 
-            (click)="resetToDefaults()"
-            class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors"
-          >
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-            </svg>
-            Restablecer
-          </button>
+    <div class="mb-6 flex items-center justify-between flex-wrap gap-3">
+      <div class="flex items-center gap-3">
+        <button 
+          routerLink="/pages/dashboard"
+          class="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-200 dark:border-[#2D313A] text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#171F2C] transition-all"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Configuración</h1>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Personaliza completamente la apariencia del sistema</p>
         </div>
       </div>
+      <button 
+        (click)="resetConfig()"
+        class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-[#1C2434] hover:bg-gray-200 dark:hover:bg-[#171F2C] text-gray-700 dark:text-gray-300 text-sm font-semibold rounded-xl transition-colors border border-gray-200 dark:border-[#2D313A]"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        Restablecer
+      </button>
     </div>
 
-    <div class="flex flex-col lg:flex-row">
-      
-      <!-- Sidebar de Navegación -->
-      <div class="lg:w-64 lg:border-r border-gray-200 dark:border-[#2D313A] p-4 lg:p-6">
-        <nav class="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible">
-          <button 
-            (click)="activeSection = 'appearance'"
-            [class.bg-blue-50]="activeSection === 'appearance'"
-            [class.dark:bg-blue-500/10]="activeSection === 'appearance'"
-            [class.text-[#3C50E0]]="activeSection === 'appearance'"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors whitespace-nowrap"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
-            </svg>
-            Apariencia
-          </button>
+    <!-- Grid de secciones -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
+      <!-- ============================================ -->
+      <!-- PRESETS DE COLOR -->
+      <!-- ============================================ -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm lg:col-span-2">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
+          <span class="text-xl">🎨</span>
+          Temas Predefinidos
+        </h2>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Selecciona un preset para aplicar colores del menú, header y primario</p>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <button 
-            (click)="activeSection = 'notifications'"
-            [class.bg-blue-50]="activeSection === 'notifications'"
-            [class.dark:bg-blue-500/10]="activeSection === 'notifications'"
-            [class.text-[#3C50E0]]="activeSection === 'notifications'"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors whitespace-nowrap"
+            *ngFor="let preset of presets"
+            (click)="onPresetSelect(preset.key)"
+            class="group relative flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all hover:scale-105"
+            [class.border-blue-500]="config.preset === preset.key"
+            [class.border-gray-200]="config.preset !== preset.key"
+            [class.dark:border-gray-700]="config.preset !== preset.key"
+            [class.bg-blue-50]="config.preset === preset.key"
+            [class.dark:bg-blue-500/10]="config.preset === preset.key"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-            </svg>
-            Notificaciones
+            <div *ngIf="config.preset === preset.key" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            
+            <div 
+              class="w-12 h-12 rounded-full shadow-lg group-hover:shadow-xl transition-shadow"
+              [style.background-color]="preset.color"
+            ></div>
+            
+            <span class="text-[11px] font-semibold text-gray-700 dark:text-gray-300 text-center leading-tight">
+              {{ preset.name }}
+            </span>
           </button>
-
-          <button 
-            (click)="activeSection = 'system'"
-            [class.bg-blue-50]="activeSection === 'system'"
-            [class.dark:bg-blue-500/10]="activeSection === 'system'"
-            [class.text-[#3C50E0]]="activeSection === 'system'"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors whitespace-nowrap"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
-            </svg>
-            Sistema
-          </button>
-
-          <button 
-            (click)="activeSection = 'bpm'"
-            [class.bg-blue-50]="activeSection === 'bpm'"
-            [class.dark:bg-blue-500/10]="activeSection === 'bpm'"
-            [class.text-[#3C50E0]]="activeSection === 'bpm'"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors whitespace-nowrap"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-            </svg>
-            BPM
-          </button>
-
-          <button 
-            (click)="activeSection = 'accessibility'"
-            [class.bg-blue-50]="activeSection === 'accessibility'"
-            [class.dark:bg-blue-500/10]="activeSection === 'accessibility'"
-            [class.text-[#3C50E0]]="activeSection === 'accessibility'"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors whitespace-nowrap"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-            Accesibilidad
-          </button>
-
-          <button 
-            (click)="activeSection = 'data'"
-            [class.bg-blue-50]="activeSection === 'data'"
-            [class.dark:bg-blue-500/10]="activeSection === 'data'"
-            [class.text-[#3C50E0]]="activeSection === 'data'"
-            class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors whitespace-nowrap"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
-            </svg>
-            Datos
-          </button>
-        </nav>
+        </div>
       </div>
 
-      <!-- Contenido Principal -->
-      <div class="flex-1 p-6 lg:p-8">
+      <!-- ============================================ -->
+      <!-- COLOR PRIMARIO -->
+      <!-- ============================================ -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <span class="text-xl">🎯</span>
+          Color Primario
+        </h2>
         
-        <!-- APARIENCIA -->
-        <div *ngIf="activeSection === 'appearance'" class="space-y-6">
+        <div class="space-y-4">
           <div>
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Apariencia</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Personaliza el aspecto visual de la aplicación</p>
-          </div>
-
-          <!-- Tema -->
-          <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-6">
-            <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4">Tema</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <button 
-                (click)="updateConfig({ theme: 'light' })"
-                [class.border-[#3C50E0]]="config?.theme === 'light'"
-                [class.bg-blue-50]="config?.theme === 'light'"
-                [class.dark:bg-blue-500/10]="config?.theme === 'light'"
-                class="flex items-center gap-3 p-4 border border-gray-200 dark:border-[#2D313A] rounded-lg hover:border-gray-300 dark:hover:border-gray-600 transition-all"
-              >
-                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                </svg>
-                <span class="text-sm font-medium text-gray-900 dark:text-white">Claro</span>
-              </button>
-
-              <button 
-                (click)="updateConfig({ theme: 'dark' })"
-                [class.border-[#3C50E0]]="config?.theme === 'dark'"
-                [class.bg-blue-50]="config?.theme === 'dark'"
-                [class.dark:bg-blue-500/10]="config?.theme === 'dark'"
-                class="flex items-center gap-3 p-4 border border-gray-200 dark:border-[#2D313A] rounded-lg hover:border-gray-300 dark:hover:border-gray-600 transition-all"
-              >
-                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                </svg>
-                <span class="text-sm font-medium text-gray-900 dark:text-white">Oscuro</span>
-              </button>
-
-              <button 
-                (click)="updateConfig({ theme: 'auto' })"
-                [class.border-[#3C50E0]]="config?.theme === 'auto'"
-                [class.bg-blue-50]="config?.theme === 'auto'"
-                [class.dark:bg-blue-500/10]="config?.theme === 'auto'"
-                class="flex items-center gap-3 p-4 border border-gray-200 dark:border-[#2D313A] rounded-lg hover:border-gray-300 dark:hover:border-gray-600 transition-all"
-              >
-                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                <span class="text-sm font-medium text-gray-900 dark:text-white">Automático</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Color Primario -->
-          <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-6">
-            <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4">Color Primario</h3>
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
-              <button 
-                *ngFor="let color of colorPresets"
-                (click)="updateConfig({ primaryColor: color.value })"
-                [class.ring-2]="config?.primaryColor === color.value"
-                [class.ring-offset-2]="config?.primaryColor === color.value"
-                [class.ring-offset-white]="config?.primaryColor === color.value"
-                [class.dark:ring-offset-[#1C2434]]="config?.primaryColor === color.value"
-                [style.background-color]="color.value"
-                class="w-full aspect-square rounded-lg hover:scale-110 transition-transform"
-                [title]="color.name"
-              ></button>
-            </div>
-          </div>
-
-          <!-- Tipografía -->
-          <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-6">
-            <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4">Tipografía</h3>
-            <div class="space-y-4">
-              <div>
-                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Familia de Fuente</label>
-                <select 
-                  [ngModel]="config?.fontFamily"
-                  (ngModelChange)="updateConfig({ fontFamily: $event })"
-                  class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10"
-                >
-                  <option *ngFor="let font of fontFamilies" [value]="font.value">{{ font.name }}</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Tamaño de Fuente</label>
-                <div class="grid grid-cols-3 gap-3">
-                  <button 
-                    (click)="updateConfig({ fontSize: 'small' })"
-                    [class.border-[#3C50E0]]="config?.fontSize === 'small'"
-                    [class.bg-blue-50]="config?.fontSize === 'small'"
-                    class="p-3 border border-gray-200 dark:border-[#2D313A] rounded-lg text-xs font-medium hover:border-gray-300 transition-all"
-                  >
-                    Pequeño
-                  </button>
-                  <button 
-                    (click)="updateConfig({ fontSize: 'medium' })"
-                    [class.border-[#3C50E0]]="config?.fontSize === 'medium'"
-                    [class.bg-blue-50]="config?.fontSize === 'medium'"
-                    class="p-3 border border-gray-200 dark:border-[#2D313A] rounded-lg text-sm font-medium hover:border-gray-300 transition-all"
-                  >
-                    Mediano
-                  </button>
-                  <button 
-                    (click)="updateConfig({ fontSize: 'large' })"
-                    [class.border-[#3C50E0]]="config?.fontSize === 'large'"
-                    [class.bg-blue-50]="config?.fontSize === 'large'"
-                    class="p-3 border border-gray-200 dark:border-[#2D313A] rounded-lg text-base font-medium hover:border-gray-300 transition-all"
-                  >
-                    Grande
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- NOTIFICACIONES -->
-        <div *ngIf="activeSection === 'notifications'" class="space-y-6">
-          <div>
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Notificaciones</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Configura cómo y cuándo recibir alertas</p>
-          </div>
-
-          <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-6 space-y-4">
-            <!-- Toggle principal -->
-            <div class="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-[#2D313A]">
-              <div>
-                <p class="text-sm font-semibold text-gray-900 dark:text-white">Notificaciones activadas</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Recibir alertas del sistema</p>
-              </div>
-              <button 
-                (click)="updateConfig({ notificationsEnabled: !config?.notificationsEnabled })"
-                [class.bg-[#3C50E0]]="config?.notificationsEnabled"
-                [class.bg-gray-300]="!config?.notificationsEnabled"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
-              >
-                <span 
-                  [class.translate-x-6]="config?.notificationsEnabled"
-                  [class.translate-x-1]="!config?.notificationsEnabled"
-                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                ></span>
-              </button>
-            </div>
-
-            <!-- Email -->
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Notificaciones por email</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Recibir alertas críticas por correo</p>
-              </div>
-              <button 
-                (click)="updateConfig({ emailNotifications: !config?.emailNotifications })"
-                [class.bg-[#3C50E0]]="config?.emailNotifications"
-                [class.bg-gray-300]="!config?.emailNotifications"
-                [disabled]="!config?.notificationsEnabled"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors disabled:opacity-50"
-              >
-                <span 
-                  [class.translate-x-6]="config?.emailNotifications"
-                  [class.translate-x-1]="!config?.emailNotifications"
-                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                ></span>
-              </button>
-            </div>
-
-            <!-- Push -->
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Notificaciones push</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Alertas en tiempo real</p>
-              </div>
-              <button 
-                (click)="updateConfig({ pushNotifications: !config?.pushNotifications })"
-                [class.bg-[#3C50E0]]="config?.pushNotifications"
-                [class.bg-gray-300]="!config?.pushNotifications"
-                [disabled]="!config?.notificationsEnabled"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors disabled:opacity-50"
-              >
-                <span 
-                  [class.translate-x-6]="config?.pushNotifications"
-                  [class.translate-x-1]="!config?.pushNotifications"
-                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                ></span>
-              </button>
-            </div>
-
-            <!-- Sonido -->
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Sonido de notificaciones</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Reproducir sonido al recibir alertas</p>
-              </div>
-              <button 
-                (click)="updateConfig({ notificationSound: !config?.notificationSound })"
-                [class.bg-[#3C50E0]]="config?.notificationSound"
-                [class.bg-gray-300]="!config?.notificationSound"
-                [disabled]="!config?.notificationsEnabled"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors disabled:opacity-50"
-              >
-                <span 
-                  [class.translate-x-6]="config?.notificationSound"
-                  [class.translate-x-1]="!config?.notificationSound"
-                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                ></span>
-              </button>
-            </div>
-
-            <!-- Horario silencioso -->
-            <div class="pt-4 border-t border-gray-200 dark:border-[#2D313A]">
-              <p class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Horario silencioso</p>
-              <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">No recibir notificaciones durante estas horas</p>
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Desde</label>
-                  <input 
-                    type="time"
-                    [ngModel]="config?.quietHoursStart"
-                    (ngModelChange)="updateConfig({ quietHoursStart: $event })"
-                    [disabled]="!config?.notificationsEnabled"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] disabled:opacity-50"
-                  >
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">Hasta</label>
-                  <input 
-                    type="time"
-                    [ngModel]="config?.quietHoursEnd"
-                    (ngModelChange)="updateConfig({ quietHoursEnd: $event })"
-                    [disabled]="!config?.notificationsEnabled"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] disabled:opacity-50"
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SISTEMA -->
-        <div *ngIf="activeSection === 'system'" class="space-y-6">
-          <div>
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Sistema</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Configuración general del sistema</p>
-          </div>
-
-          <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-6 space-y-4">
-            <!-- Idioma -->
-            <div>
-              <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Idioma</label>
-              <select 
-                [ngModel]="config?.language"
-                (ngModelChange)="updateConfig({ language: $event })"
-                class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0]"
-              >
-                <option value="es">Español</option>
-                <option value="en">English</option>
-                <option value="pt">Português</option>
-              </select>
-            </div>
-
-            <!-- Zona horaria -->
-            <div>
-              <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Zona Horaria</label>
-              <select 
-                [ngModel]="config?.timezone"
-                (ngModelChange)="updateConfig({ timezone: $event })"
-                class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0]"
-              >
-                <option *ngFor="let tz of timezones" [value]="tz.value">{{ tz.name }}</option>
-              </select>
-            </div>
-
-            <!-- Formato de fecha -->
-            <div>
-              <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Formato de Fecha</label>
-              <select 
-                [ngModel]="config?.dateFormat"
-                (ngModelChange)="updateConfig({ dateFormat: $event })"
-                class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0]"
-              >
-                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-              </select>
-            </div>
-
-            <!-- Formato de hora -->
-            <div>
-              <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Formato de Hora</label>
-              <div class="grid grid-cols-2 gap-3">
-                <button 
-                  (click)="updateConfig({ timeFormat: '12h' })"
-                  [class.border-[#3C50E0]]="config?.timeFormat === '12h'"
-                  [class.bg-blue-50]="config?.timeFormat === '12h'"
-                  class="p-3 border border-gray-200 dark:border-[#2D313A] rounded-lg text-sm font-medium hover:border-gray-300 transition-all"
-                >
-                  12 horas (AM/PM)
-                </button>
-                <button 
-                  (click)="updateConfig({ timeFormat: '24h' })"
-                  [class.border-[#3C50E0]]="config?.timeFormat === '24h'"
-                  [class.bg-blue-50]="config?.timeFormat === '24h'"
-                  class="p-3 border border-gray-200 dark:border-[#2D313A] rounded-lg text-sm font-medium hover:border-gray-300 transition-all"
-                >
-                  24 horas
-                </button>
-              </div>
-            </div>
-
-            <!-- Auto logout -->
-            <div>
-              <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Cerrar sesión automática</label>
-              <select 
-                [ngModel]="config?.autoLogoutMinutes"
-                (ngModelChange)="updateConfig({ autoLogoutMinutes: $event })"
-                class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0]"
-              >
-                <option [value]="15">15 minutos</option>
-                <option [value]="30">30 minutos</option>
-                <option [value]="60">1 hora</option>
-                <option [value]="120">2 horas</option>
-                <option [value]="0">Nunca</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- BPM -->
-        <div *ngIf="activeSection === 'bpm'" class="space-y-6">
-          <div>
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Sistema BPM</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Configuración específica del sistema de gestión</p>
-          </div>
-
-          <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-6 space-y-4">
-            <!-- Establecimiento por defecto -->
-            <div>
-              <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Establecimiento por defecto</label>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Color Principal
+            </label>
+            <div class="flex items-center gap-3">
               <input 
-                type="text"
-                [ngModel]="config?.defaultEstablishment"
-                (ngModelChange)="updateConfig({ defaultEstablishment: $event })"
-                class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0]"
+                type="color" 
+                [value]="config.primaryColor"
+                (input)="onColorChange('primaryColor', $any($event.target).value)"
+                class="w-14 h-14 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
               >
-            </div>
-
-            <!-- Requerir firma -->
-            <div class="flex items-center justify-between py-3 border-t border-gray-200 dark:border-[#2D313A]">
-              <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Requerir firma digital</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Solicitar firma al guardar checklists</p>
-              </div>
-              <button 
-                (click)="updateConfig({ requireSignature: !config?.requireSignature })"
-                [class.bg-[#3C50E0]]="config?.requireSignature"
-                [class.bg-gray-300]="!config?.requireSignature"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
-              >
-                <span 
-                  [class.translate-x-6]="config?.requireSignature"
-                  [class.translate-x-1]="!config?.requireSignature"
-                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                ></span>
-              </button>
-            </div>
-
-            <!-- Permitir fotos -->
-            <div class="flex items-center justify-between py-3 border-t border-gray-200 dark:border-[#2D313A]">
-              <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Permitir fotos adjuntas</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Adjuntar imágenes a los registros</p>
-              </div>
-              <button 
-                (click)="updateConfig({ allowPhotos: !config?.allowPhotos })"
-                [class.bg-[#3C50E0]]="config?.allowPhotos"
-                [class.bg-gray-300]="!config?.allowPhotos"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
-              >
-                <span 
-                  [class.translate-x-6]="config?.allowPhotos"
-                  [class.translate-x-1]="!config?.allowPhotos"
-                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                ></span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ACCESIBILIDAD -->
-        <div *ngIf="activeSection === 'accessibility'" class="space-y-6">
-          <div>
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Accesibilidad</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Opciones para mejorar la accesibilidad</p>
-          </div>
-
-          <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-6 space-y-4">
-            <!-- Alto contraste -->
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Alto contraste</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Mejorar visibilidad de elementos</p>
-              </div>
-              <button 
-                (click)="updateConfig({ highContrast: !config?.highContrast })"
-                [class.bg-[#3C50E0]]="config?.highContrast"
-                [class.bg-gray-300]="!config?.highContrast"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
-              >
-                <span 
-                  [class.translate-x-6]="config?.highContrast"
-                  [class.translate-x-1]="!config?.highContrast"
-                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                ></span>
-              </button>
-            </div>
-
-            <!-- Reducir animaciones -->
-            <div class="flex items-center justify-between py-3 border-t border-gray-200 dark:border-[#2D313A]">
-              <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">Reducir animaciones</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Minimizar movimientos en la interfaz</p>
-              </div>
-              <button 
-                (click)="updateConfig({ reduceAnimations: !config?.reduceAnimations })"
-                [class.bg-[#3C50E0]]="config?.reduceAnimations"
-                [class.bg-gray-300]="!config?.reduceAnimations"
-                class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
-              >
-                <span 
-                  [class.translate-x-6]="config?.reduceAnimations"
-                  [class.translate-x-1]="!config?.reduceAnimations"
-                  class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                ></span>
-              </button>
-            </div>
-
-            <!-- Tamaño de iconos -->
-            <div class="pt-3 border-t border-gray-200 dark:border-[#2D313A]">
-              <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Tamaño de Iconos</label>
-              <div class="grid grid-cols-3 gap-3">
-                <button 
-                  (click)="updateConfig({ iconSize: 'small' })"
-                  [class.border-[#3C50E0]]="config?.iconSize === 'small'"
-                  [class.bg-blue-50]="config?.iconSize === 'small'"
-                  class="p-3 border border-gray-200 dark:border-[#2D313A] rounded-lg text-xs font-medium hover:border-gray-300 transition-all"
-                >
-                  Pequeño
-                </button>
-                <button 
-                  (click)="updateConfig({ iconSize: 'medium' })"
-                  [class.border-[#3C50E0]]="config?.iconSize === 'medium'"
-                  [class.bg-blue-50]="config?.iconSize === 'medium'"
-                  class="p-3 border border-gray-200 dark:border-[#2D313A] rounded-lg text-sm font-medium hover:border-gray-300 transition-all"
-                >
-                  Mediano
-                </button>
-                <button 
-                  (click)="updateConfig({ iconSize: 'large' })"
-                  [class.border-[#3C50E0]]="config?.iconSize === 'large'"
-                  [class.bg-blue-50]="config?.iconSize === 'large'"
-                  class="p-3 border border-gray-200 dark:border-[#2D313A] rounded-lg text-base font-medium hover:border-gray-300 transition-all"
-                >
-                  Grande
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- DATOS -->
-        <div *ngIf="activeSection === 'data'" class="space-y-6">
-          <div>
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Datos y Almacenamiento</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Gestiona tu configuración y datos</p>
-          </div>
-
-          <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-6 space-y-4">
-            <!-- Exportar -->
-            <div class="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-[#2D313A]">
-              <div>
-                <p class="text-sm font-semibold text-gray-900 dark:text-white">Exportar configuración</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Descargar tu configuración actual</p>
-              </div>
-              <button 
-                (click)="exportConfig()"
-                class="flex items-center gap-2 px-4 py-2 bg-[#3C50E0] hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                </svg>
-                Exportar
-              </button>
-            </div>
-
-            <!-- Importar -->
-            <div class="flex items-center justify-between pb-4 border-b border-gray-200 dark:border-[#2D313A]">
-              <div>
-                <p class="text-sm font-semibold text-gray-900 dark:text-white">Importar configuración</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Restaurar desde un archivo</p>
-              </div>
-              <label class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-[#171F2C] hover:bg-gray-200 dark:hover:bg-[#0F1520] text-gray-700 dark:text-gray-300 text-sm font-semibold rounded-lg transition-colors cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-                </svg>
-                Importar
+              <div class="flex-1">
                 <input 
-                  type="file" 
-                  accept=".json"
-                  (change)="importConfig($event)"
-                  class="hidden"
+                  type="text" 
+                  [value]="config.primaryColor"
+                  (input)="onColorChange('primaryColor', $any($event.target).value)"
+                  class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+                  placeholder="#3C50E0"
                 >
-              </label>
-            </div>
-
-            <!-- Restablecer -->
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-semibold text-rose-600 dark:text-rose-400">Restablecer configuración</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Volver a los valores por defecto</p>
+                <p class="text-[10px] text-gray-400 mt-1">Botones, enlaces y elementos destacados</p>
               </div>
-              <button 
-                (click)="resetToDefaults()"
-                class="flex items-center gap-2 px-4 py-2 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-sm font-semibold rounded-lg transition-colors"
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="p-4 rounded-lg bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A]">
+            <p class="text-[10px] font-semibold text-gray-500 uppercase mb-2">Vista previa</p>
+            <div class="flex gap-2 flex-wrap">
+              <div 
+                class="px-4 py-2 rounded-lg text-white font-semibold text-xs shadow-md"
+                [style.background-color]="config.primaryColor"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
-                Restablecer
-              </button>
+                Botón Primario
+              </div>
+              <div 
+                class="px-4 py-2 rounded-lg font-semibold text-xs border-2"
+                [style.color]="config.primaryColor"
+                [style.border-color]="config.primaryColor"
+              >
+                Outline
+              </div>
+              <div 
+                class="px-4 py-2 rounded-lg font-semibold text-xs"
+                [style.background-color]="config.primaryLight"
+                [style.color]="config.primaryColor"
+              >
+                Badge Suave
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
+      <!-- ============================================ -->
+      <!-- SIDEBAR -->
+      <!-- ============================================ -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <span class="text-xl">📋</span>
+          Barra Lateral (Menú)
+        </h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Fondo del Sidebar
+            </label>
+            <div class="flex items-center gap-3">
+              <input 
+                type="color" 
+                [value]="config.sidebarBg"
+                (input)="onColorChange('sidebarBg', $any($event.target).value)"
+                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
+              >
+              <input 
+                type="text" 
+                [value]="config.sidebarBg"
+                (input)="onColorChange('sidebarBg', $any($event.target).value)"
+                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+              >
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Color del Texto
+            </label>
+            <div class="flex items-center gap-3">
+              <input 
+                type="color" 
+                [value]="config.sidebarText"
+                (input)="onColorChange('sidebarText', $any($event.target).value)"
+                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
+              >
+              <input 
+                type="text" 
+                [value]="config.sidebarText"
+                (input)="onColorChange('sidebarText', $any($event.target).value)"
+                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+              >
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Color Hover (al pasar el mouse)
+            </label>
+            <div class="flex items-center gap-3">
+              <input 
+                type="color" 
+                [value]="config.sidebarHover"
+                (input)="onColorChange('sidebarHover', $any($event.target).value)"
+                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
+              >
+              <input 
+                type="text" 
+                [value]="config.sidebarHover"
+                (input)="onColorChange('sidebarHover', $any($event.target).value)"
+                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+              >
+            </div>
+          </div>
+
+          <!-- Preview del sidebar -->
+          <div class="p-3 rounded-lg border border-gray-200 dark:border-[#2D313A]" [style.background-color]="config.sidebarBg">
+            <p class="text-[10px] font-semibold uppercase mb-2" [style.color]="config.sidebarText" style="opacity: 0.6">Vista previa del menú</p>
+            <div class="space-y-1">
+              <div class="px-3 py-2 rounded text-xs font-medium" [style.color]="config.sidebarText">📊 Dashboard</div>
+              <div class="px-3 py-2 rounded text-xs font-medium" [style.background-color]="config.sidebarHover" [style.color]="config.primaryColor">🛡️ Limpieza (hover)</div>
+              <div class="px-3 py-2 rounded text-xs font-medium" [style.background-color]="config.sidebarActive" [style.color]="config.primaryColor">🔍 Verificación (activo)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- HEADER -->
+      <!-- ============================================ -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <span class="text-xl">🔝</span>
+          Barra Superior (Header)
+        </h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Fondo del Header
+            </label>
+            <div class="flex items-center gap-3">
+              <input 
+                type="color" 
+                [value]="config.headerBg"
+                (input)="onColorChange('headerBg', $any($event.target).value)"
+                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
+              >
+              <input 
+                type="text" 
+                [value]="config.headerBg"
+                (input)="onColorChange('headerBg', $any($event.target).value)"
+                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+              >
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Color del Texto
+            </label>
+            <div class="flex items-center gap-3">
+              <input 
+                type="color" 
+                [value]="config.headerText"
+                (input)="onColorChange('headerText', $any($event.target).value)"
+                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
+              >
+              <input 
+                type="text" 
+                [value]="config.headerText"
+                (input)="onColorChange('headerText', $any($event.target).value)"
+                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+              >
+            </div>
+          </div>
+
+          <!-- Preview del header -->
+          <div class="p-3 rounded-lg border border-gray-200 dark:border-[#2D313A] flex items-center justify-between" [style.background-color]="config.headerBg">
+            <div>
+              <p class="text-sm font-bold" [style.color]="config.headerText">Sistema BPM</p>
+              <p class="text-[10px]" [style.color]="config.headerText" style="opacity: 0.7">Vista previa del header</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg border" [style.background-color]="config.primaryColor"></div>
+              <div class="w-8 h-8 rounded-lg border" [style.background-color]="config.primaryColor"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TIPOGRAFÍA -->
+      <!-- ============================================ -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <span class="text-xl">🔤</span>
+          Tipografía
+        </h2>
+        
+        <div class="space-y-4">
+          <!-- Fuente -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Familia de Fuente
+            </label>
+            <select 
+              [value]="config.fontFamily"
+              (change)="onFontChange($any($event.target).value)"
+              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+            >
+              <option *ngFor="let font of fontFamilies" [value]="font">{{ font }}</option>
+            </select>
+          </div>
+
+          <!-- Tamaño base -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Tamaño Base: {{ config.fontSizeBase }}px
+            </label>
+            <input 
+              type="range" 
+              [min]="10" 
+              [max]="20" 
+              [value]="config.fontSizeBase"
+              (input)="onNumberChange('fontSizeBase', $any($event.target).value)"
+              class="w-full h-2 bg-gray-200 dark:bg-[#121824] rounded-lg appearance-none cursor-pointer accent-blue-500"
+            >
+            <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+              <span>10px (Pequeño)</span>
+              <span>20px (Grande)</span>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="p-3 rounded-lg bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] space-y-2">
+            <p class="text-gray-700 dark:text-gray-300" [style.font-size.px]="config.fontSizeLarge" style="font-weight: 700;">
+              Título grande
+            </p>
+            <p class="text-gray-700 dark:text-gray-300" [style.font-size.px]="config.fontSizeBase">
+              Texto normal con tamaño {{ config.fontSizeBase }}px
+            </p>
+            <p class="text-gray-500 dark:text-gray-400" [style.font-size.px]="config.fontSizeSmall">
+              Texto pequeño con tamaño {{ config.fontSizeSmall }}px
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- ICONOS Y BORDES -->
+      <!-- ============================================ -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <span class="text-xl">⚙️</span>
+          Iconos y Bordes
+        </h2>
+        
+        <div class="space-y-4">
+          <!-- Tamaño de iconos -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Tamaño de Iconos: {{ config.iconSize }}px
+            </label>
+            <input 
+              type="range" 
+              [min]="14" 
+              [max]="32" 
+              [value]="config.iconSize"
+              (input)="onNumberChange('iconSize', $any($event.target).value)"
+              class="w-full h-2 bg-gray-200 dark:bg-[#121824] rounded-lg appearance-none cursor-pointer accent-blue-500"
+            >
+            <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+              <span>14px (Compacto)</span>
+              <span>32px (Grande)</span>
+            </div>
+          </div>
+
+          <!-- Radio de bordes -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              Radio de Bordes: {{ config.borderRadius }}px
+            </label>
+            <input 
+              type="range" 
+              [min]="0" 
+              [max]="24" 
+              [value]="config.borderRadius"
+              (input)="onNumberChange('borderRadius', $any($event.target).value)"
+              class="w-full h-2 bg-gray-200 dark:bg-[#121824] rounded-lg appearance-none cursor-pointer accent-blue-500"
+            >
+            <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+              <span>Cuadrado (0px)</span>
+              <span>Muy redondeado (24px)</span>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="p-4 rounded-lg bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] flex items-center gap-4 flex-wrap">
+            <div 
+              class="w-12 h-12 flex items-center justify-center text-white font-bold shadow-md"
+              [style.background-color]="config.primaryColor"
+              [style.border-radius.px]="config.borderRadius"
+            >
+              <svg [style.width.px]="config.iconSize" [style.height.px]="config.iconSize" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <div 
+              class="px-4 py-2 text-white font-semibold text-xs shadow-md"
+              [style.background-color]="config.primaryColor"
+              [style.border-radius.px]="config.borderRadius"
+            >
+              Botón de ejemplo
+            </div>
+            <div 
+              class="w-12 h-12 border-2 flex items-center justify-center"
+              [style.border-color]="config.primaryColor"
+              [style.border-radius.px]="config.borderRadius"
+              [style.color]="config.primaryColor"
+            >
+              <svg [style.width.px]="config.iconSize" [style.height.px]="config.iconSize" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- MODO DE VISUALIZACIÓN -->
+      <!-- ============================================ -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm lg:col-span-2">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <span class="text-xl">🌓</span>
+          Modo de Visualización
+        </h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          
+          <!-- Modo Claro -->
+          <button 
+            (click)="setLightMode()"
+            class="flex items-center gap-3 p-4 rounded-xl border-2 transition-all"
+            [class.border-blue-500]="!config.darkMode"
+            [class.bg-blue-50]="!config.darkMode"
+            [class.dark:bg-blue-500/10]="!config.darkMode"
+            [class.border-gray-200]="config.darkMode"
+            [class.dark:border-gray-700]="config.darkMode"
+          >
+            <div class="w-12 h-12 rounded-lg bg-white border-2 border-gray-200 flex items-center justify-center">
+              <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </div>
+            <div class="text-left">
+              <p class="text-sm font-bold text-gray-900 dark:text-white">Modo Claro</p>
+              <p class="text-xs text-gray-500">Ideal para ambientes iluminados</p>
+            </div>
+            <div *ngIf="!config.darkMode" class="ml-auto w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          </button>
+
+          <!-- Modo Oscuro -->
+          <button 
+            (click)="setDarkMode()"
+            class="flex items-center gap-3 p-4 rounded-xl border-2 transition-all"
+            [class.border-blue-500]="config.darkMode"
+            [class.bg-blue-50]="config.darkMode"
+            [class.dark:bg-blue-500/10]="config.darkMode"
+            [class.border-gray-200]="!config.darkMode"
+            [class.dark:border-gray-700]="!config.darkMode"
+          >
+            <div class="w-12 h-12 rounded-lg bg-gray-800 border-2 border-gray-700 flex items-center justify-center">
+              <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+              </svg>
+            </div>
+            <div class="text-left">
+              <p class="text-sm font-bold text-gray-900 dark:text-white">Modo Oscuro</p>
+              <p class="text-xs text-gray-500">Reduce fatiga visual</p>
+            </div>
+            <div *ngIf="config.darkMode" class="ml-auto w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer info -->
+    <div class="mt-6 bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 rounded-xl p-4 flex items-start gap-3">
+      <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div class="text-xs text-blue-700 dark:text-blue-300">
+        <p class="font-semibold mb-1">Los cambios se aplican automáticamente</p>
+        <p>Toda la configuración se guarda en tu navegador. Los cambios son instantáneos y no requieren recargar la página. Puedes personalizar colores del menú, header, tipografía, iconos y bordes.</p>
       </div>
     </div>
 

@@ -17,7 +17,8 @@
             </button>
 
             <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#3C50E0] to-blue-600 flex items-center justify-center shadow-md shadow-blue-500/20">
+              <div class="w-9 h-9 rounded-lg flex items-center justify-center shadow-md"
+                   [style.background-color]="'var(--color-primary)'">
                 <span class="text-lg">{{ currentConfig?.icon }}</span>
               </div>
               <div>
@@ -53,14 +54,14 @@
 
       <!-- Loading -->
       <div *ngIf="loading" class="flex flex-col items-center justify-center py-16">
-        <div class="w-8 h-8 border-2 border-[#3C50E0] border-t-transparent rounded-full animate-spin"></div>
+        <div class="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin"
+             [style.border-color]="'var(--color-primary)'"></div>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-3">Cargando...</p>
       </div>
 
       <div *ngIf="!loading">
         
         <!-- Formulario -->
-                <!-- Formulario -->
         <form (ngSubmit)="guardarFormulario()" class="mb-8">
           <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-4 sm:p-6 shadow-sm">
             <h2 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
@@ -75,7 +76,7 @@
                 <!-- Día -->
                 <div>
                   <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="text-[#3C50E0] mr-1">1.</span> Día
+                    <span class="mr-1" [style.color]="'var(--color-primary)'">1.</span> Día
                   </label>
                   <input
                     type="text"
@@ -88,13 +89,15 @@
                 <!-- Nombre del Evaluado -->
                 <div>
                   <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="text-[#3C50E0] mr-1">2.</span> Nombre del Evaluado
+                    <span class="mr-1" [style.color]="'var(--color-primary)'">2.</span> Nombre del Evaluado
                   </label>
                   <input
                     type="text"
                     [(ngModel)]="formData['nombre_evaluado']"
                     name="nombre_evaluado"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                    [style.--tw-ring-color]="'var(--color-primary)'"
+                    [style.--tw-border-color]="'var(--color-primary)'"
                     placeholder="Ingrese el nombre del evaluado"
                   >
                 </div>
@@ -103,7 +106,7 @@
               <!-- ✅ Tabla de Evaluación -->
               <div>
                 <h3 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <svg class="w-4 h-4 text-[#3C50E0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4" [style.color]="'var(--color-primary)'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                   </svg>
                   Limpieza e Higiene Personal
@@ -133,7 +136,9 @@
                             <select
                               [(ngModel)]="formData['items'][i]['cumple']"
                               [name]="'item_' + i + '_cumple'"
-                              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all appearance-none cursor-pointer"
+                              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer"
+                              [style.--tw-ring-color]="'var(--color-primary)'"
+                              [style.--tw-border-color]="'var(--color-primary)'"
                             >
                               <option value="" disabled>Seleccione...</option>
                               <option value="Si">✅ Si</option>
@@ -146,7 +151,9 @@
                               type="text"
                               [(ngModel)]="formData['items'][i]['observaciones']"
                               [name]="'item_' + i + '_observaciones'"
-                              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+                              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                              [style.--tw-ring-color]="'var(--color-primary)'"
+                              [style.--tw-border-color]="'var(--color-primary)'"
                               placeholder="Observaciones..."
                             >
                           </td>
@@ -162,13 +169,15 @@
                 <!-- Responsable del Checkeo -->
                 <div>
                   <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="text-[#3C50E0] mr-1">3.</span> Responsable del Checkeo
+                    <span class="mr-1" [style.color]="'var(--color-primary)'">3.</span> Responsable del Checkeo
                   </label>
                   <input
                     type="text"
                     [(ngModel)]="formData['responsable_checkeo']"
                     name="responsable_checkeo"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                    [style.--tw-ring-color]="'var(--color-primary)'"
+                    [style.--tw-border-color]="'var(--color-primary)'"
                     placeholder="Ingrese responsable"
                   >
                 </div>
@@ -176,13 +185,15 @@
                 <!-- Firma del Evaluado -->
                 <div>
                   <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="text-[#3C50E0] mr-1">4.</span> Firma del Evaluado
+                    <span class="mr-1" [style.color]="'var(--color-primary)'">4.</span> Firma del Evaluado
                   </label>
                   <input
                     type="text"
                     [(ngModel)]="formData['firma_evaluado']"
                     name="firma_evaluado"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                    [style.--tw-ring-color]="'var(--color-primary)'"
+                    [style.--tw-border-color]="'var(--color-primary)'"
                     placeholder="Ingrese firma"
                   >
                 </div>
@@ -190,13 +201,15 @@
                 <!-- Cargo -->
                 <div>
                   <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="text-[#3C50E0] mr-1">5.</span> Cargo
+                    <span class="mr-1" [style.color]="'var(--color-primary)'">5.</span> Cargo
                   </label>
                   <input
                     type="text"
                     [(ngModel)]="formData['cargo']"
                     name="cargo"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                    [style.--tw-ring-color]="'var(--color-primary)'"
+                    [style.--tw-border-color]="'var(--color-primary)'"
                     placeholder="Ingrese cargo"
                   >
                 </div>
@@ -204,13 +217,15 @@
                 <!-- Recomendaciones -->
                 <div class="sm:col-span-2 lg:col-span-3">
                   <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="text-[#3C50E0] mr-1">6.</span> Recomendaciones
+                    <span class="mr-1" [style.color]="'var(--color-primary)'">6.</span> Recomendaciones
                   </label>
                   <textarea
                     [(ngModel)]="formData['recomendaciones']"
                     name="recomendaciones"
                     rows="3"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all resize-none"
+                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none"
+                    [style.--tw-ring-color]="'var(--color-primary)'"
+                    [style.--tw-border-color]="'var(--color-primary)'"
                     placeholder="Ingrese recomendaciones"
                   ></textarea>
                 </div>
@@ -226,7 +241,7 @@
                      [class.lg:col-span-3]="field.type === 'textarea' || (field.type === 'text' && field.key === 'observaciones')">
 
                   <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="text-[#3C50E0] mr-1">{{ i + 1 }}.</span>
+                    <span class="mr-1" [style.color]="'var(--color-primary)'">{{ i + 1 }}.</span>
                     {{ field.label }}
                   </label>
 
@@ -236,7 +251,9 @@
                       [type]="field.type"
                       [(ngModel)]="formData[field.key]"
                       [name]="field.key"
-                      class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all"
+                      class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                      [style.--tw-ring-color]="'var(--color-primary)'"
+                      [style.--tw-border-color]="'var(--color-primary)'"
                       [placeholder]="'Ingrese ' + field.label"
                     >
                     <span *ngIf="field.unit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-gray-400 bg-gray-100 dark:bg-[#1C2434] px-1.5 py-0.5 rounded">
@@ -278,7 +295,9 @@
                     [(ngModel)]="formData[field.key]"
                     [name]="field.key"
                     rows="3"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all resize-none"
+                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none"
+                    [style.--tw-ring-color]="'var(--color-primary)'"
+                    [style.--tw-border-color]="'var(--color-primary)'"
                     [placeholder]="'Ingrese ' + field.label"
                   ></textarea>
 
@@ -287,7 +306,9 @@
                     <select
                       [(ngModel)]="formData[field.key]"
                       [name]="field.key"
-                      class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-[#3C50E0] focus:ring-2 focus:ring-[#3C50E0]/10 transition-all appearance-none cursor-pointer pr-8"
+                      class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer pr-8"
+                      [style.--tw-ring-color]="'var(--color-primary)'"
+                      [style.--tw-border-color]="'var(--color-primary)'"
                     >
                       <option value="" disabled>Seleccione...</option>
                       <option *ngFor="let option of field.options" [value]="option">
@@ -308,10 +329,11 @@
                         [name]="field.key"
                         [min]="field.min || 0"
                         [max]="field.max || 100"
-                        class="flex-1 h-2 bg-gray-200 dark:bg-[#1C2434] rounded-lg appearance-none cursor-pointer accent-[#3C50E0]"
+                        class="flex-1 h-2 bg-gray-200 dark:bg-[#1C2434] rounded-lg appearance-none cursor-pointer"
+                        [style.accent-color]="'var(--color-primary)'"
                       >
                       <div class="flex items-center gap-1 bg-white dark:bg-[#1C2434] border border-gray-200 dark:border-[#2D313A] rounded px-2 py-1 min-w-[65px] justify-center shadow-sm">
-                        <span class="text-sm font-bold text-[#3C50E0]">{{ formData[field.key] || 0 }}</span>
+                        <span class="text-sm font-bold" [style.color]="'var(--color-primary)'">{{ formData[field.key] || 0 }}</span>
                         <span class="text-[10px] font-semibold text-gray-400">{{ field.unit || '%' }}</span>
                       </div>
                     </div>
@@ -347,7 +369,8 @@
               </button>
               <button
                 type="submit"
-                class="flex-1 flex items-center justify-center gap-2 bg-[#1c2434] hover:bg-[#2a3347] text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm transition-all"
+                class="flex-1 flex items-center justify-center gap-2 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm transition-all hover:opacity-90"
+                [style.background-color]="'var(--color-primary)'"
               >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -361,8 +384,9 @@
         <!-- Tabla de Registros -->
         <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] overflow-hidden shadow-sm">
           
-          <!-- Header Naranja de la Tabla -->
-          <div class="bg-gradient-to-r from-[#FF6B35] to-[#FF8C42] px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <!-- Header de la Tabla -->
+          <div class="px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+               [style.background]="'linear-gradient(to right, var(--color-primary), var(--color-primary-hover))'">
             <h3 class="text-white font-bold text-sm flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -393,7 +417,6 @@
             </div>
           </div>
 
-          <!-- Cuerpo de la Tabla -->
           <!-- Cuerpo de la Tabla -->
           <div class="overflow-x-auto">
             <table class="w-full">

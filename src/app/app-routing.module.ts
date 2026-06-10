@@ -12,9 +12,21 @@ const routes: Routes = [
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
   },
   {
+    path: 'register',
+    loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule)
+  },
+  {
+    path: 'forgot-password',
+    loadChildren: () => import('./pages/forgot-password/forgot-password.module').then(m => m.ForgotPasswordPageModule)
+  },
+  
+  // ✅ Dashboard
+  {
     path: 'pages/dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardPageModule)
   },
+  
+  // ✅ Formularios dinámicos
   {
     path: 'pages/limpiezaydesinfeccion',
     loadChildren: () => import('./pages/formulario-dinamico/formulario-dinamico.module').then(m => m.FormularioDinamicoPageModule)
@@ -55,38 +67,20 @@ const routes: Routes = [
     path: 'pages/temp-hr',
     loadChildren: () => import('./pages/formulario-dinamico/formulario-dinamico.module').then(m => m.FormularioDinamicoPageModule)
   },
+  
+  // ✅ Exportar
   {
-    path: 'exportar',
-    loadChildren: () => import('./pages/exportar/exportar.module').then( m => m.ExportarPageModule)
+    path: 'pages/exportar',
+    loadChildren: () => import('./pages/exportar/exportar.module').then(m => m.ExportarPageModule)
   },
+  
+  // ✅ Perfil
   {
-  path: 'pages/exportar',
-  loadChildren: () => import('./pages/exportar/exportar.module').then(m => m.ExportarPageModule)
+    path: 'pages/profile',
+    loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule)
   },
-  {
-    path: 'profile',
-    loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule)
-  },
-  {
-  path: 'pages/profile',
-  loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule)
-  },
-  {
-    path: 'register',
-    loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
-  },
-  {
-    path: 'forgot-password',
-    loadChildren: () => import('./pages/forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
-  },
-  {
-    path: 'register',  // ✅ Esta ruta debe existir
-    loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule)
-  },
-  {
-    path: 'forgot-password',  // ✅ Esta ruta debe existir
-    loadChildren: () => import('./pages/forgot-password/forgot-password.module').then(m => m.ForgotPasswordPageModule)
-  },
+  
+  // ✅ Configuración (LA QUE FALTABA)
   {
     path: 'pages/settings',
     loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule)

@@ -5,6 +5,7 @@ import { filter, Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { SupabaseService } from './services/supabase.service';
 import { NotificationService, Alert } from './services/notification.service';
+import { ConfigService } from './services/config.service';
 
 @Component({
   selector: 'app-root',
@@ -33,10 +34,15 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     private supabaseService: SupabaseService,
-    public notificationService: NotificationService
+    public notificationService: NotificationService,
+    public configService: ConfigService
   ) {
     this.setupMenuAutoClose();
     this.actualizarFecha();
+
+       this.configService.config$.subscribe(() => {
+          setTimeout(() => this.forceSidebarUpdate(), 50);
+        });
     
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
@@ -46,14 +52,22 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.cargarTemaInicial();
     this.verificarAutenticacion();
     await this.cargarInfoUsuario();
   }
 
+
+
   ngOnDestroy() {
     this.limpiarSuscripciones();
   }
+
+  toggleDarkMode() {
+  const current = this.configService.getConfig();
+  this.configService.updateConfig({ darkMode: !current.darkMode });
+}
+
+
 
   private limpiarSuscripciones() {
     if (this.alertsSubscription) {
@@ -191,34 +205,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  cargarTemaInicial() {
-    const darkMode = localStorage.getItem('darkMode');
-    if (darkMode === null) {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('darkMode', 'true');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('darkMode', 'false');
-      }
-    } else {
-      if (darkMode === 'true') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }
-  }
-
-  toggleDarkMode() {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('darkMode', isDark ? 'true' : 'false');
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 100);
-  }
-
+ 
   async logout() {
     try {
       this.limpiarSuscripciones();
@@ -264,4 +251,93 @@ export class AppComponent implements OnInit, OnDestroy {
     if (days < 7) return `Hace ${days} día${days > 1 ? 's' : ''}`;
     return date.toLocaleDateString('es-ES');
   }
+
+  // Manejar hover del menú con colores dinámicos
+onMenuHover(event: MouseEvent, isEnter: boolean) {
+  const element = event.currentTarget as HTMLElement;
+  if (isEnter) {
+    element.style.backgroundColor = 'var(--sidebar-hover)';
+    element.style.color = 'var(--color-primary)';
+  } else {
+    // Solo resetear si NO está activo (router-link-active)
+    if (!element.classList.contains('active-menu-item')) {
+      element.style.backgroundColor = '';
+      element.style.color = 'var(--sidebar-text)';
+    }
+  }
+}
+
+// Métodos para manejar hovers con variables CSS dinámicas
+onHoverColor(event: Event, color: string) {
+  const el = event.currentTarget as HTMLElement;
+  if (el && !el.classList.contains('active-menu-item')) {
+    el.style.color = color;
+  }
+}
+
+onLeaveColor(event: Event, defaultColor: string) {
+  const el = event.currentTarget as HTMLElement;
+  if (el && !el.classList.contains('active-menu-item')) {
+    el.style.color = defaultColor;
+  }
+}
+
+onHoverBorder(event: Event, color: string) {
+  const el = event.currentTarget as HTMLElement;
+  if (el) el.style.borderColor = color;
+}
+
+onLeaveBorder(event: Event, defaultColor: string) {
+  const el = event.currentTarget as HTMLElement;
+  if (el) el.style.borderColor = defaultColor;
+}
+
+onHoverBg(event: Event, color: string) {
+  const el = event.currentTarget as HTMLElement;
+  if (el && !el.classList.contains('active-menu-item')) {
+    el.style.backgroundColor = color;
+  }
+}
+
+onLeaveBg(event: Event) {
+  const el = event.currentTarget as HTMLElement;
+  if (el && !el.classList.contains('active-menu-item')) {
+    el.style.backgroundColor = '';
+  }
+}
+
+
+// Métodos unificados para hover del menú - SOLO si NO está activo
+onMenuEnter(event: Event) {
+  const el = event.currentTarget as HTMLElement;
+  // ✅ Solo aplicar hover si NO tiene la clase active-menu-item
+  if (el && !el.classList.contains('active-menu-item')) {
+    el.style.backgroundColor = 'var(--sidebar-hover)';
+    el.style.color = 'var(--color-primary)';
+  }
+}
+
+onMenuLeave(event: Event) {
+  const el = event.currentTarget as HTMLElement;
+  // ✅ Solo limpiar hover si NO tiene la clase active-menu-item
+  if (el && !el.classList.contains('active-menu-item')) {
+    el.style.backgroundColor = '';
+    el.style.color = 'var(--sidebar-text)';
+  }
+}
+
+// Forzar actualización cuando cambie la configuración
+forceSidebarUpdate() {
+  const menuItems = document.querySelectorAll('nav a[routerLink]');
+  menuItems.forEach(link => {
+    const el = link as HTMLElement;
+    // Limpiar TODOS los estilos inline
+    el.style.backgroundColor = '';
+    el.style.color = '';
+    // Forzar reflow
+    void el.offsetWidth;
+  });
+}
+
+
 }

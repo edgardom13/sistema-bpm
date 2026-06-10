@@ -12,116 +12,70 @@ export class ExportService {
 
   // Mapeo de campos legibles por tipo de formulario
   private fieldMappings: { [key: string]: { [key: string]: string } } = {
-    'SGI-FLD-02': { // Limpieza y Desinfección
+    'SGI-FLD-02': {
       'aspecto_evaluar': 'Aspecto a Evaluar',
       'responsable': 'Responsable',
       'actividad': 'Actividad',
       'cantidad': 'Cantidad',
-      'concentracion': 'Concentración (%)',
+      'concentracion': 'Concentración',
       'dia': 'Día',
       'frecuencia': 'Frecuencia',
       'observaciones': 'Observaciones'
     },
-    'SGI-FT-01': { // Temperatura de Hornos
+    'SGI-FT-01': {
+      'dia': 'Día',
+      'jornada': 'Jornada',
       'horno_1': 'Horno 1 (°C)',
       'horno_2': 'Horno 2 (°C)',
-      'horno_3': 'Horno 3 (°C)',
-      'tiempo_coccion': 'Tiempo Cocción (min)',
-      'operador': 'Operador',
-      'observaciones': 'Observaciones'
-    },
-    'SGI-FVL-06': { // Verificación de Limpieza
-      'area_inspeccionada': 'Área Inspeccionada',
-      'inspector': 'Inspector',
-      'resultado': 'Resultado',
-      'metodo_verificacion': 'Método Verificación',
-      'observaciones': 'Observaciones'
-    },
-    'SGI-FPH-03': { // Prácticas Higiénicas
-      'area': 'Área Evaluada',
-      'uniforme_completo': 'Uniforme Completo',
-      'lavado_manos': 'Lavado Manos',
-      'uso_cofia': 'Uso de Cofia',
-      'uso_cubrebocas': 'Uso de Cubrebocas',
-      'calzado_adecuado': 'Calzado Adecuado',
-      'uñas_cortas_limpias': 'Uñas Cortas/Limpias',
-      'sin_joyas': 'Sin Joyas',
-      'observaciones': 'Observaciones'
-    },
-    'SGI-FIR-04': { // Inspección de Residuos
-      'area': 'Área Inspeccionada',
-      'tipo_residuo': 'Tipo Residuo',
-      'contenedores_adecuados': 'Contenedores Adecuados',
-      'senalizacion': 'Señalización',
-      'frecuencia_recoleccion': 'Frecuencia Recolección',
-      'observaciones': 'Observaciones'
-    },
-    'SGI-FPC-05': { // Control de Plagas
-      'area_inspeccionada': 'Área Inspeccionada',
-      'evidencia_plagas': 'Evidencia Plagas',
-      'tipo_plaga': 'Tipo Plaga',
-      'trampas_colocadas': 'Trampas Colocadas',
-      'cantidad_trampas': 'Cantidad Trampas',
-      'fumigacion_reciente': 'Fumigación Reciente',
-      'observaciones': 'Observaciones'
-    },
-    'SGI-FCFA-07': { // pH y Cloro
-      'punto_muestreo': 'Punto Muestreo',
-      'ph': 'pH Medido',
-      'ph_min': 'pH Mínimo',
-      'ph_max': 'pH Máximo',
-      'cloro_libre': 'Cloro Libre (ppm)',
-      'cloro_min': 'Cloro Mínimo',
-      'cloro_max': 'Cloro Máximo',
       'responsable': 'Responsable',
       'observaciones': 'Observaciones'
     },
-    'SGI-TZP-08': { // Devolución de Producto
-      'producto': 'Producto',
-      'lote': 'Lote',
-      'cantidad': 'Cantidad Devuelta',
-      'motivo': 'Motivo',
-      'origen': 'Origen',
-      'estado_producto': 'Estado Producto',
+    'SGI-FVL-06': {
+      'aspecto_evaluar': 'Aspecto a Evaluar',
       'responsable': 'Responsable',
-      'observaciones': 'Observaciones'
+      'cumple': 'Cumple',
+      'dia': 'Día',
+      'observaciones': 'Observaciones',
+      'procedimiento': 'Procedimiento',
+      'verificado': 'Verificado'
     },
-    'SGI-FMP-09': { // Materia Prima
-      'proveedor': 'Proveedor',
-      'producto': 'Producto/Materia Prima',
-      'lote': 'Lote',
-      'fecha_vencimiento': 'Fecha Vencimiento',
-      'cantidad_recibida': 'Cantidad Recibida',
-      'unidad_medida': 'Unidad Medida',
-      'temperatura_recepcion': 'Temp. Recepción (°C)',
-      'inspeccion_organoleptica': 'Inspección Organoléptica',
-      'observaciones': 'Observaciones'
-    },
-    'SGI-FTHR-11': { // Temp y HR CC
-      'area': 'Área/Cuarto',
-      'temperatura_manana': 'Temp. Mañana (°C)',
-      'hr_manana': 'HR Mañana (%)',
-      'temperatura_tarde': 'Temp. Tarde (°C)',
-      'hr_tarde': 'HR Tarde (%)',
-      'temp_min_permitida': 'Temp. Mín Permitida',
-      'temp_max_permitida': 'Temp. Máx Permitida',
-      'responsable': 'Responsable',
-      'observaciones': 'Observaciones'
+    'SGI-FPH-03': {
+      'dia': 'Día',
+      'nombre_evaluado': 'Nombre del Evaluado',
+      'responsable_checkeo': 'Responsable del Checkeo',
+      'firma_evaluado': 'Firma del Evaluado',
+      'cargo': 'Cargo',
+      'recomendaciones': 'Recomendaciones'
     }
   };
 
-  // Nombres legibles de formatos
+  // Items de evaluación para Higiénicas
+  private itemsHigienicas: string[] = [
+    'Utiliza correctamente su uniforme de dotación limpio y en buen estado',
+    'Ingresa y sale del area de trabajo con el uniforme de dotación',
+    'Delantal plástico atado al cuerpo',
+    'Lava y desinfecta sus manos y/o guantes siempre que se requiere',
+    'Cabello recogido y cubierto totalmente',
+    'Se afeita diariamente',
+    'Usa maquillaje y/o perfume',
+    'Uñas cortas, limpias y sin esmalte',
+    'Ausencia de anillos, aretes, joyas u otros accesorios',
+    'No come, bebe o mastica ningún objeto o producto',
+    'No habla, tose o estornuda sobre los alimentos',
+    'No se toca ninguna parte del cuerpo con las manos',
+    'No se sienta o reposa sobre las áreas de trabajo',
+    'No fuma en el área de trabajo',
+    'Guantes limpios, sin roturas o desperfectos (en caso de usarlos)',
+    'Usa tapabocas que cubra desde la nariz hasta la boca',
+    'Ausencia de celulares equipos electronicos y objetos ajenos al proceso',
+    'Uso de calzado en buen estado y limpio'
+  ];
+
   private formatNames: { [key: string]: string } = {
     'SGI-FT-01': 'Temperatura de Hornos',
     'SGI-FLD-02': 'Limpieza y Desinfección',
     'SGI-FVL-06': 'Verificación de Limpieza',
-    'SGI-FPH-03': 'Prácticas Higiénicas',
-    'SGI-FIR-04': 'Inspección de Residuos',
-    'SGI-FPC-05': 'Control de Plagas',
-    'SGI-FCFA-07': 'Seguimiento pH y Cloro',
-    'SGI-TZP-08': 'Devolución de Producto',
-    'SGI-FMP-09': 'Control de Materia Prima',
-    'SGI-FTHR-11': 'Registro Temp y HR CC'
+    'SGI-FPH-03': 'Prácticas Higiénicas'
   };
 
   constructor(private supabaseService: SupabaseService) {}
@@ -130,13 +84,14 @@ export class ExportService {
     return this.supabaseService.getSupabase();
   }
 
-  // Construir query con filtros (SOLO fecha y formato)
-  private buildQuery(filters: any) {
+  // ============================================
+  // OBTENER DATOS FILTRADOS (para vista previa)
+  // ============================================
+  async getFilteredData(filters: any = {}) {
     let query = this.supabaseService
       .from('checklists')
       .select('*');
 
-    // ✅ Usar data->>dia para filtros de fecha (consistente con formulario)
     if (filters.startDate) {
       query = query.gte('data->>dia', filters.startDate);
     }
@@ -147,10 +102,358 @@ export class ExportService {
       query = query.eq('format_type', filters.formatType);
     }
 
-    return query.order('created_at', { ascending: false });
+    const { data, error } = await query.order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
   }
 
-  // Generar nombre de archivo descriptivo
+  // ============================================
+  // EXPORTAR A EXCEL
+  // ============================================
+  async exportToExcel(filters: any = {}) {
+    try {
+      const data = await this.getFilteredData(filters);
+
+      if (!data || data.length === 0) {
+        return { success: false, error: new Error('No hay registros') };
+      }
+
+      const workbook = XLSX.utils.book_new();
+      
+      // Agrupar por tipo de formato
+      const grouped = this.groupByFormat(data);
+
+      Object.keys(grouped).forEach(formatType => {
+        const items = grouped[formatType];
+        const formatName = this.formatNames[formatType] || formatType;
+        let excelData: any[] = [];
+
+        // Caso especial: Higiénicas (con items anidados)
+        if (formatType === 'SGI-FPH-03') {
+          excelData = items.map(item => {
+            const row: any = {
+              'Día': item.data?.dia || '',
+              'Nombre del Evaluado': item.data?.nombre_evaluado || '',
+              'Responsable del Checkeo': item.data?.responsable_checkeo || '',
+              'Firma del Evaluado': item.data?.firma_evaluado || '',
+              'Cargo': item.data?.cargo || '',
+              'Recomendaciones': item.data?.recomendaciones || ''
+            };
+
+            // Agregar cada ítem de evaluación
+            if (item.data?.items && Array.isArray(item.data.items)) {
+              this.itemsHigienicas.forEach((itemNombre, idx) => {
+                const itemData = item.data.items[idx] || {};
+                const nombreCorto = itemNombre.length > 40 
+                  ? itemNombre.substring(0, 40) + '...' 
+                  : itemNombre;
+                row[`✅ ${nombreCorto}`] = itemData.cumple || '-';
+                row[`📝 Obs: ${nombreCorto.substring(0, 30)}`] = itemData.observaciones || '';
+              });
+            }
+
+            return row;
+          });
+        } 
+        // Caso especial: Limpieza (con concentración como %)
+        else if (formatType === 'SGI-FLD-02') {
+          excelData = items.map(item => ({
+            'Aspecto a Evaluar': item.data?.aspecto_evaluar || '',
+            'Responsable': item.data?.responsable || '',
+            'Actividad': item.data?.actividad || '',
+            'Cantidad': item.data?.cantidad || '',
+            'Concentración': item.data?.concentracion ? `${item.data.concentracion}%` : '',
+            'Día': item.data?.dia || '',
+            'Frecuencia': item.data?.frecuencia || '',
+            'Observaciones': item.data?.observaciones || ''
+          }));
+        }
+        // Caso especial: Verificación
+        else if (formatType === 'SGI-FVL-06') {
+          excelData = items.map(item => ({
+            'Aspecto a Evaluar': item.data?.aspecto_evaluar || '',
+            'Responsable': item.data?.responsable || '',
+            'Cumple': item.data?.cumple || '',
+            'Día': item.data?.dia || '',
+            'Observaciones': item.data?.observaciones || '',
+            'Procedimiento': item.data?.procedimiento || '',
+            'Verificado': item.data?.verificado || ''
+          }));
+        }
+        // Caso especial: Hornos
+        else if (formatType === 'SGI-FT-01') {
+          excelData = items.map(item => ({
+            'Día': item.data?.dia || '',
+            'Jornada': item.data?.jornada || '',
+            'Horno 1 (°C)': item.data?.horno_1 || '',
+            'Horno 2 (°C)': item.data?.horno_2 || '',
+            'Responsable': item.data?.responsable || '',
+            'Observaciones': item.data?.observaciones || ''
+          }));
+        }
+        // Caso genérico
+        else {
+          const fieldMapping = this.fieldMappings[formatType] || {};
+          excelData = items.map(item => {
+            const row: any = {
+              'ID': item.id,
+              'Fecha Registro': new Date(item.created_at).toLocaleString('es-ES')
+            };
+            if (item.data) {
+              Object.keys(item.data).forEach(key => {
+                const label = fieldMapping[key] || key;
+                row[label] = item.data[key] ?? '';
+              });
+            }
+            return row;
+          });
+        }
+
+        if (excelData.length > 0) {
+          const worksheet = XLSX.utils.json_to_sheet(excelData);
+          const colWidths = Object.keys(excelData[0]).map(key => ({
+            wch: Math.max(key.length, 15)
+          }));
+          worksheet['!cols'] = colWidths;
+          XLSX.utils.book_append_sheet(workbook, worksheet, formatName.substring(0, 31));
+        }
+      });
+
+      const fileName = this.generateFileName('Reporte', 'xlsx', filters);
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { 
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+      });
+      saveAs(blob, fileName);
+
+      return { success: true, count: data.length };
+
+    } catch (error) {
+      console.error('Error exportando a Excel:', error);
+      return { success: false, error };
+    }
+  }
+
+  // ============================================
+  // EXPORTAR A PDF
+  // ============================================
+  async exportToPDF(filters: any = {}) {
+    try {
+      const data = await this.getFilteredData(filters);
+
+      if (!data || data.length === 0) {
+        return { success: false, error: new Error('No hay registros') };
+      }
+
+      const doc = new jsPDF('landscape', 'mm', 'a4');
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+
+      const grouped = this.groupByFormat(data);
+      let isFirstPage = true;
+
+      Object.keys(grouped).forEach((formatType) => {
+        const items = grouped[formatType];
+        const formatName = this.formatNames[formatType] || formatType;
+
+        if (!isFirstPage) doc.addPage();
+        isFirstPage = false;
+
+        // Encabezado
+        doc.setFillColor(60, 80, 224);
+        doc.rect(0, 0, pageWidth, 25, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text(formatName, 14, 12);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Sistema BPM - Pan del Sur | ${items.length} registro(s)`, 14, 19);
+
+        let yPos = 32;
+        doc.setTextColor(100, 100, 100);
+        doc.setFontSize(9);
+
+        const filterInfo: string[] = [];
+        if (filters.startDate && filters.endDate) {
+          if (filters.startDate === filters.endDate) {
+            filterInfo.push(`Fecha: ${filters.startDate}`);
+          } else {
+            filterInfo.push(`Período: ${filters.startDate} a ${filters.endDate}`);
+          }
+        }
+        if (filterInfo.length > 0) {
+          doc.text(filterInfo.join(' | '), 14, yPos);
+          yPos += 6;
+        }
+
+        // Caso especial: Higiénicas (tabla con items)
+        if (formatType === 'SGI-FPH-03') {
+          items.forEach((item, idx) => {
+            if (idx > 0) doc.addPage();
+            
+            doc.setFontSize(12);
+            doc.setTextColor(60, 80, 224);
+            doc.setFont('helvetica', 'bold');
+            doc.text(`Evaluación: ${item.data?.nombre_evaluado || 'N/A'}`, 14, yPos);
+            yPos += 6;
+            
+            doc.setFontSize(9);
+            doc.setTextColor(80, 80, 80);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Día: ${item.data?.dia || '-'} | Cargo: ${item.data?.cargo || '-'}`, 14, yPos);
+            yPos += 5;
+            doc.text(`Responsable: ${item.data?.responsable_checkeo || '-'}`, 14, yPos);
+            yPos += 8;
+
+            // Tabla de items
+            if (item.data?.items && Array.isArray(item.data.items)) {
+              const tableData = this.itemsHigienicas.map((itemNombre, i) => {
+                const itemData = item.data.items[i] || {};
+                return [
+                  (i + 1).toString(),
+                  itemNombre,
+                  itemData.cumple || '-',
+                  itemData.observaciones || '-'
+                ];
+              });
+
+              autoTable(doc, {
+                startY: yPos,
+                head: [['N°', 'Ítem a Evaluar', 'Cumple', 'Observaciones']],
+                body: tableData,
+                styles: { fontSize: 7, cellPadding: 2 },
+                headStyles: { fillColor: [255, 107, 53], textColor: 255, fontStyle: 'bold' },
+                columnStyles: {
+                  0: { cellWidth: 8, halign: 'center' },
+                  1: { cellWidth: 120 },
+                  2: { cellWidth: 20, halign: 'center' },
+                  3: { cellWidth: 'auto' }
+                }
+              });
+            }
+            
+            yPos = (doc as any).lastAutoTable.finalY + 10;
+            doc.text(`Recomendaciones: ${item.data?.recomendaciones || '-'}`, 14, yPos);
+          });
+        }
+        // Caso especial: Limpieza
+        else if (formatType === 'SGI-FLD-02') {
+          const headers = ['N°', 'Aspecto', 'Responsable', 'Actividad', 'Cantidad', 'Conc.', 'Frecuencia', 'Día'];
+          const tableData = items.map((item, idx) => [
+            (idx + 1).toString(),
+            item.data?.aspecto_evaluar || '-',
+            item.data?.responsable || '-',
+            item.data?.actividad || '-',
+            item.data?.cantidad || '-',
+            item.data?.concentracion ? `${item.data.concentracion}%` : '-',
+            item.data?.frecuencia || '-',
+            item.data?.dia || '-'
+          ]);
+
+          autoTable(doc, {
+            startY: yPos,
+            head: [headers],
+            body: tableData,
+            styles: { fontSize: 7, cellPadding: 2 },
+            headStyles: { fillColor: [255, 107, 53], textColor: 255, fontStyle: 'bold' },
+            columnStyles: {
+              0: { cellWidth: 8, halign: 'center' },
+              1: { cellWidth: 50 },
+              6: { cellWidth: 22 }
+            }
+          });
+        }
+        // Caso especial: Verificación
+        else if (formatType === 'SGI-FVL-06') {
+          const headers = ['N°', 'Aspecto', 'Responsable', 'Cumple', 'Procedimiento', 'Verificado', 'Día'];
+          const tableData = items.map((item, idx) => [
+            (idx + 1).toString(),
+            item.data?.aspecto_evaluar || '-',
+            item.data?.responsable || '-',
+            item.data?.cumple || '-',
+            item.data?.procedimiento || '-',
+            item.data?.verificado || '-',
+            item.data?.dia || '-'
+          ]);
+
+          autoTable(doc, {
+            startY: yPos,
+            head: [headers],
+            body: tableData,
+            styles: { fontSize: 7, cellPadding: 2 },
+            headStyles: { fillColor: [255, 107, 53], textColor: 255, fontStyle: 'bold' },
+            columnStyles: {
+              0: { cellWidth: 8, halign: 'center' },
+              1: { cellWidth: 60 },
+              3: { cellWidth: 18, halign: 'center' }
+            }
+          });
+        }
+        // Caso especial: Hornos
+        else if (formatType === 'SGI-FT-01') {
+          const headers = ['N°', 'Día', 'Jornada', 'Horno 1 (°C)', 'Horno 2 (°C)', 'Responsable'];
+          const tableData = items.map((item, idx) => [
+            (idx + 1).toString(),
+            item.data?.dia || '-',
+            item.data?.jornada || '-',
+            item.data?.horno_1 || '-',
+            item.data?.horno_2 || '-',
+            item.data?.responsable || '-'
+          ]);
+
+          autoTable(doc, {
+            startY: yPos,
+            head: [headers],
+            body: tableData,
+            styles: { fontSize: 8, cellPadding: 3 },
+            headStyles: { fillColor: [255, 107, 53], textColor: 255, fontStyle: 'bold' },
+            columnStyles: {
+              0: { cellWidth: 10, halign: 'center' },
+              2: { cellWidth: 20, halign: 'center' },
+              3: { cellWidth: 30, halign: 'center' },
+              4: { cellWidth: 30, halign: 'center' }
+            }
+          });
+        }
+
+        // Pie de página
+        const pageCount = doc.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+          doc.setPage(i);
+          doc.setFontSize(8);
+          doc.setTextColor(150, 150, 150);
+          doc.text(
+            `Página ${i} de ${pageCount} | Generado: ${new Date().toLocaleString('es-ES')} | Sistema BPM - Pan del Sur`,
+            14,
+            pageHeight - 8
+          );
+        }
+      });
+
+      const fileName = this.generateFileName('Reporte', 'pdf', filters);
+      doc.save(fileName);
+
+      return { success: true, count: data.length };
+
+    } catch (error) {
+      console.error('Error exportando a PDF:', error);
+      return { success: false, error };
+    }
+  }
+
+  // ============================================
+  // UTILIDADES
+  // ============================================
+  private groupByFormat(data: any[]): { [key: string]: any[] } {
+    return data.reduce((acc, item) => {
+      const format = item.format_type;
+      if (!acc[format]) acc[format] = [];
+      acc[format].push(item);
+      return acc;
+    }, {} as { [key: string]: any[] });
+  }
+
   private generateFileName(prefix: string, extension: string, filters: any): string {
     const parts = [prefix];
     
@@ -175,493 +478,5 @@ export class ExportService {
     parts.push(timestamp);
     
     return `${parts.join('_')}.${extension}`;
-  }
-
-  // ============================================
-  // EXPORTAR A EXCEL
-  // ============================================
-  async exportToExcel(filters: {
-    startDate?: string;
-    endDate?: string;
-    formatType?: string;
-  } = {}) {
-    try {
-      const { data, error } = await this.buildQuery(filters);
-
-      if (error) throw error;
-      if (!data || data.length === 0) {
-        return { success: false, error: new Error('No hay registros que coincidan con los filtros') };
-      }
-
-      // Agrupar por tipo de formato
-      const workbook = XLSX.utils.book_new();
-      const groupedData = this.groupByFormat(data);
-
-      // Crear una hoja por cada tipo de formato
-      Object.keys(groupedData).forEach(formatType => {
-        const items = groupedData[formatType];
-        const fieldMapping = this.fieldMappings[formatType] || {};
-        
-        // Obtener todas las claves únicas
-        const allKeys = new Set<string>();
-        items.forEach(item => {
-          if (item.data) {
-            Object.keys(item.data).forEach(key => allKeys.add(key));
-          }
-        });
-
-        // Crear datos con cabeceras legibles
-        const excelData = items.map(item => {
-          const row: any = {
-            'ID': item.id,
-            'Fecha Registro': new Date(item.created_at).toLocaleString('es-ES'),
-          };
-
-          // Agregar campos del formulario con nombres legibles
-          allKeys.forEach(key => {
-            const label = fieldMapping[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            let value = item.data?.[key];
-            
-            // Formatear concentración con %
-            if (key === 'concentracion' && value !== undefined && value !== null) {
-              value = `${value}%`;
-            }
-            
-            row[label] = value ?? '';
-          });
-
-          return row;
-        });
-
-        const worksheet = XLSX.utils.json_to_sheet(excelData);
-        
-        // Ajustar ancho de columnas
-        const colWidths = Object.keys(excelData[0] || {}).map(key => ({
-          wch: Math.max(key.length, 15)
-        }));
-        worksheet['!cols'] = colWidths;
-
-        // Nombre de hoja (máximo 31 caracteres)
-        const sheetName = (this.formatNames[formatType] || formatType).substring(0, 31);
-        XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-      });
-
-      // Si hay múltiples formatos, crear una hoja "Resumen General"
-      if (Object.keys(groupedData).length > 1) {
-        const summaryData = data.map(item => ({
-          'ID': item.id,
-          'Formato': this.formatNames[item.format_type] || item.format_type,
-          'Fecha': new Date(item.created_at).toLocaleString('es-ES'),
-          'Día Registro': item.data?.dia || '',
-          'Resumen': this.extractSummary(item.data)
-        }));
-
-        const summarySheet = XLSX.utils.json_to_sheet(summaryData);
-        summarySheet['!cols'] = [
-          { wch: 40 }, { wch: 25 }, { wch: 20 }, { wch: 15 }, 
-          { wch: 50 }
-        ];
-        XLSX.utils.book_append_sheet(workbook, summarySheet, 'Resumen General');
-      }
-
-      // Generar nombre de archivo
-      const fileName = this.generateFileName('Reporte', 'xlsx', filters);
-
-      // Descargar
-      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([excelBuffer], { 
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-      });
-      saveAs(blob, fileName);
-
-      return { success: true, count: data.length };
-
-    } catch (error) {
-      console.error('Error exportando a Excel:', error);
-      return { success: false, error };
-    }
-  }
-
-  // ============================================
-  // EXPORTAR A PDF
-  // ============================================
-  async exportToPDF(filters: {
-    startDate?: string;
-    endDate?: string;
-    formatType?: string;
-  } = {}) {
-    try {
-      const { data, error } = await this.buildQuery(filters);
-
-      if (error) throw error;
-      if (!data || data.length === 0) {
-        return { success: false, error: new Error('No hay registros que coincidan con los filtros') };
-      }
-
-      const doc = new jsPDF('landscape', 'mm', 'a4');
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const pageHeight = doc.internal.pageSize.getHeight();
-
-      // Agrupar por formato
-      const groupedData = this.groupByFormat(data);
-      let isFirstPage = true;
-
-      Object.keys(groupedData).forEach((formatType, index) => {
-        const items = groupedData[formatType];
-        const formatName = this.formatNames[formatType] || formatType;
-        const fieldMapping = this.fieldMappings[formatType] || {};
-
-        // Nueva página para cada formato (excepto el primero)
-        if (!isFirstPage) {
-          doc.addPage();
-        }
-        isFirstPage = false;
-
-        // Encabezado
-        doc.setFillColor(60, 80, 224);
-        doc.rect(0, 0, pageWidth, 25, 'F');
-        
-        doc.setTextColor(255, 255, 255);
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        doc.text(formatName, 14, 12);
-        
-        doc.setFontSize(9);
-        doc.setFont('helvetica', 'normal');
-        doc.text(`Sistema BPM - Pan del Sur | ${items.length} registro(s)`, 14, 19);
-
-        // Información de filtros
-        let yPos = 32;
-        doc.setTextColor(100, 100, 100);
-        doc.setFontSize(9);
-        
-        const filterInfo: string[] = [];
-        if (filters.startDate && filters.endDate) {
-          if (filters.startDate === filters.endDate) {
-            filterInfo.push(`Fecha: ${filters.startDate}`);
-          } else {
-            filterInfo.push(`Período: ${filters.startDate} a ${filters.endDate}`);
-          }
-        } else if (filters.startDate) {
-          filterInfo.push(`Desde: ${filters.startDate}`);
-        } else if (filters.endDate) {
-          filterInfo.push(`Hasta: ${filters.endDate}`);
-        }
-        
-        if (filterInfo.length > 0) {
-          doc.text(filterInfo.join(' | '), 14, yPos);
-          yPos += 6;
-        }
-
-        // Obtener todas las claves únicas de los datos
-        const allKeys = new Set<string>();
-        items.forEach(item => {
-          if (item.data) {
-            Object.keys(item.data).forEach(key => allKeys.add(key));
-          }
-        });
-
-        // Preparar cabeceras
-        const headers = ['N°', 'Fecha', ...Array.from(allKeys).map(k => fieldMapping[k] || k)];
-        
-        // Preparar datos de la tabla
-        const tableData = items.map((item, idx) => {
-          const row: any[] = [
-            idx + 1,
-            new Date(item.created_at).toLocaleDateString('es-ES')
-          ];
-          
-          allKeys.forEach(key => {
-            let value = item.data?.[key];
-            if (key === 'concentracion' && value !== undefined && value !== null) {
-              value = `${value}%`;
-            }
-            row.push(value ?? '-');
-          });
-          
-          return row;
-        });
-
-        // Crear tabla
-        autoTable(doc, {
-          startY: yPos,
-          head: [headers],
-          body: tableData,
-          styles: {
-            fontSize: 7,
-            cellPadding: 2,
-            overflow: 'linebreak',
-            lineColor: [220, 220, 220],
-            lineWidth: 0.1
-          },
-          headStyles: {
-            fillColor: [255, 107, 53],
-            textColor: 255,
-            fontStyle: 'bold',
-            fontSize: 7
-          },
-          alternateRowStyles: {
-            fillColor: [250, 250, 250]
-          },
-          columnStyles: {
-            0: { cellWidth: 8, halign: 'center', fontStyle: 'bold' },
-            1: { cellWidth: 22 }
-          },
-          margin: { left: 14, right: 14 }
-        });
-
-        // Pie de página
-        const pageCount = doc.getNumberOfPages();
-        for (let i = 1; i <= pageCount; i++) {
-          doc.setPage(i);
-          doc.setFontSize(8);
-          doc.setTextColor(150, 150, 150);
-          doc.text(
-            `Página ${i} de ${pageCount} | Generado: ${new Date().toLocaleString('es-ES')} | Sistema BPM - Pan del Sur`,
-            14,
-            pageHeight - 8
-          );
-        }
-      });
-
-      // Generar nombre de archivo
-      const fileName = this.generateFileName('Reporte', 'pdf', filters);
-      doc.save(fileName);
-
-      return { success: true, count: data.length };
-
-    } catch (error) {
-      console.error('Error exportando a PDF:', error);
-      return { success: false, error };
-    }
-  }
-
-  // ============================================
-  // EXPORTAR REGISTRO INDIVIDUAL
-  // ============================================
-  async exportIndividualRecord(recordId: string, format: 'excel' | 'pdf') {
-    try {
-      const { data, error } = await this.supabaseService
-        .from('checklists')
-        .select('*')
-        .eq('id', recordId)
-        .single();
-
-      if (error) throw error;
-      if (!data) {
-        return { success: false, error: new Error('Registro no encontrado') };
-      }
-
-      if (format === 'excel') {
-        return this.exportSingleToExcel(data);
-      } else {
-        return this.exportSingleToPDF(data);
-      }
-    } catch (error) {
-      console.error('Error exportando registro individual:', error);
-      return { success: false, error };
-    }
-  }
-
-  private async exportSingleToExcel(item: any) {
-    const fieldMapping = this.fieldMappings[item.format_type] || {};
-    const formatName = this.formatNames[item.format_type] || item.format_type;
-
-    const excelData = [{
-      'Campo': 'ID',
-      'Valor': item.id
-    }, {
-      'Campo': 'Formato',
-      'Valor': formatName
-    }, {
-      'Campo': 'Fecha de Registro',
-      'Valor': new Date(item.created_at).toLocaleString('es-ES')
-    }, {
-      'Campo': 'Estado',
-      'Valor': item.status
-    }, {
-      'Campo': 'Establecimiento',
-      'Valor': item.establishment
-    }];
-
-    // Agregar campos del formulario
-    if (item.data) {
-      Object.keys(item.data).forEach(key => {
-        let value = item.data[key];
-        const label = fieldMapping[key] || key;
-        
-        if (key === 'concentracion' && value !== undefined && value !== null) {
-          value = `${value}%`;
-        }
-        
-        excelData.push({
-          'Campo': label,
-          'Valor': value ?? ''
-        });
-      });
-    }
-
-    const worksheet = XLSX.utils.json_to_sheet(excelData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Registro');
-    
-    worksheet['!cols'] = [{ wch: 30 }, { wch: 50 }];
-
-    const fileName = `Registro_${formatName.replace(/\s+/g, '_')}_${item.data?.dia || new Date().toISOString().split('T')[0]}.xlsx`;
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { 
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
-    });
-    saveAs(blob, fileName);
-
-    return { success: true, count: 1 };
-  }
-
-  private async exportSingleToPDF(item: any) {
-    const fieldMapping = this.fieldMappings[item.format_type] || {};
-    const formatName = this.formatNames[item.format_type] || item.format_type;
-
-    const doc = new jsPDF('portrait', 'mm', 'a4');
-    const pageWidth = doc.internal.pageSize.getWidth();
-
-    // Encabezado con color
-    doc.setFillColor(60, 80, 224);
-    doc.rect(0, 0, pageWidth, 35, 'F');
-    
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.text(formatName, 14, 18);
-    
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Sistema BPM - Pan del Sur', 14, 26);
-    doc.text(`Registro Individual`, 14, 31);
-
-    // Información general
-    let yPos = 45;
-    
-    doc.setTextColor(60, 80, 224);
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Información General', 14, yPos);
-    yPos += 2;
-    
-    doc.setDrawColor(60, 80, 224);
-    doc.setLineWidth(0.5);
-    doc.line(14, yPos, pageWidth - 14, yPos);
-    yPos += 8;
-
-    const generalInfo = [
-      ['ID del Registro', item.id],
-      ['Fecha de Creación', new Date(item.created_at).toLocaleString('es-ES')],
-      ['Estado', item.status],
-      ['Establecimiento', item.establishment]
-    ];
-
-    doc.setFontSize(10);
-    generalInfo.forEach(([label, value]) => {
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(80, 80, 80);
-      doc.text(`${label}:`, 14, yPos);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(40, 40, 40);
-      doc.text(String(value), 70, yPos);
-      yPos += 6;
-    });
-
-    yPos += 5;
-
-    // Datos del formulario
-    doc.setTextColor(255, 107, 53);
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Datos del Formulario', 14, yPos);
-    yPos += 2;
-    
-    doc.setDrawColor(255, 107, 53);
-    doc.setLineWidth(0.5);
-    doc.line(14, yPos, pageWidth - 14, yPos);
-    yPos += 8;
-
-    // Tabla con los datos
-    if (item.data) {
-      const tableData = Object.keys(item.data).map(key => {
-        const label = fieldMapping[key] || key.replace(/_/g, ' ');
-        let value = item.data[key];
-        
-        if (key === 'concentracion' && value !== undefined && value !== null) {
-          value = `${value}%`;
-        }
-        
-        return [label, value ?? '-'];
-      });
-
-      autoTable(doc, {
-        startY: yPos,
-        head: [['Campo', 'Valor']],
-        body: tableData,
-        styles: {
-          fontSize: 10,
-          cellPadding: 4,
-          overflow: 'linebreak'
-        },
-        headStyles: {
-          fillColor: [255, 107, 53],
-          textColor: 255,
-          fontStyle: 'bold'
-        },
-        columnStyles: {
-          0: { cellWidth: 70, fontStyle: 'bold', fillColor: [250, 250, 250] },
-          1: { cellWidth: 'auto' }
-        },
-        margin: { left: 14, right: 14 }
-      });
-    }
-
-    // Pie de página
-    const pageHeight = doc.internal.pageSize.getHeight();
-    doc.setFontSize(8);
-    doc.setTextColor(150, 150, 150);
-    doc.text(
-      `Generado: ${new Date().toLocaleString('es-ES')} | Sistema BPM - Pan del Sur`,
-      14,
-      pageHeight - 10
-    );
-
-    const fileName = `Registro_${formatName.replace(/\s+/g, '_')}_${item.data?.dia || new Date().toISOString().split('T')[0]}.pdf`;
-    doc.save(fileName);
-
-    return { success: true, count: 1 };
-  }
-
-  // ============================================
-  // UTILIDADES
-  // ============================================
-  private groupByFormat(data: any[]): { [key: string]: any[] } {
-    return data.reduce((acc, item) => {
-      const format = item.format_type;
-      if (!acc[format]) acc[format] = [];
-      acc[format].push(item);
-      return acc;
-    }, {} as { [key: string]: any[] });
-  }
-
-  private extractSummary(data: any): string {
-    if (!data) return 'Sin datos';
-    
-    try {
-      const obj = typeof data === 'string' ? JSON.parse(data) : data;
-      const keys = Object.keys(obj);
-      
-      const summary = keys.slice(0, 3).map(key => {
-        const value = obj[key];
-        return `${key}: ${typeof value === 'object' ? JSON.stringify(value) : value}`;
-      }).join(', ');
-      
-      return summary + (keys.length > 3 ? '...' : '');
-    } catch {
-      return 'Datos no válidos';
-    }
   }
 }

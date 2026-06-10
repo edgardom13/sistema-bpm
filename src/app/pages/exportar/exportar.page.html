@@ -1,7 +1,7 @@
 <ion-content class="ion-no-padding bg-gray-50 dark:bg-[#0C121E]">
-  <div class="max-w-5xl mx-auto">
+  <div class="max-w-6xl mx-auto">
     
-    <!-- Header Minimalista -->
+    <!-- Header -->
     <div class="sticky top-0 z-40 bg-white/80 dark:bg-[#1C2434]/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-[#2D313A]/60">
       <div class="px-6 py-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
@@ -27,7 +27,6 @@
           </div>
         </div>
 
-        <!-- Stats compactos -->
         <div class="hidden sm:flex items-center gap-4 text-xs">
           <div class="flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -41,11 +40,10 @@
       </div>
     </div>
 
-    <!-- Contenido -->
-    <div class="px-6 py-6">
+    <div class="px-6 py-6 space-y-4">
       
-      <!-- Filtros Compactos -->
-      <div class  ="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-4 mb-4">
+      <!-- Filtros -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-4">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider flex items-center gap-2">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,8 +62,7 @@
           </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-          <!-- Fecha Inicio -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           <div>
             <label class="block text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
               📅 Desde
@@ -78,7 +75,6 @@
             >
           </div>
 
-          <!-- Fecha Fin -->
           <div>
             <label class="block text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
               📅 Hasta
@@ -91,7 +87,6 @@
             >
           </div>
 
-          <!-- Formato -->
           <div>
             <label class="block text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
               📋 Formato
@@ -103,19 +98,35 @@
             >
               <option value="">Todos los formatos</option>
               <option *ngFor="let fmt of formatOptions" [value]="fmt.value">
-                {{ fmt.label }}
+                {{ fmt.icon }} {{ fmt.label }}
               </option>
             </select>
           </div>
+        </div>
 
-          <!-- Estado -->
-        
+        <!-- Filtros activos -->
+        <div *ngIf="activeFilters.length > 0" class="mt-3 flex flex-wrap gap-1.5">
+          <span 
+            *ngFor="let filter of activeFilters"
+            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-500/30"
+          >
+            {{ filter.label }}
+            <button (click)="removeFilter(filter.key)" class="hover:text-rose-500 transition-colors">
+              <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </span>
+        </div>
+
+        <div *ngIf="activeFilters.length === 0" class="mt-3 text-[11px] text-gray-500 dark:text-gray-400 italic">
+          💡 No hay filtros activos. Se exportarán todos los registros.
         </div>
       </div>
 
       <!-- Panel de Vista Previa -->
-      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#1C2434] dark:to-[#171F2C] rounded-xl border border-blue-200 dark:border-[#2D313A] p-4 mb-4">
-        <div class="flex items-center justify-between flex-wrap gap-3">
+      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#1C2434] dark:to-[#171F2C] rounded-xl border border-blue-200 dark:border-[#2D313A] p-4">
+        <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
               <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,6 +139,7 @@
               <div class="text-[10px] text-gray-500 dark:text-gray-400">
                 <span class="font-bold text-blue-600 dark:text-blue-400 text-sm">{{ previewCount }}</span>
                 registros coinciden con los filtros
+                <span *ngIf="previewCount > 10" class="text-gray-400">(mostrando primeros 10)</span>
               </div>
             </div>
           </div>
@@ -143,31 +155,74 @@
           </button>
         </div>
 
-        <!-- Resumen de filtros activos -->
-        <!-- Resumen de filtros activos -->
-        <div *ngIf="activeFilters.length > 0" class="mt-3 flex flex-wrap gap-1.5">
-        <span 
-          *ngFor="let filter of activeFilters"
-          class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-white dark:bg-[#0C121E] text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-[#2D313A]"
-        >
-          {{ filter.label }}
-          <button (click)="removeFilter(filter.key)" class="hover:text-rose-500 transition-colors">
-            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-          </button>
-        </span>
-      </div>
+        <!-- Tabla de vista previa -->
+        <div *ngIf="previewDataList.length > 0" class="bg-white dark:bg-[#0C121E] rounded-lg border border-gray-200 dark:border-[#2D313A] overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50 dark:bg-[#171F2C] border-b border-gray-200 dark:border-[#2D313A]">
+                <tr>
+                  <th class="px-3 py-2 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Formato</th>
+                  <th class="px-3 py-2 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Día</th>
+                  <th class="px-3 py-2 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Resumen</th>
+                  <th class="px-3 py-2 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Detalles</th>
+                  <th class="px-3 py-2 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Registrado</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
+                <tr *ngFor="let reg of previewDataList" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
+                  <td class="px-3 py-2">
+                    <div class="flex items-center gap-2">
+                      <span class="text-lg">{{ reg.formatoIcon }}</span>
+                      <span class="text-xs font-semibold text-gray-900 dark:text-white">{{ reg.formato }}</span>
+                    </div>
+                  </td>
+                  <td class="px-3 py-2 text-xs text-gray-600 dark:text-gray-300 font-mono">
+                    {{ reg.dia }}
+                  </td>
+                  <td class="px-3 py-2 text-xs font-medium text-gray-900 dark:text-white max-w-[200px] truncate" [title]="reg.resumen">
+                    {{ reg.resumen }}
+                  </td>
+                  <td class="px-3 py-2">
+                    <div class="flex flex-wrap gap-1">
+                      <span 
+                        *ngFor="let d of reg.detalles" 
+                        class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                        [title]="d.label + ': ' + d.value"
+                      >
+                        <span class="text-gray-400">{{ d.label }}:</span>
+                        <span class="font-semibold">{{ d.value }}</span>
+                      </span>
+                    </div>
+                  </td>
+                  <td class="px-3 py-2 text-[10px] text-gray-500 dark:text-gray-400">
+                    {{ reg.fechaRegistro }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-        <!-- Mensaje cuando no hay filtros -->
-        <div *ngIf="activeFilters.length === 0" class="mt-3 text-[11px] text-gray-500 dark:text-gray-400 italic">
-          💡 No hay filtros activos. Se exportarán todos los registros.
+        <!-- Mensaje cuando no hay datos -->
+        <div *ngIf="previewDataList.length === 0 && !loadingPreview" class="bg-white dark:bg-[#0C121E] rounded-lg border border-gray-200 dark:border-[#2D313A] p-8 text-center">
+          <div class="flex flex-col items-center gap-2">
+            <span class="text-4xl">📭</span>
+            <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">No hay registros</p>
+            <p class="text-xs text-gray-500">Ajusta los filtros para ver datos</p>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="loadingPreview" class="bg-white dark:bg-[#0C121E] rounded-lg border border-gray-200 dark:border-[#2D313A] p-8 flex items-center justify-center">
+          <div class="flex items-center gap-3">
+            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+            <span class="text-xs text-gray-500">Cargando vista previa...</span>
+          </div>
         </div>
       </div>
 
       <!-- Botones de Exportación -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <!-- Excel -->
         <button 
           (click)="exportExcel()"
           [disabled]="exporting || previewCount === 0"
@@ -191,7 +246,6 @@
           </svg>
         </button>
 
-        <!-- PDF -->
         <button 
           (click)="exportPDF()"
           [disabled]="exporting || previewCount === 0"
@@ -217,7 +271,7 @@
       </div>
 
       <!-- Ejemplos de uso -->
-      <div class="mt-6 bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-4">
+      <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-4">
         <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -245,6 +299,5 @@
       </div>
 
     </div>
-
   </div>
 </ion-content>
