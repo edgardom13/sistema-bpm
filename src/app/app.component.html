@@ -4,7 +4,7 @@
     
     <!-- Sidebar -->
     <ion-menu contentId="main-content" type="overlay" side="start">
-      <ion-content class="ion-no-padding">
+      <ion-content class="ion-no-padding"  [scrollEvents]="true">
         <div class="flex flex-col h-full select-none" 
              [style.background-color]="'var(--sidebar-bg)'"
              [style.color]="'var(--sidebar-text)'">
@@ -12,306 +12,309 @@
           <!-- Logo Section -->
           <div class="flex items-center gap-3 px-6 py-5 border-b flex-shrink-0"
                style="border-color: rgba(128,128,128,0.2)">
-            <div class="flex items-center justify-center w-10 h-10 rounded-lg text-white"
-                 [style.background-color]="'var(--color-primary)'">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <div class="flex items-center justify-center w-10 h-10 rounded-lg shadow-lg overflow-hidden"
+                 [style.background-color]="brandLogo ? 'transparent' : 'var(--color-primary)'">
+              <img *ngIf="brandLogo" [src]="brandLogo" alt="Logo" class="w-full h-full object-contain p-1">
+              <svg *ngIf="!brandLogo" class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M6 18V9a6 6 0 0 1 12 0v9M3 20h18a1 1 0 0 0 1-1v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1a1 1 0 0 0 1 1z" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
             <div>
-              <h1 class="text-xl font-bold tracking-wide" [style.color]="'var(--sidebar-text)'">Sistema BPM</h1>
-              <p class="text-xs font-medium" [style.color]="'var(--sidebar-text)'" style="opacity: 0.6">Control de Calidad</p>
+              <h1 class="text-lg font-bold tracking-wide" [style.color]="'var(--sidebar-text)'">Sistema BPM</h1>
+              <p class="text-[10px] font-medium uppercase tracking-wider" [style.color]="'var(--sidebar-text)'" style="opacity: 0.6">Control de Calidad</p>
             </div>
           </div>
 
           <!-- Menu Section -->
-          <nav class="flex-1 px-4 py-6 overflow-y-auto space-y-5">
-  
-            <!-- Dashboard -->
+          <nav class="flex-1 px-3 py-6 overflow-y-auto space-y-6 custom-scrollbar">
+            
+            <!-- SECCIÓN: PRINCIPAL -->
             <div>
-              <a routerLink="/pages/dashboard" 
-                 routerLinkActive="active-menu-item" 
-                 class="group flex items-center justify-between w-full px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200"
-                 [style.color]="'var(--sidebar-text)'"
-                 (mouseenter)="onMenuEnter($event)"
-                 (mouseleave)="onMenuLeave($event)">
-                <div class="flex items-center gap-3">
-                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <h3 class="px-3 text-[10px] font-bold uppercase tracking-widest mb-2" 
+                  [style.color]="'var(--sidebar-text)'" style="opacity: 0.4">
+                Principal
+              </h3>
+              <div class="space-y-1">
+                <a routerLink="/pages/home" 
+                   routerLinkActive="active-menu-item" 
+                   class="group flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200"
+                   [style.color]="'var(--sidebar-text)'"
+                   (mouseenter)="onMenuEnter($event)"
+                   (mouseleave)="onMenuLeave($event)">
+                  <svg class="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                  </svg>
+                  <span>Inicio</span>
+                </a>
+
+                <a routerLink="/pages/dashboard" 
+                   routerLinkActive="active-menu-item" 
+                   class="group flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200"
+                   [style.color]="'var(--sidebar-text)'"
+                   (mouseenter)="onMenuEnter($event)"
+                   (mouseleave)="onMenuLeave($event)">
+                  <svg class="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="3" width="7" height="9" rx="1"/>
                     <rect x="14" y="3" width="7" height="5" rx="1"/>
                     <rect x="14" y="12" width="7" height="9" rx="1"/>
                     <rect x="3" y="16" width="7" height="5" rx="1"/>
                   </svg>
                   <span>Dashboard General</span>
-                </div>
-              </a>
+                </a>
+              </div>
             </div>
 
-            <!-- Section Title -->
-            <div class="pt-4">
-              <h3 class="px-4 text-xs font-semibold uppercase tracking-wider mb-3" 
-                  [style.color]="'var(--sidebar-text)'" style="opacity: 0.5">
+            <!-- SECCIÓN: GESTIÓN -->
+            <div>
+              <h3 class="px-3 text-[10px] font-bold uppercase tracking-widest mb-2" 
+                  [style.color]="'var(--sidebar-text)'" style="opacity: 0.4">
+                Gestión
+              </h3>
+              <div class="space-y-1">
+                <a routerLink="/pages/empleados" 
+                   routerLinkActive="active-menu-item" 
+                   class="group flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200"
+                   [style.color]="'var(--sidebar-text)'"
+                   (mouseenter)="onMenuEnter($event)"
+                   (mouseleave)="onMenuLeave($event)">
+                  <svg class="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                  </svg>
+                  <span>Empleados</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- SECCIÓN: FORMATOS DE CONTROL (Dropdown) -->
+            <div>
+              <h3 class="px-3 text-[10px] font-bold uppercase tracking-widest mb-2" 
+                  [style.color]="'var(--sidebar-text)'" style="opacity: 0.4">
                 Formatos de Control
               </h3>
               
-              <ul class="space-y-1">
-                
+              <!-- Botón Desplegable -->
+              <button 
+                (click)="toggleFormatosControl()"
+                class="group flex items-center justify-between w-full px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200"
+                [style.color]="'var(--sidebar-text)'"
+                [style.background-color]="showFormatosControl ? 'var(--sidebar-hover)' : 'transparent'"
+                (mouseenter)="onMenuEnter($event)"
+                (mouseleave)="onMenuLeave($event)">
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                  </svg>
+                  <span>Formatos de control</span>
+                </div>
+                <svg 
+                  class="w-4 h-4 transition-transform duration-200" 
+                  [class.rotate-180]="showFormatosControl"
+                  [style.color]="'var(--sidebar-text)'" 
+                  style="opacity: 0.5"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              
+              <!-- Lista de Formatos -->
+              <ul class="space-y-1 mt-1 overflow-hidden pl-4 border-l-2" 
+                  [style.border-color]="'var(--color-primary)'"
+                  *ngIf="showFormatosControl"
+                  style="opacity: 0.9">
                 <li>
                   <a [routerLink]="'/pages/limpiezaydesinfeccion'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                      <path d="m9 12 2 2 4-4"/>
-                    </svg>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
                     <span class="truncate">Limpieza y Desinfección</span>
                   </a>
                 </li>
-
                 <li>
                   <a [routerLink]="'/pages/verificacion'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M9 11l3 3L22 4"/>
-                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                    </svg>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
                     <span class="truncate">Verificación de Limpieza</span>
                   </a>
                 </li>
-
                 <li>
                   <a [routerLink]="'/pages/hornos'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
-                    </svg>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
                     <span class="truncate">Temperatura de Hornos</span>
                   </a>
                 </li>
-
                 <li>
                   <a [routerLink]="'/pages/higienicas'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 3v18"/>
-                      <path d="m8 7 4-4 4 4"/>
-                      <path d="M18 11c0 2-1 3-2 4s-2 2-2 4"/>
-                      <path d="M6 11c0 2 1 3 2 4s2 2 2 4"/>
-                    </svg>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
                     <span class="truncate">Prácticas Higiénicas</span>
                   </a>
                 </li>
-
                 <li>
                   <a [routerLink]="'/pages/residuos'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 6h18"/>
-                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                      <line x1="10" x2="10" y1="11" y2="17"/>
-                      <line x1="14" x2="14" y1="11" y2="17"/>
-                    </svg>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
                     <span class="truncate">Inspección de Residuos</span>
                   </a>
                 </li>
-
                 <li>
                   <a [routerLink]="'/pages/plagas'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="m8 2 1.88 1.88"/>
-                      <path d="M14.12 3.88 16 2"/>
-                      <path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/>
-                      <path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/>
-                      <path d="M12 20v-9"/>
-                      <path d="M6.53 9C4.6 8.8 3 7.1 3 5"/>
-                      <path d="M6 13H2"/>
-                      <path d="M3 21c0-2.1 1.7-3.9 3.8-4"/>
-                      <path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/>
-                      <path d="M22 13h-4"/>
-                      <path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/>
-                    </svg>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
                     <span class="truncate">Control de Plagas</span>
                   </a>
                 </li>
-
                 <li>
                   <a [routerLink]="'/pages/ph-cloro'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/>
-                      <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/>
-                    </svg>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
                     <span class="truncate">Seguimiento pH y Cloro</span>
                   </a>
                 </li>
-
                 <li>
                   <a [routerLink]="'/pages/devolucion'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                      <path d="M3 3v5h5"/>
-                    </svg>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
                     <span class="truncate">Devolución de Producto</span>
                   </a>
                 </li>
-
                 <li>
                   <a [routerLink]="'/pages/materia-prima'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M16.5 9.4 7.55 4.24"/>
-                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                      <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                      <line x1="12" x2="12" y1="22.08" y2="12"/>
-                    </svg>
-                    <span class="truncate">Control de MP</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
+                    <span class="truncate">Control de Materia Prima</span>
                   </a>
                 </li>
-
                 <li>
                   <a [routerLink]="'/pages/temp-hr'" [queryParams]="{ date: getCurrentDateForUrl() }" 
                      routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
+                     class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all"
                      [style.color]="'var(--sidebar-text)'"
                      (mouseenter)="onMenuEnter($event)"
                      (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>
-                    </svg>
+                    <span class="w-1.5 h-1.5 rounded-full bg-current opacity-50 group-hover:opacity-100 transition-opacity"></span>
                     <span class="truncate">Registro Temp y HR CC</span>
                   </a>
                 </li>
-
-                <li>
-                  <a routerLink="/pages/exportar" 
-                     routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
-                     [style.color]="'var(--sidebar-text)'"
-                     (mouseenter)="onMenuEnter($event)"
-                     (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                      <polyline points="7 10 12 15 17 10"/>
-                      <line x1="12" x2="12" y1="15" y2="3"/>
-                    </svg>
-                    <span class="truncate">Exportar Datos</span>
-                  </a>
-                </li>
-
               </ul>
             </div>
 
-            <!-- Sección de Herramientas -->
-            <div class="pt-4">
-              <h3 class="px-4 text-xs font-semibold uppercase tracking-wider mb-3"
-                  [style.color]="'var(--sidebar-text)'" style="opacity: 0.5">
+            <!-- SECCIÓN: HERRAMIENTAS Y SISTEMA -->
+            <div class="pt-2 border-t" style="border-color: rgba(128,128,128,0.1)">
+              <h3 class="px-3 text-[10px] font-bold uppercase tracking-widest mb-2" 
+                  [style.color]="'var(--sidebar-text)'" style="opacity: 0.4">
                 Herramientas
               </h3>
-              
-              <ul class="space-y-1">
-                <li>
-                  <a routerLink="/pages/settings" 
-                     routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
-                     [style.color]="'var(--sidebar-text)'"
-                     (mouseenter)="onMenuEnter($event)"
-                     (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                      <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                    <span class="truncate">Configuración</span>
-                  </a>
-                </li>
+              <div class="space-y-1">
+                <a routerLink="/pages/exportar" 
+                   routerLinkActive="active-menu-item"
+                   class="group flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200"
+                   [style.color]="'var(--sidebar-text)'"
+                   (mouseenter)="onMenuEnter($event)"
+                   (mouseleave)="onMenuLeave($event)">
+                  <svg class="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" x2="12" y1="15" y2="3"/>
+                  </svg>
+                  <span>Exportar Datos</span>
+                </a>
 
-                <li>
-                  <a routerLink="/pages/profile" 
-                     routerLinkActive="active-menu-item"
-                     class="group flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all"
-                     [style.color]="'var(--sidebar-text)'"
-                     (mouseenter)="onMenuEnter($event)"
-                     (mouseleave)="onMenuLeave($event)">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                      <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    <span class="truncate">Mi Perfil</span>
-                  </a>
-                </li>
-              </ul>
+                <a routerLink="/pages/settings" 
+                   routerLinkActive="active-menu-item"
+                   class="group flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200"
+                   [style.color]="'var(--sidebar-text)'"
+                   (mouseenter)="onMenuEnter($event)"
+                   (mouseleave)="onMenuLeave($event)">
+                  <svg class="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  <span>Configuración</span>
+                </a>
+
+                <a routerLink="/pages/profile" 
+                   routerLinkActive="active-menu-item"
+                   class="group flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200"
+                   [style.color]="'var(--sidebar-text)'"
+                   (mouseenter)="onMenuEnter($event)"
+                   (mouseleave)="onMenuLeave($event)">
+                  <svg class="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  <span>Mi Perfil</span>
+                </a>
+              </div>
             </div>
+
           </nav>
           
           <!-- User Profile Section -->
           <div class="p-4 border-t flex-shrink-0" style="border-color: rgba(128,128,128,0.2)">
-            <div class="flex items-center gap-2">
-              
-              <!-- Botón de Perfil -->
+            <div class="flex items-center gap-3">
               <button 
                 routerLink="/pages/profile"
-                class="flex items-center gap-3 flex-1 min-w-0 px-3 py-2 rounded-lg transition-colors group"
+                class="flex items-center gap-3 flex-1 min-w-0 px-2 py-2 rounded-lg transition-colors group"
                 (mouseenter)="onMenuEnter($event)"
                 (mouseleave)="onMenuLeave($event)"
               >
-                <div class="h-10 w-10 rounded-full overflow-hidden border-2 flex-shrink-0 flex items-center justify-center transition-colors"
-                     [style.background-color]="'var(--color-primary)'"
+                <div class="h-9 w-9 rounded-full overflow-hidden border-2 flex-shrink-0 flex items-center justify-center transition-colors shadow-sm"
+                     [style.background-color]="userAvatarUrl ? 'transparent' : 'var(--color-primary)'"
                      style="border-color: rgba(128,128,128,0.3)">
-                  <span class="text-white font-bold text-sm">{{ userInitials }}</span>
+                  <img *ngIf="userAvatarUrl" [src]="userAvatarUrl" alt="Avatar" class="w-full h-full object-cover">
+                  <span *ngIf="!userAvatarUrl" class="text-white font-bold text-xs">{{ userInitials }}</span>
                 </div>
                 <div class="flex-1 min-w-0 text-left">
                   <p class="text-sm font-semibold truncate transition-colors" 
                      [style.color]="'var(--sidebar-text)'">{{ userName }}</p>
-                  <p class="text-xs truncate" [style.color]="'var(--sidebar-text)'" style="opacity: 0.6">{{ userEmail }}</p>
+                  <p class="text-[10px] truncate" [style.color]="'var(--sidebar-text)'" style="opacity: 0.6">{{ userRole }}</p>
                 </div>
-                <svg class="w-4 h-4 transition-all flex-shrink-0" 
-                     [style.color]="'var(--sidebar-text)'" style="opacity: 0.5"
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
               </button>
 
-              <!-- Botón de Logout -->
               <button 
                 (click)="logout()" 
-                class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors flex-shrink-0"
+                class="flex items-center justify-center w-9 h-9 rounded-lg transition-colors flex-shrink-0 hover:bg-rose-500/10"
                 [style.color]="'var(--sidebar-text)'"
                 style="opacity: 0.6"
                 (mouseenter)="onHoverColor($event, '#EF4444')"
@@ -322,7 +325,6 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                 </svg>
               </button>
-              
             </div>
           </div>
           
@@ -332,19 +334,15 @@
 
     <!-- Main Content -->
     <div class="ion-page" id="main-content">
-      
-      <!-- Header -->
       <header class="sticky top-0 z-50 flex w-full border-b shadow-sm flex-shrink-0"
               [style.background-color]="'var(--header-bg)'"
               [style.color]="'var(--header-text)'"
               style="border-color: rgba(128,128,128,0.2)">
         <div class="flex flex-grow items-center justify-between px-4 py-4 md:px-6 2xl:px-11">
-          
           <div class="flex items-center gap-4">
             <div class="lg:hidden">
               <ion-menu-button [style.color]="'var(--header-text)'"></ion-menu-button>
             </div>
-            
             <div class="hidden md:block">
               <h2 class="text-lg font-semibold" [style.color]="'var(--header-text)'">Sistema BPM</h2>
               <p class="text-xs" [style.color]="'var(--header-text)'" style="opacity: 0.7">{{ currentDate }}</p>
@@ -352,8 +350,6 @@
           </div>
 
           <div class="flex items-center gap-3 md:gap-5">
-            
-            <!-- Dark Mode Toggle -->
             <button (click)="toggleDarkMode()" 
                     class="flex h-10 w-10 items-center justify-center rounded-lg border transition-all"
                     [style.background-color]="'var(--header-bg)'"
@@ -390,8 +386,7 @@
                 </svg>
                 <span 
                   *ngIf="unreadCount > 0" 
-                  class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-[#171F2C] animate-pulse"
-                >
+                  class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-[#171F2C] animate-pulse">
                   {{ unreadCount > 9 ? '9+' : unreadCount }}
                 </span>
               </button>
@@ -403,9 +398,7 @@
                 [style.background-color]="'var(--header-bg)'"
                 style="border-color: rgba(128,128,128,0.2)">
                 
-                <!-- Header -->
-                <div class="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
-                     style="border-color: rgba(128,128,128,0.2)">
+                <div class="flex items-center justify-between px-4 py-3 border-b flex-shrink-0" style="border-color: rgba(128,128,128,0.2)">
                   <div class="min-w-0 flex-1">
                     <h4 class="text-sm font-bold truncate" [style.color]="'var(--header-text)'">Alertas del Sistema</h4>
                     <p class="text-[10px] mt-0.5" [style.color]="'var(--header-text)'" style="opacity: 0.5">{{ unreadCount }} sin reconocer</p>
@@ -413,15 +406,13 @@
                   <button 
                     *ngIf="unreadCount > 0"
                     (click)="reconocerTodas()" 
-                    class="text-xs font-semibold flex-shrink-0 ml-2"
+                    class="text-xs font-semibold flex-shrink-0 ml-2 hover:underline"
                     [style.color]="'var(--color-primary)'">
                     Reconocer todas
                   </button>
                 </div>
 
-                <!-- Lista de alertas -->
                 <div class="max-h-[60vh] sm:max-h-[28rem] overflow-y-auto">
-                  
                   <div *ngIf="alerts.length === 0" class="px-4 py-8 text-center">
                     <svg class="w-12 h-12 mx-auto mb-2 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
@@ -432,11 +423,11 @@
                   </div>
 
                   <div *ngFor="let alert of alerts" 
-                       class="px-4 py-3 border-b transition-colors cursor-pointer"
+                       class="px-4 py-3 border-b transition-colors cursor-pointer group"
                        [class.bg-rose-50/50]="alert.severity === 'critical' && !alert.acknowledged"
+                       [class.hover\:bg-gray-50]="!alert.acknowledged"
+                       [class.dark\:hover\:bg-[#171F2C]]="!alert.acknowledged"
                        style="border-color: rgba(128,128,128,0.1)"
-                       (mouseenter)="onHoverBg($event, 'var(--sidebar-hover)')"
-                       (mouseleave)="onLeaveBg($event)"
                        (click)="alertaClic(alert)">
                     <div class="flex items-start gap-2.5">
                       <div class="flex-shrink-0 mt-0.5">
@@ -445,9 +436,18 @@
                       
                       <div class="flex-1 min-w-0">
                         <div class="flex items-start justify-between gap-2">
-                          <p class="text-sm font-bold leading-tight line-clamp-2" [style.color]="'var(--header-text)'">
+                          <p class="text-xs font-bold leading-tight line-clamp-2" [style.color]="'var(--header-text)'">
                             {{ alert.message }}
                           </p>
+                          <!-- ✅ BOTÓN X PARA CERRAR SIN REDIRIGIR -->
+                          <button 
+                            (click)="cerrarAlertaSinRedirigir($event, alert)"
+                            class="text-gray-400 hover:text-rose-500 transition-colors p-1 rounded-full hover:bg-rose-50 dark:hover:bg-rose-500/10 flex-shrink-0"
+                            title="Descartar notificación">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                          </button>
                         </div>
                         
                         <div class="mt-1.5 space-y-1">
@@ -456,21 +456,11 @@
                                   [ngClass]="notificationService.getAlertColor(alert.severity)">
                               {{ notificationService.getSeverityLabel(alert.severity) }}
                             </span>
-                            <span class="truncate" [style.color]="'var(--header-text)'" style="opacity: 0.6">
-                              {{ notificationService.formatValueRange(alert) }}
-                            </span>
                           </div>
-                          
-                          <p class="text-xs truncate" [style.color]="'var(--header-text)'" style="opacity: 0.7">
-                            <span class="font-semibold">{{ alert.parameter }}</span>
-                            <span class="mx-1">•</span>
-                            <span>{{ alert.format_type }}</span>
+                          <p class="text-[10px] mt-1.5" [style.color]="'var(--header-text)'" style="opacity: 0.5">
+                            {{ getTimeAgo(alert.created_at) }}
                           </p>
                         </div>
-
-                        <p class="text-[10px] mt-1.5" [style.color]="'var(--header-text)'" style="opacity: 0.5">
-                          {{ getTimeAgo(alert.created_at) }}
-                        </p>
                       </div>
 
                       <div *ngIf="!alert.acknowledged" 
@@ -478,17 +468,13 @@
                            [style.background-color]="'var(--color-primary)'"></div>
                     </div>
                   </div>
-
                 </div>
 
-                <!-- Footer -->
-                <div class="px-4 py-3 border-t flex-shrink-0"
-                     [style.background-color]="'var(--sidebar-hover)'"
-                     style="border-color: rgba(128,128,128,0.2)">
+                <div class="px-4 py-3 border-t flex-shrink-0" [style.background-color]="'var(--sidebar-hover)'" style="border-color: rgba(128,128,128,0.2)">
                   <button 
                     routerLink="/pages/dashboard"
                     (click)="showAlerts = false"
-                    class="w-full text-center text-xs font-semibold"
+                    class="w-full text-center text-xs font-semibold hover:underline"
                     [style.color]="'var(--color-primary)'">
                     Ver dashboard completo →
                   </button>
@@ -497,7 +483,7 @@
             </div>
 
             <!-- User Avatar -->
-           <button 
+            <button 
               routerLink="/pages/profile"
               class="flex items-center gap-3 pl-3 border-l rounded-lg px-2 py-1.5 transition-all cursor-pointer group"
               style="border-color: rgba(128,128,128,0.2)"
@@ -510,9 +496,10 @@
                 <p class="text-xs" [style.color]="'var(--header-text)'" style="opacity: 0.6">{{ userRole }}</p>
               </div>
               <div class="h-10 w-10 rounded-full overflow-hidden border-2 flex items-center justify-center flex-shrink-0 transition-colors"
-                   [style.background-color]="'var(--color-primary)'"
+                   [style.background-color]="userAvatarUrl ? 'transparent' : 'var(--color-primary)'"
                    style="border-color: rgba(128,128,128,0.3)">
-                <span class="text-white font-bold text-sm">{{ userInitials }}</span>
+                <img *ngIf="userAvatarUrl" [src]="userAvatarUrl" alt="Avatar" class="w-full h-full object-cover">
+                <span *ngIf="!userAvatarUrl" class="text-white font-bold text-sm">{{ userInitials }}</span>
               </div>
             </button>
 
@@ -520,9 +507,7 @@
         </div>
       </header>
 
-      <!-- Router Outlet -->
       <ion-router-outlet class="flex-1 overflow-hidden"></ion-router-outlet>
-
     </div>
 
   </ion-split-pane>

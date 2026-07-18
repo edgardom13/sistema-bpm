@@ -6,13 +6,18 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class SupabaseService {
-  private supabase: SupabaseClient;
+  private supabase: SupabaseClient; // ✅ Solo UNA vez
 
   constructor() {
     this.supabase = createClient(
       environment.supabase.url,
       environment.supabase.key
     );
+  }
+
+  // Getter para exponer el Storage
+  get storage() {
+    return this.supabase.storage;
   }
 
   getSupabase(): SupabaseClient {

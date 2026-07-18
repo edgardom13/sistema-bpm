@@ -34,6 +34,11 @@ export interface ThemeConfig {
   
   // Preset activo
   preset: string;
+
+  // ✅ NUEVOS CAMPOS PARA MARCA E IDENTIDAD
+  brandLogo?: string;
+  companyName?: string;
+  establishmentName?: string;
 }
 
 @Injectable({
@@ -175,7 +180,12 @@ export class ConfigService {
     iconSize: 20,
     borderRadius: 8,
     darkMode: false,
-    preset: 'azul-corporativo'
+    preset: 'azul-corporativo',
+    
+    // ✅ Valores por defecto para Marca e Identidad
+    brandLogo: '',
+    companyName: 'Sistema BPM',
+    establishmentName: 'Control de Calidad'
   };
 
   public config$ = new BehaviorSubject<ThemeConfig>(this.defaultConfig);
@@ -205,7 +215,7 @@ export class ConfigService {
     const currentConfig = this.getConfig();
     const updatedConfig = { ...currentConfig, ...newConfig };
     
-    // Generar colores derivados automáticamente
+    // Generar colores derivados automáticamente si cambia el color primario
     if (newConfig.primaryColor) {
       updatedConfig.primaryHover = this.adjustColor(newConfig.primaryColor, -20);
       updatedConfig.primaryLight = this.hexToRgba(newConfig.primaryColor, 0.1);

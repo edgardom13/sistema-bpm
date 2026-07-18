@@ -1,117 +1,59 @@
 <ion-content class="ion-no-padding bg-gray-50 dark:bg-[#0C121E]">
   <div class="min-h-screen">
-
     <!-- Header Compacto -->
     <div class="sticky top-0 z-40 bg-white/80 dark:bg-[#1C2434]/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-[#2D313A]/60">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
         <div class="flex items-center justify-between gap-4">
-
           <div class="flex items-center gap-3">
-            <button
-              routerLink="/pages/dashboard"
-              class="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 dark:border-[#2D313A] text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#171F2C] transition-all"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-              </svg>
+            <button routerLink="/pages/dashboard" class="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 dark:border-[#2D313A] text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#171F2C] transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
             </button>
-
             <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-lg flex items-center justify-center shadow-md"
-                   [style.background-color]="'var(--color-primary)'">
-                <span class="text-lg">{{ currentConfig?.icon }}</span>
-              </div>
+              <div class="w-9 h-9 rounded-lg flex items-center justify-center shadow-md" [style.background-color]="'var(--color-primary)'"><span class="text-lg">{{ currentConfig?.icon }}</span></div>
               <div>
-                <h1 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">
-                  {{ currentConfig?.title }}
-                </h1>
-                <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
-                  {{ formatType | titlecase }}
-                </p>
+                <h1 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">{{ currentConfig?.title }}</h1>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">{{ formatType | titlecase }}</p>
               </div>
             </div>
           </div>
-
-          <!-- Selector de Fecha -->
           <div class="flex items-center gap-2 bg-gray-100 dark:bg-[#121824] rounded-lg px-2.5 py-1.5 border border-gray-200 dark:border-[#2D313A]">
-            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-            <input
-              type="date"
-              [value]="selectedDate"
-              (change)="onDateChange($event)"
-              class="bg-transparent text-xs font-semibold text-gray-700 dark:text-gray-300 focus:outline-none cursor-pointer"
-            >
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <input type="date" [value]="selectedDate" (change)="onDateChange($event)" class="bg-transparent text-xs font-semibold text-gray-700 dark:text-gray-300 focus:outline-none cursor-pointer">
           </div>
-
         </div>
       </div>
     </div>
 
     <!-- Contenido -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5">
-
-      <!-- Loading -->
       <div *ngIf="loading" class="flex flex-col items-center justify-center py-16">
-        <div class="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin"
-             [style.border-color]="'var(--color-primary)'"></div>
+        <div class="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" [style.border-color]="'var(--color-primary)'"></div>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-3">Cargando...</p>
       </div>
 
       <div *ngIf="!loading">
-        
-        <!-- Formulario -->
         <form (ngSubmit)="guardarFormulario()" class="mb-8">
           <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-4 sm:p-6 shadow-sm">
-            <h2 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
-              {{ isEditing ? 'Editar Registro' : 'Nuevo Registro' }}
-            </h2>
+            <h2 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">{{ isEditing ? 'Editar Registro' : 'Nuevo Registro' }}</h2>
 
             <!-- ✅ CASO ESPECIAL: Prácticas Higiénicas -->
             <div *ngIf="formatType === 'higienicas'" class="space-y-6">
-              
-              <!-- Campos ANTES de la tabla -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Día -->
                 <div>
-                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="mr-1" [style.color]="'var(--color-primary)'">1.</span> Día
-                  </label>
-                  <input
-                    type="text"
-                    [value]="selectedDate"
-                    readonly
-                    class="w-full bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-not-allowed"
-                  >
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">1.</span> Día</label>
+                  <input type="text" [value]="selectedDate" readonly class="w-full bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-not-allowed">
                 </div>
-                
-                <!-- Nombre del Evaluado -->
                 <div>
-                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="mr-1" [style.color]="'var(--color-primary)'">2.</span> Nombre del Evaluado
-                  </label>
-                  <input
-                    type="text"
-                    [(ngModel)]="formData['nombre_evaluado']"
-                    name="nombre_evaluado"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
-                    [style.--tw-ring-color]="'var(--color-primary)'"
-                    [style.--tw-border-color]="'var(--color-primary)'"
-                    placeholder="Ingrese el nombre del evaluado"
-                  >
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">2.</span> Nombre del Evaluado</label>
+                  <select [(ngModel)]="formData['nombre_evaluado']" name="nombre_evaluado" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                    <option value="" disabled>Seleccione el empleado...</option>
+                    <option *ngFor="let emp of listaEmpleadosOperativos" [value]="emp">{{ emp }}</option>
+                  </select>
                 </div>
               </div>
 
-              <!-- ✅ Tabla de Evaluación -->
               <div>
-                <h3 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                  <svg class="w-4 h-4" [style.color]="'var(--color-primary)'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                  </svg>
-                  Limpieza e Higiene Personal
-                </h3>
-
+                <h3 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2"><svg class="w-4 h-4" [style.color]="'var(--color-primary)'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg> Limpieza e Higiene Personal</h3>
                 <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] overflow-hidden">
                   <div class="overflow-x-auto">
                     <table class="w-full">
@@ -124,38 +66,19 @@
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
-                        <tr *ngFor="let item of currentConfig?.itemsEvaluacion; let i = index" 
-                            class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
-                          <td class="px-3 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 text-center">
-                            {{ i + 1 }}
-                          </td>
-                          <td class="px-3 py-3 text-xs text-gray-700 dark:text-gray-300">
-                            {{ item }}
-                          </td>
+                        <tr *ngFor="let item of currentConfig?.itemsEvaluacion; let i = index" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
+                          <td class="px-3 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 text-center">{{ i + 1 }}</td>
+                          <td class="px-3 py-3 text-xs text-gray-700 dark:text-gray-300">{{ item }}</td>
                           <td class="px-3 py-3">
-                            <select
-                              [(ngModel)]="formData['items'][i]['cumple']"
-                              [name]="'item_' + i + '_cumple'"
-                              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer"
-                              [style.--tw-ring-color]="'var(--color-primary)'"
-                              [style.--tw-border-color]="'var(--color-primary)'"
-                            >
+                            <select [(ngModel)]="formData['items'][i]['cumple']" [name]="'item_' + i + '_cumple'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
                               <option value="" disabled>Seleccione...</option>
                               <option value="Si">✅ Si</option>
                               <option value="No">❌ No</option>
-                              <option value="Ninguna">⚪ Ninguna</option>
+                              <option value="Ninguna"> Ninguna</option>
                             </select>
                           </td>
                           <td class="px-3 py-3">
-                            <input
-                              type="text"
-                              [(ngModel)]="formData['items'][i]['observaciones']"
-                              [name]="'item_' + i + '_observaciones'"
-                              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
-                              [style.--tw-ring-color]="'var(--color-primary)'"
-                              [style.--tw-border-color]="'var(--color-primary)'"
-                              placeholder="Observaciones..."
-                            >
+                            <input type="text" [(ngModel)]="formData['items'][i]['observaciones']" [name]="'item_' + i + '_observaciones'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Observaciones...">
                           </td>
                         </tr>
                       </tbody>
@@ -164,354 +87,475 @@
                 </div>
               </div>
 
-              <!-- Campos DESPUÉS de la tabla -->
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Responsable del Checkeo -->
                 <div>
-                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="mr-1" [style.color]="'var(--color-primary)'">3.</span> Responsable del Checkeo
-                  </label>
-                  <input
-                    type="text"
-                    [(ngModel)]="formData['responsable_checkeo']"
-                    name="responsable_checkeo"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
-                    [style.--tw-ring-color]="'var(--color-primary)'"
-                    [style.--tw-border-color]="'var(--color-primary)'"
-                    placeholder="Ingrese responsable"
-                  >
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">3.</span> Responsable del Checkeo</label>
+                  <select [(ngModel)]="formData['responsable_checkeo']" name="responsable_checkeo" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                    <option value="" disabled>Seleccione el Jefe de Calidad...</option>
+                    <option *ngFor="let jefe of listaJefesCalidad" [value]="jefe">{{ jefe }}</option>
+                  </select>
                 </div>
-
-                <!-- Firma del Evaluado -->
                 <div>
-                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="mr-1" [style.color]="'var(--color-primary)'">4.</span> Firma del Evaluado
-                  </label>
-                  <input
-                    type="text"
-                    [(ngModel)]="formData['firma_evaluado']"
-                    name="firma_evaluado"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
-                    [style.--tw-ring-color]="'var(--color-primary)'"
-                    [style.--tw-border-color]="'var(--color-primary)'"
-                    placeholder="Ingrese firma"
-                  >
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">4.</span> Firma del Evaluado</label>
+                  <input type="text" [(ngModel)]="formData['firma_evaluado']" name="firma_evaluado" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese firma">
                 </div>
-
-                <!-- Cargo -->
                 <div>
-                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="mr-1" [style.color]="'var(--color-primary)'">5.</span> Cargo
-                  </label>
-                  <input
-                    type="text"
-                    [(ngModel)]="formData['cargo']"
-                    name="cargo"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
-                    [style.--tw-ring-color]="'var(--color-primary)'"
-                    [style.--tw-border-color]="'var(--color-primary)'"
-                    placeholder="Ingrese cargo"
-                  >
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">5.</span> Cargo</label>
+                  <input type="text" [(ngModel)]="formData['cargo']" name="cargo" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese cargo">
                 </div>
-
-                <!-- Recomendaciones -->
                 <div class="sm:col-span-2 lg:col-span-3">
-                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="mr-1" [style.color]="'var(--color-primary)'">6.</span> Recomendaciones
-                  </label>
-                  <textarea
-                    [(ngModel)]="formData['recomendaciones']"
-                    name="recomendaciones"
-                    rows="3"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none"
-                    [style.--tw-ring-color]="'var(--color-primary)'"
-                    [style.--tw-border-color]="'var(--color-primary)'"
-                    placeholder="Ingrese recomendaciones"
-                  ></textarea>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">6.</span> Recomendaciones</label>
+                  <textarea [(ngModel)]="formData['recomendaciones']" name="recomendaciones" rows="3" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese recomendaciones"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ CASO ESPECIAL: Inspección de Residuos -->
+            <div *ngIf="formatType === 'residuos'" class="space-y-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">1.</span> Día</label>
+                  <input type="text" [value]="selectedDate" readonly class="w-full bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-not-allowed">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">2.</span> Responsable</label>
+                  <select [(ngModel)]="formData['responsable']" name="responsable" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                    <option value="" disabled>Seleccione el Jefe de Calidad...</option>
+                    <option *ngFor="let jefe of listaJefesCalidad" [value]="jefe">{{ jefe }}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">3.</span> Área inspeccionada</label>
+                  <input type="text" [(ngModel)]="formData['area_inspeccionada']" name="area_inspeccionada" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese área">
                 </div>
               </div>
 
+              <div>
+                <h3 class="text-sm font-bold text-white px-4 py-2 rounded-lg mb-3 flex items-center gap-2" [style.background]="'linear-gradient(to right, #FF6B35, #F7931E)'"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Residuos Sólidos</h3>
+                <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] overflow-hidden">
+                  <div class="overflow-x-auto">
+                    <table class="w-full">
+                      <thead class="bg-gray-50 dark:bg-[#121824] border-b border-gray-200 dark:border-[#2D313A]">
+                        <tr>
+                          <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-12">N°</th>
+                          <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actividades a Verificar</th>
+                          <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">Verificación</th>
+                          <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48">Observaciones</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
+                        <tr *ngFor="let item of getResiduosSolidosItems(); let i = index" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
+                          <td class="px-3 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 text-center">{{ i + 1 }}</td>
+                          <td class="px-3 py-3 text-xs text-gray-700 dark:text-gray-300">{{ item }}</td>
+                          <td class="px-3 py-3">
+                            <div class="flex items-center justify-center gap-2">
+                              <button type="button" (click)="setResiduoValue(i, 'Si')" class="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-bold transition-all border-2" [class.bg-green-500]="getResiduoValue(i) === 'Si'" [class.text-white]="getResiduoValue(i) === 'Si'" [class.border-green-500]="getResiduoValue(i) === 'Si'" [class.bg-white]="getResiduoValue(i) !== 'Si'" [class.text-gray-400]="getResiduoValue(i) !== 'Si'" [class.border-gray-200]="getResiduoValue(i) !== 'Si'" [class.hover\:bg-green-50]="getResiduoValue(i) !== 'Si'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Sí</button>
+                              <button type="button" (click)="setResiduoValue(i, 'No')" class="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-bold transition-all border-2" [class.bg-rose-500]="getResiduoValue(i) === 'No'" [class.text-white]="getResiduoValue(i) === 'No'" [class.border-rose-500]="getResiduoValue(i) === 'No'" [class.bg-white]="getResiduoValue(i) !== 'No'" [class.text-gray-400]="getResiduoValue(i) !== 'No'" [class.border-gray-200]="getResiduoValue(i) !== 'No'" [class.hover\:bg-rose-50]="getResiduoValue(i) !== 'No'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg> No</button>
+                            </div>
+                          </td>
+                          <td class="px-3 py-3"><input type="text" [(ngModel)]="formData['items_solidos'][i]['observaciones']" [name]="'residuo_solido_' + i + '_obs'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Observaciones..."></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-bold text-white px-4 py-2 rounded-lg mb-3 flex items-center gap-2" [style.background]="'linear-gradient(to right, #0EA5E9, #06B6D4)'"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg> Residuos Líquidos</h3>
+                <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] overflow-hidden">
+                  <div class="overflow-x-auto">
+                    <table class="w-full">
+                      <thead class="bg-gray-50 dark:bg-[#121824] border-b border-gray-200 dark:border-[#2D313A]">
+                        <tr>
+                          <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-12">N°</th>
+                          <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actividades a Verificar</th>
+                          <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">Verificación</th>
+                          <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48">Observaciones</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
+                        <tr *ngFor="let item of getResiduosLiquidosItems(); let i = index" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
+                          <td class="px-3 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 text-center">{{ i + 1 }}</td>
+                          <td class="px-3 py-3 text-xs text-gray-700 dark:text-gray-300">{{ item }}</td>
+                          <td class="px-3 py-3">
+                            <div class="flex items-center justify-center gap-2">
+                              <button type="button" (click)="setResiduoLiquidoValue(i, 'Si')" class="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-bold transition-all border-2" [class.bg-green-500]="getResiduoLiquidoValue(i) === 'Si'" [class.text-white]="getResiduoLiquidoValue(i) === 'Si'" [class.border-green-500]="getResiduoLiquidoValue(i) === 'Si'" [class.bg-white]="getResiduoLiquidoValue(i) !== 'Si'" [class.text-gray-400]="getResiduoLiquidoValue(i) !== 'Si'" [class.border-gray-200]="getResiduoLiquidoValue(i) !== 'Si'" [class.hover\:bg-green-50]="getResiduoLiquidoValue(i) !== 'Si'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Sí</button>
+                              <button type="button" (click)="setResiduoLiquidoValue(i, 'No')" class="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-bold transition-all border-2" [class.bg-rose-500]="getResiduoLiquidoValue(i) === 'No'" [class.text-white]="getResiduoLiquidoValue(i) === 'No'" [class.border-rose-500]="getResiduoLiquidoValue(i) === 'No'" [class.bg-white]="getResiduoLiquidoValue(i) !== 'No'" [class.text-gray-400]="getResiduoLiquidoValue(i) !== 'No'" [class.border-gray-200]="getResiduoLiquidoValue(i) !== 'No'" [class.hover\:bg-rose-50]="getResiduoLiquidoValue(i) !== 'No'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg> No</button>
+                            </div>
+                          </td>
+                          <td class="px-3 py-3"><input type="text" [(ngModel)]="formData['items_liquidos'][i]['observaciones']" [name]="'residuo_liquido_' + i + '_obs'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Observaciones..."></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">4.</span> Observaciones Generales</label>
+                <textarea [(ngModel)]="formData['observaciones_generales']" name="observaciones_generales" rows="3" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese observaciones generales..."></textarea>
+              </div>
+            </div>
+
+            <!-- ✅ CASO ESPECIAL: Control de Plagas -->
+            <div *ngIf="formatType === 'plagas'" class="space-y-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">1.</span> Día</label>
+                  <input type="text" [value]="selectedDate" readonly class="w-full bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-not-allowed">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">2.</span> Responsable</label>
+                  <select [(ngModel)]="formData['responsable']" name="responsable" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                    <option value="" disabled>Seleccione el Jefe de Calidad...</option>
+                    <option *ngFor="let jefe of listaJefesCalidad" [value]="jefe">{{ jefe }}</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">3.</span> Área inspeccionada</label>
+                  <input type="text" [(ngModel)]="formData['area_inspeccionada']" name="area_inspeccionada" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese área">
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-bold text-white px-4 py-2 rounded-lg mb-3 flex items-center gap-2" [style.background]="'linear-gradient(to right, #8B5CF6, #A78BFA)'"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg> Aspectos a Verificar</h3>
+                <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] overflow-hidden">
+                  <div class="overflow-x-auto">
+                    <table class="w-full">
+                      <thead class="bg-gray-50 dark:bg-[#121824] border-b border-gray-200 dark:border-[#2D313A]">
+                        <tr>
+                          <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-12">N°</th>
+                          <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Aspecto a Verificar</th>
+                          <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">Verificación</th>
+                          <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48">Observaciones</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
+                        <tr *ngFor="let item of getPlagasItems(); let i = index" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
+                          <td class="px-3 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 text-center">{{ i + 1 }}</td>
+                          <td class="px-3 py-3 text-xs text-gray-700 dark:text-gray-300">{{ item }}</td>
+                          <td class="px-3 py-3">
+                            <div class="flex items-center justify-center gap-2">
+                              <button type="button" (click)="setPlagasValue(i, 'Si')" class="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-bold transition-all border-2" [class.bg-green-500]="getPlagasValue(i) === 'Si'" [class.text-white]="getPlagasValue(i) === 'Si'" [class.border-green-500]="getPlagasValue(i) === 'Si'" [class.bg-white]="getPlagasValue(i) !== 'Si'" [class.text-gray-400]="getPlagasValue(i) !== 'Si'" [class.border-gray-200]="getPlagasValue(i) !== 'Si'" [class.hover\:bg-green-50]="getPlagasValue(i) !== 'Si'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Sí</button>
+                              <button type="button" (click)="setPlagasValue(i, 'No')" class="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg text-xs font-bold transition-all border-2" [class.bg-rose-500]="getPlagasValue(i) === 'No'" [class.text-white]="getPlagasValue(i) === 'No'" [class.border-rose-500]="getPlagasValue(i) === 'No'" [class.bg-white]="getPlagasValue(i) !== 'No'" [class.text-gray-400]="getPlagasValue(i) !== 'No'" [class.border-gray-200]="getPlagasValue(i) !== 'No'" [class.hover\:bg-rose-50]="getPlagasValue(i) !== 'No'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg> No</button>
+                            </div>
+                          </td>
+                          <td class="px-3 py-3"><input type="text" [(ngModel)]="formData['items_plagas'][i]['observaciones']" [name]="'plagas_' + i + '_obs'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Observaciones..."></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">4.</span> Medidas Preventivas</label>
+                <textarea [(ngModel)]="formData['medidas_preventivas']" name="medidas_preventivas" rows="3" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese medidas preventivas..."></textarea>
+              </div>
+              <div>
+                <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">5.</span> Medidas Correctivas</label>
+                <textarea [(ngModel)]="formData['medidas_correctivas']" name="medidas_correctivas" rows="3" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese medidas correctivas..."></textarea>
+              </div>
+              <div>
+                <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">6.</span> Jefe de Control de Calidad</label>
+                <select [(ngModel)]="formData['jefe_calidad']" name="jefe_calidad" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                  <option value="" disabled>Seleccione el Jefe de Calidad...</option>
+                  <option *ngFor="let jefe of listaJefesCalidad" [value]="jefe">{{ jefe }}</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ✅ CASO ESPECIAL: Seguimiento pH y Cloro -->
+            <div *ngIf="formatType === 'ph-cloro'" class="space-y-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">1.</span> Fecha</label>
+                  <input type="text" [value]="selectedDate" readonly class="w-full bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-not-allowed">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">2.</span> Punto de Toma</label>
+                  <select [(ngModel)]="formData['punto_toma_de']" name="punto_toma_de" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                    <option value="" disabled>Seleccione...</option>
+                    <option value="Grifo de produccion">Grifo de producción</option>
+                    <option value="Tanque almacenamiento">Tanque almacenamiento</option>
+                    <option value="Linea envasado">Línea envasado</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">3.</span> pH</label>
+                  <input type="number" step="0.1" [(ngModel)]="formData['ph']" name="ph" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ej: 7.2">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">4.</span> Cloro (ppm)</label>
+                  <input type="number" step="0.1" [(ngModel)]="formData['cloro']" name="cloro" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ej: 1.5">
+                </div>
+                <div class="sm:col-span-2 lg:col-span-3">
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">5.</span> Observaciones</label>
+                  <textarea [(ngModel)]="formData['observaciones']" name="observaciones" rows="3" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese observaciones..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ CASO ESPECIAL: Devolución de Producto -->
+            <div *ngIf="formatType === 'devolucion'" class="space-y-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">1.</span> Fecha</label>
+                  <input type="text" [value]="selectedDate" readonly class="w-full bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-not-allowed">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">2.</span> Nombre del Producto</label>
+                  <input type="text" [(ngModel)]="formData['nombre_producto']" name="nombre_producto" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese nombre del producto">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">3.</span> Cantidad</label>
+                  <input type="text" [(ngModel)]="formData['cantidad']" name="cantidad" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ej: 3 UNIDADES">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">4.</span> Fecha de Devolución</label>
+                  <input type="date" [(ngModel)]="formData['fecha_devolucion']" name="fecha_devolucion" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">5.</span> Cliente</label>
+                  <input type="text" [(ngModel)]="formData['cliente']" name="cliente" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese cliente">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">6.</span> Causa de la Devolución</label>
+                  <select [(ngModel)]="formData['causa_devolucion']" name="causa_devolucion" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                    <option value="" disabled>Seleccione...</option>
+                    <option value="PRESENTA MOHO">PRESENTA MOHO</option>
+                    <option value="VENCIDO">VENCIDO</option>
+                    <option value="DANADO">DAÑADO</option>
+                    <option value="ERROR_PEDIDO">ERROR EN PEDIDO</option>
+                    <option value="OTRO">OTRO</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-2 lg:col-span-3">
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">7.</span> Observaciones</label>
+                  <textarea [(ngModel)]="formData['observaciones']" name="observaciones" rows="3" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese observaciones..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ CASO ESPECIAL: Control de Materia Prima -->
+            <div *ngIf="formatType === 'materia-prima'" class="space-y-6">
+              <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="w-full">
+                    <thead class="bg-gray-50 dark:bg-[#121824] border-b border-gray-200 dark:border-[#2D313A]">
+                      <tr>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-12">N°</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Fecha</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Proveedor</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Producto</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Fecha Vencimiento</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">Temp (°C)</th>
+                        <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">Aprobado</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48">Observaciones</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
+                      <tr *ngFor="let item of getMPItems(); let i = index" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
+                        <td class="px-3 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 text-center">{{ i + 1 }}</td>
+                        <td class="px-3 py-3"><input type="date" [(ngModel)]="formData['items_mp'][i]['fecha']" [name]="'mp_' + i + '_fecha'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'"></td>
+                        <td class="px-3 py-3"><input type="text" [(ngModel)]="formData['items_mp'][i]['proveedor']" [name]="'mp_' + i + '_proveedor'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Proveedor"></td>
+                        <td class="px-3 py-3"><input type="text" [(ngModel)]="formData['items_mp'][i]['producto']" [name]="'mp_' + i + '_producto'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Producto"></td>
+                        <td class="px-3 py-3"><input type="date" [(ngModel)]="formData['items_mp'][i]['fecha_vencimiento']" [name]="'mp_' + i + '_vencimiento'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'"></td>
+                        <td class="px-3 py-3"><input type="number" step="0.1" [(ngModel)]="formData['items_mp'][i]['temperatura']" [name]="'mp_' + i + '_temp'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="°C"></td>
+                        <td class="px-3 py-3">
+                          <div class="flex items-center justify-center gap-1">
+                            <button type="button" (click)="setMPValue(i, 'Si')" class="flex-1 px-2 py-1 rounded text-[10px] font-bold transition-all border-2" [class.bg-green-500]="getMPValue(i) === 'Si'" [class.text-white]="getMPValue(i) === 'Si'" [class.border-green-500]="getMPValue(i) === 'Si'" [class.bg-white]="getMPValue(i) !== 'Si'" [class.text-gray-400]="getMPValue(i) !== 'Si'" [class.border-gray-200]="getMPValue(i) !== 'Si'">Si</button>
+                            <button type="button" (click)="setMPValue(i, 'No')" class="flex-1 px-2 py-1 rounded text-[10px] font-bold transition-all border-2" [class.bg-rose-500]="getMPValue(i) === 'No'" [class.text-white]="getMPValue(i) === 'No'" [class.border-rose-500]="getMPValue(i) === 'No'" [class.bg-white]="getMPValue(i) !== 'No'" [class.text-gray-400]="getMPValue(i) !== 'No'" [class.border-gray-200]="getMPValue(i) !== 'No'">No</button>
+                            <button type="button" (click)="setMPValue(i, 'NA')" class="flex-1 px-2 py-1 rounded text-[10px] font-bold transition-all border-2" [class.bg-gray-500]="getMPValue(i) === 'NA'" [class.text-white]="getMPValue(i) === 'NA'" [class.border-gray-500]="getMPValue(i) === 'NA'" [class.bg-white]="getMPValue(i) !== 'NA'" [class.text-gray-400]="getMPValue(i) !== 'NA'" [class.border-gray-200]="getMPValue(i) !== 'NA'">NA</button>
+                          </div>
+                        </td>
+                        <td class="px-3 py-3"><input type="text" [(ngModel)]="formData['items_mp'][i]['observaciones']" [name]="'mp_' + i + '_obs'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Observaciones..."></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <button type="button" (click)="agregarItemMP()" class="w-full flex items-center justify-center gap-2 py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-xs font-semibold text-gray-500 dark:text-gray-400 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Agregar</button>
+              <div>
+                <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">Observaciones Generales</span></label>
+                <textarea [(ngModel)]="formData['observaciones_generales']" name="observaciones_generales" rows="2" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Ingrese observaciones generales..."></textarea>
+              </div>
+              <div>
+                <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">Operario Responsable</span></label>
+                <select [(ngModel)]="formData['operario_responsable']" name="operario_responsable" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                  <option value="" disabled>Seleccione el empleado...</option>
+                  <option *ngFor="let emp of listaEmpleadosOperativos" [value]="emp">{{ emp }}</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">Jefe de Calidad</span></label>
+                <select [(ngModel)]="formData['jefe_calidad']" name="jefe_calidad" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                  <option value="" disabled>Seleccione el Jefe de Calidad...</option>
+                  <option *ngFor="let jefe of listaJefesCalidad" [value]="jefe">{{ jefe }}</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- ✅ CASO ESPECIAL: Control de Temp y HR CC -->
+            <div *ngIf="formatType === 'temp-hr'" class="space-y-6">
+              <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] overflow-hidden">
+                <div class="overflow-x-auto">
+                  <table class="w-full">
+                    <thead class="bg-gray-50 dark:bg-[#121824] border-b border-gray-200 dark:border-[#2D313A]">
+                      <tr>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-12">N°</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Fecha</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Hora</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">°T (Temp)</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">HR (%)</th>
+                        <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-48">Observaciones</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
+                      <tr *ngFor="let item of getTempHRItems(); let i = index" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
+                        <td class="px-3 py-3 text-xs font-bold text-gray-500 dark:text-gray-400 text-center">{{ i + 1 }}</td>
+                        <td class="px-3 py-3"><input type="date" [(ngModel)]="formData['items_temp_hr'][i]['fecha']" [name]="'temp_hr_' + i + '_fecha'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'"></td>
+                        <td class="px-3 py-3"><input type="time" [(ngModel)]="formData['items_temp_hr'][i]['hora']" [name]="'temp_hr_' + i + '_hora'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'"></td>
+                        <td class="px-3 py-3"><input type="number" step="0.1" [(ngModel)]="formData['items_temp_hr'][i]['temperatura']" [name]="'temp_hr_' + i + '_temp'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="°C"></td>
+                        <td class="px-3 py-3"><input type="number" step="0.1" [(ngModel)]="formData['items_temp_hr'][i]['hr']" [name]="'temp_hr_' + i + '_hr'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="%"></td>
+                        <td class="px-3 py-3"><input type="text" [(ngModel)]="formData['items_temp_hr'][i]['observaciones']" [name]="'temp_hr_' + i + '_obs'" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" placeholder="Observaciones..."></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <button type="button" (click)="agregarItemTempHR()" class="w-full flex items-center justify-center gap-2 py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-xs font-semibold text-gray-500 dark:text-gray-400 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-all"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Agregar Más Registro</button>
+              <div>
+                <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">Jefe de Calidad</span></label>
+                <select [(ngModel)]="formData['jefe_calidad']" name="jefe_calidad" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                  <option value="" disabled>Seleccione el Jefe de Calidad...</option>
+                  <option *ngFor="let jefe of listaJefesCalidad" [value]="jefe">{{ jefe }}</option>
+                </select>
+              </div>
             </div>
 
             <!-- ✅ FORMULARIO GENÉRICO para todos los demás -->
-            <div *ngIf="formatType !== 'higienicas'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div *ngIf="formatType !== 'higienicas' && formatType !== 'residuos' && formatType !== 'plagas' && formatType !== 'ph-cloro' && formatType !== 'devolucion' && formatType !== 'materia-prima' && formatType !== 'temp-hr'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <ng-container *ngFor="let field of currentConfig?.fields; let i = index">
-                <div 
-                     [class.sm:col-span-2]="field.type === 'textarea' || (field.type === 'text' && field.key === 'observaciones')"
-                     [class.lg:col-span-3]="field.type === 'textarea' || (field.type === 'text' && field.key === 'observaciones')">
+                <div [class.sm:col-span-2]="field.type === 'textarea' || (field.type === 'text' && field.key === 'observaciones')" [class.lg:col-span-3]="field.type === 'textarea' || (field.type === 'text' && field.key === 'observaciones')">
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5"><span class="mr-1" [style.color]="'var(--color-primary)'">{{ i + 1 }}.</span> {{ field.label }}</label>
 
-                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
-                    <span class="mr-1" [style.color]="'var(--color-primary)'">{{ i + 1 }}.</span>
-                    {{ field.label }}
-                  </label>
-
-                  <!-- Input text/number -->
                   <div *ngIf="field.type === 'text' || field.type === 'number'" class="relative">
-                    <input
-                      [type]="field.type"
-                      [(ngModel)]="formData[field.key]"
-                      [name]="field.key"
-                      class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
-                      [style.--tw-ring-color]="'var(--color-primary)'"
-                      [style.--tw-border-color]="'var(--color-primary)'"
-                      [placeholder]="'Ingrese ' + field.label"
-                    >
-                    <span *ngIf="field.unit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-gray-400 bg-gray-100 dark:bg-[#1C2434] px-1.5 py-0.5 rounded">
-                      {{ field.unit }}
-                    </span>
+                    <input [type]="field.type" [(ngModel)]="formData[field.key]" [name]="field.key" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" [placeholder]="'Ingrese ' + field.label">
+                    <span *ngIf="field.unit" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-gray-400 bg-gray-100 dark:bg-[#1C2434] px-1.5 py-0.5 rounded">{{ field.unit }}</span>
                   </div>
 
-                  <!-- Date Auto -->
                   <div *ngIf="field.type === 'date-auto'" class="relative">
-                    <input
-                      type="text"
-                      [value]="selectedDate"
-                      readonly
-                      class="w-full bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-not-allowed"
-                    >
+                    <input type="text" [value]="selectedDate" readonly class="w-full bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 cursor-not-allowed">
                   </div>
 
-                  <!-- Jornada Auto -->
                   <div *ngIf="field.type === 'jornada-auto'" class="relative">
                     <div class="flex items-center gap-2">
-                      <input
-                        type="text"
-                        [value]="formData[field.key]"
-                        readonly
-                        class="flex-1 bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 cursor-not-allowed text-center"
-                      >
-                      <div class="flex items-center gap-1 bg-amber-100 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30 rounded-lg px-2.5 py-2">
-                        <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <span class="text-[10px] font-semibold text-amber-700 dark:text-amber-400">Auto</span>
-                      </div>
+                      <input type="text" [value]="formData[field.key]" readonly class="flex-1 bg-gray-100 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 cursor-not-allowed text-center">
+                      <div class="flex items-center gap-1 bg-amber-100 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30 rounded-lg px-2.5 py-2"><svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[10px] font-semibold text-amber-700 dark:text-amber-400">Auto</span></div>
                     </div>
                   </div>
 
-                  <!-- Textarea -->
-                  <textarea
-                    *ngIf="field.type === 'textarea'"
-                    [(ngModel)]="formData[field.key]"
-                    [name]="field.key"
-                    rows="3"
-                    class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none"
-                    [style.--tw-ring-color]="'var(--color-primary)'"
-                    [style.--tw-border-color]="'var(--color-primary)'"
-                    [placeholder]="'Ingrese ' + field.label"
-                  ></textarea>
+                  <textarea *ngIf="field.type === 'textarea'" [(ngModel)]="formData[field.key]" [name]="field.key" rows="3" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all resize-none" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'" [placeholder]="'Ingrese ' + field.label"></textarea>
 
-                  <!-- Select -->
-                  <div *ngIf="field.type === 'select'" class="relative">
-                    <select
-                      [(ngModel)]="formData[field.key]"
-                      [name]="field.key"
-                      class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer pr-8"
-                      [style.--tw-ring-color]="'var(--color-primary)'"
-                      [style.--tw-border-color]="'var(--color-primary)'"
-                    >
-                      <option value="" disabled>Seleccione...</option>
-                      <option *ngFor="let option of field.options" [value]="option">
-                        {{ option }}
-                      </option>
+                  <!-- Select Responsable (Jefe de Calidad) -->
+                  <div *ngIf="field.type === 'select-responsable'" class="relative">
+                    <select [(ngModel)]="formData[field.key]" [name]="field.key" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer pr-8" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                      <option value="" disabled>Seleccione el Jefe de Calidad...</option>
+                      <option *ngFor="let jefe of listaJefesCalidad" [value]="jefe">{{ jefe }}</option>
                     </select>
-                    <svg class="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
+                    <svg class="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                   </div>
 
-                  <!-- Range / Slider -->
+                  <!-- Select Empleado (Todos menos Jefe, Admin, Supervisor) -->
+                  <div *ngIf="field.type === 'select-empleado'" class="relative">
+                    <select [(ngModel)]="formData[field.key]" [name]="field.key" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer pr-8" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                      <option value="" disabled>Seleccione el empleado...</option>
+                      <option *ngFor="let emp of listaEmpleadosOperativos" [value]="emp">{{ emp }}</option>
+                    </select>
+                    <svg class="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                  </div>
+
+                  <!-- Select Jefe de Calidad -->
+                  <div *ngIf="field.type === 'select-jefe-calidad'" class="relative">
+                    <select [(ngModel)]="formData[field.key]" [name]="field.key" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer pr-8" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                      <option value="" disabled>Seleccione el Jefe de Calidad...</option>
+                      <option *ngFor="let jefe of listaJefesCalidad" [value]="jefe">{{ jefe }}</option>
+                    </select>
+                    <svg class="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                  </div>
+
+                  <div *ngIf="field.type === 'select'" class="relative">
+                    <select [(ngModel)]="formData[field.key]" [name]="field.key" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer pr-8" [style.--tw-ring-color]="'var(--color-primary)'" [style.--tw-border-color]="'var(--color-primary)'">
+                      <option value="" disabled>Seleccione...</option>
+                      <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
+                    </select>
+                    <svg class="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                  </div>
+
                   <div *ngIf="field.type === 'range'" class="relative">
                     <div class="flex items-center gap-3 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2">
-                      <input
-                        type="range"
-                        [(ngModel)]="formData[field.key]"
-                        [name]="field.key"
-                        [min]="field.min || 0"
-                        [max]="field.max || 100"
-                        class="flex-1 h-2 bg-gray-200 dark:bg-[#1C2434] rounded-lg appearance-none cursor-pointer"
-                        [style.accent-color]="'var(--color-primary)'"
-                      >
-                      <div class="flex items-center gap-1 bg-white dark:bg-[#1C2434] border border-gray-200 dark:border-[#2D313A] rounded px-2 py-1 min-w-[65px] justify-center shadow-sm">
-                        <span class="text-sm font-bold" [style.color]="'var(--color-primary)'">{{ formData[field.key] || 0 }}</span>
-                        <span class="text-[10px] font-semibold text-gray-400">{{ field.unit || '%' }}</span>
-                      </div>
+                      <input type="range" [(ngModel)]="formData[field.key]" [name]="field.key" [min]="field.min || 0" [max]="field.max || 100" class="flex-1 h-2 bg-gray-200 dark:bg-[#1C2434] rounded-lg appearance-none cursor-pointer" [style.accent-color]="'var(--color-primary)'">
+                      <div class="flex items-center gap-1 bg-white dark:bg-[#1C2434] border border-gray-200 dark:border-[#2D313A] rounded px-2 py-1 min-w-[65px] justify-center shadow-sm"><span class="text-sm font-bold" [style.color]="'var(--color-primary)'">{{ formData[field.key] || 0 }}</span><span class="text-[10px] font-semibold text-gray-400">{{ field.unit || '%' }}</span></div>
                     </div>
                   </div>
-
                 </div>
               </ng-container>
             </div>
 
             <!-- Botones de acción del formulario -->
             <div class="flex items-center gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-[#2D313A]">
-              <button
-                type="button"
-                (click)="cancelarEdicion()"
-                *ngIf="isEditing"
-                class="flex-1 flex items-center justify-center gap-2 bg-gray-100 dark:bg-[#121824] hover:bg-gray-200 dark:hover:bg-[#1C2434] text-gray-700 dark:text-gray-300 font-semibold text-xs py-2.5 px-4 rounded-lg border border-gray-200 dark:border-[#2D313A] transition-all"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-                Cancelar Edición
-              </button>
-              <button
-                type="button"
-                routerLink="/pages/dashboard"
-                *ngIf="!isEditing"
-                class="flex-1 flex items-center justify-center gap-2 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs py-2.5 px-4 rounded-lg border border-rose-200 dark:border-rose-500/20 transition-all"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                class="flex-1 flex items-center justify-center gap-2 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm transition-all hover:opacity-90"
-                [style.background-color]="'var(--color-primary)'"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                {{ isEditing ? 'Actualizar' : 'Guardar Registro' }}
-              </button>
+              <button type="button" (click)="cancelarEdicion()" *ngIf="isEditing" class="flex-1 flex items-center justify-center gap-2 bg-gray-100 dark:bg-[#121824] hover:bg-gray-200 dark:hover:bg-[#1C2434] text-gray-700 dark:text-gray-300 font-semibold text-xs py-2.5 px-4 rounded-lg border border-gray-200 dark:border-[#2D313A] transition-all"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg> Cancelar Edición</button>
+              <button type="button" routerLink="/pages/dashboard" *ngIf="!isEditing" class="flex-1 flex items-center justify-center gap-2 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold text-xs py-2.5 px-4 rounded-lg border border-rose-200 dark:border-rose-500/20 transition-all"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg> Cancelar</button>
+              <button type="submit" class="flex-1 flex items-center justify-center gap-2 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm transition-all hover:opacity-90" [style.background-color]="'var(--color-primary)'"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> {{ isEditing ? 'Actualizar' : 'Guardar Registro' }}</button>
             </div>
           </div>
         </form>
 
         <!-- Tabla de Registros -->
         <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] overflow-hidden shadow-sm">
-          
-          <!-- Header de la Tabla -->
-          <div class="px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
-               [style.background]="'linear-gradient(to right, var(--color-primary), var(--color-primary-hover))'">
-            <h3 class="text-white font-bold text-sm flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-              </svg>
-              Registros del Día: {{ selectedDate }}
-            </h3>
+          <div class="px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3" [style.background]="'linear-gradient(to right, var(--color-primary), var(--color-primary-hover))'">
+            <h3 class="text-white font-bold text-sm flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg> Registros del Día: {{ selectedDate }}</h3>
             <div class="flex items-center gap-2 flex-wrap">
-              <button
-                type="button"
-                (click)="exportarTodoExcel()"
-                class="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-[10px] sm:text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all backdrop-blur-sm"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                Exportar Todo (Excel)
-              </button>
-              <button
-                type="button"
-                (click)="exportarTodoPDF()"
-                class="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-[10px] sm:text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all backdrop-blur-sm"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                </svg>
-                Exportar Todo (PDF)
-              </button>
+              <button type="button" (click)="exportarTodoExcel()" class="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-[10px] sm:text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all backdrop-blur-sm"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Exportar Todo (Excel)</button>
+              <button type="button" (click)="exportarTodoPDF()" class="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-[10px] sm:text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-all backdrop-blur-sm"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg> Exportar Todo (PDF)</button>
             </div>
           </div>
-
-          <!-- Cuerpo de la Tabla -->
           <div class="overflow-x-auto">
             <table class="w-full">
               <thead class="bg-gray-50 dark:bg-[#121824] border-b border-gray-200 dark:border-[#2D313A]">
                 <tr>
-                  <th *ngFor="let col of getTableColumns()" 
-                      class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-                      [class.text-center]="col === 'Acciones'">
-                    {{ col }}
-                  </th>
+                  <th *ngFor="let col of getTableColumns()" class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider" [class.text-center]="col === 'Acciones'">{{ col }}</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
                 <tr *ngFor="let registro of registrosDelDia" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
                   <ng-container *ngFor="let col of getTableColumns()">
-                    
-                    <!-- Columna Acciones -->
                     <td *ngIf="col === 'Acciones'" class="px-3 py-3">
                       <div class="flex items-center justify-center gap-1">
-                        <!-- Editar -->
-                        <button
-                          (click)="editarRegistro(registro)"
-                          class="p-1.5 rounded bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-500/30 transition-colors"
-                          title="Editar"
-                        >
-                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                          </svg>
-                        </button>
-                        <!-- Eliminar -->
-                        <button
-                          (click)="eliminarRegistro(registro.id)"
-                          class="p-1.5 rounded bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 hover:bg-rose-200 dark:hover:bg-rose-500/30 transition-colors"
-                          title="Eliminar"
-                        >
-                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                          </svg>
-                        </button>
-                        <!-- Exportar Excel -->
-                        <button
-                          (click)="exportarRegistroIndividual(registro)"
-                          class="p-1.5 rounded bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-500/30 transition-colors"
-                          title="Exportar Excel"
-                        >
-                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                          </svg>
-                        </button>
-                        <!-- Exportar PDF -->
-                        <button
-                          (click)="exportarRegistroIndividualPDF(registro)"
-                          class="p-1.5 rounded bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 hover:bg-orange-200 dark:hover:bg-orange-500/30 transition-colors"
-                          title="Exportar PDF"
-                        >
-                          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                          </svg>
-                        </button>
+                        <button (click)="editarRegistro(registro)" class="p-1.5 rounded bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-500/30 transition-colors" title="Editar"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+                        <button (click)="eliminarRegistro(registro.id)" class="p-1.5 rounded bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 hover:bg-rose-200 dark:hover:bg-rose-500/30 transition-colors" title="Eliminar"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                        <button (click)="exportarRegistroIndividual(registro)" class="p-1.5 rounded bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-500/30 transition-colors" title="Exportar Excel"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></button>
+                        <button (click)="exportarRegistroIndividualPDF(registro)" class="p-1.5 rounded bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 hover:bg-orange-200 dark:hover:bg-orange-500/30 transition-colors" title="Exportar PDF"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></button>
                       </div>
-                    </td> 
-                    
-                    <!-- Columnas de datos -->
-                    <td *ngIf="col !== 'Acciones'" class="px-3 py-3 text-xs text-gray-600 dark:text-gray-300 max-w-[150px] truncate" [title]="getCellValue(registro, col)">
-                      <span *ngIf="!isBadgeValue(col)">
-                        {{ getCellValue(registro, col) || '-' }}
-                      </span>
-                      <span *ngIf="isBadgeValue(col)" 
-                            class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold"
-                            [ngClass]="getBadgeColor(col, getCellValue(registro, col))">
-                        {{ getCellValue(registro, col) || '-' }}
-                      </span>
                     </td>
-                    
+                    <td *ngIf="col !== 'Acciones'" class="px-3 py-3 text-xs text-gray-600 dark:text-gray-300 max-w-[150px] truncate" [title]="getCellValue(registro, col)">
+                      <span *ngIf="!isBadgeValue(col)">{{ getCellValue(registro, col) || '-' }}</span>
+                      <span *ngIf="isBadgeValue(col)" class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold" [ngClass]="getBadgeColor(col, getCellValue(registro, col))">{{ getCellValue(registro, col) || '-' }}</span>
+                    </td>
                   </ng-container>
                 </tr>
                 <tr *ngIf="registrosDelDia.length === 0">
                   <td [attr.colspan]="getTableColumns().length" class="px-4 py-10 text-center">
-                    <div class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
-                      <svg class="w-10 h-10 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                      </svg>
-                      <p class="text-xs font-medium">No hay registros para este día</p>
-                    </div>
+                    <div class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500"><svg class="w-10 h-10 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><p class="text-xs font-medium">No hay registros para este día</p></div>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
 </ion-content>

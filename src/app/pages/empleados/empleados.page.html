@@ -1,0 +1,417 @@
+<ion-content class="ion-no-padding bg-gray-50 dark:bg-[#0C121E]">
+  <div class="min-h-screen">
+
+    <!-- Header -->
+    <div class="sticky top-0 z-40 bg-white/80 dark:bg-[#1C2434]/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-[#2D313A]/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <button
+              routerLink="/pages/dashboard"
+              class="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 dark:border-[#2D313A] text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#171F2C] transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-lg flex items-center justify-center shadow-md" style="background-color: var(--color-primary)">
+                <span class="text-lg">👥</span>
+              </div>
+              <div>
+                <h1 class="text-sm font-bold text-gray-900 dark:text-white leading-tight">Gestión de Empleados</h1>
+                <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">Administrar personal</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-5">
+
+      <!-- Formulario -->
+      <form (ngSubmit)="guardarEmpleado()" class="mb-8">
+        <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] p-4 sm:p-6 shadow-sm">
+          <h2 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">
+            {{ isEditing ? 'Editar Empleado' : 'Nuevo Empleado' }}
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Nombre Completo -->
+            <div class="sm:col-span-2">
+              <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                <span class="mr-1" style="color: var(--color-primary)">1.</span> Nombre Completo
+              </label>
+              <input
+                type="text"
+                [(ngModel)]="formData.nombre"
+                name="nombre"
+                class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                style="--tw-ring-color: var(--color-primary); --tw-border-color: var(--color-primary)"
+                placeholder="Ingrese nombre completo"
+                required
+              >
+            </div>
+
+            <!-- Rol / Cargo -->
+            <div>
+              <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                <span class="mr-1" style="color: var(--color-primary)">2.</span> Rol / Cargo
+              </label>
+              <select
+                [(ngModel)]="formData.rol"
+                (ngModelChange)="onRoleChange()"
+                name="rol"
+                class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none transition-all appearance-none cursor-pointer"
+                style="--tw-ring-color: var(--color-primary); --tw-border-color: var(--color-primary)"
+                required
+              >
+                <option value="" disabled>Seleccione el rol...</option>
+                <option value="Supervisor CC">Supervisor CC</option>
+                <option value="Jefe de Calidad">Jefe de Calidad</option>
+                <option value="Operario">Operario</option>
+                <option value="Panadero">Panadero</option>
+                <option value="Auxiliar">Auxiliar</option>
+                <option value="Administrador">Administrador</option>
+              </select>
+            </div>
+
+            <!-- ✅ PARA JEFE DE CALIDAD: Firma Digital -->
+            <div *ngIf="formData.rol === 'Jefe de Calidad'" class="sm:col-span-2 space-y-4">
+              <!-- Configuración de Firma -->
+<div class="bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 rounded-lg p-4">
+  <h3 class="text-xs font-bold text-blue-700 dark:text-blue-400 mb-3 flex items-center gap-2">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+    </svg>
+    Configuración de Firma para Jefe de Calidad
+  </h3>
+
+  <!-- Selección de tipo de firma -->
+  <div class="mb-4">
+    <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
+      ¿CÓMO DESEA REGISTRAR LA FIRMA?
+    </label>
+    <div class="flex gap-3">
+      <button
+        type="button"
+        (click)="setFirmaType('digital')"
+        class="flex-1 py-2 px-3 rounded-lg border-2 text-xs font-semibold transition-all"
+        [class.border-blue-500]="formData.firma_type === 'digital'"
+        [class.bg-blue-50]="formData.firma_type === 'digital'"
+        [class.dark:bg-blue-500/20]="formData.firma_type === 'digital'"
+        [class.border-gray-300]="formData.firma_type !== 'digital'"
+        [class.dark:border-gray-600]="formData.firma_type !== 'digital'"
+        [class.text-gray-700]="formData.firma_type !== 'digital'"
+        [class.dark:text-gray-200]="formData.firma_type !== 'digital'"
+        [class.text-blue-700]="formData.firma_type === 'digital'"
+        [class.dark:text-blue-300]="formData.firma_type === 'digital'"
+      >
+        ✍️ Firma Digital (Canvas)
+      </button>
+      <button
+        type="button"
+        (click)="setFirmaType('imagen')"
+        class="flex-1 py-2 px-3 rounded-lg border-2 text-xs font-semibold transition-all"
+        [class.border-blue-500]="formData.firma_type === 'imagen'"
+        [class.bg-blue-50]="formData.firma_type === 'imagen'"
+        [class.dark:bg-blue-500/20]="formData.firma_type === 'imagen'"
+        [class.border-gray-300]="formData.firma_type !== 'imagen'"
+        [class.dark:border-gray-600]="formData.firma_type !== 'imagen'"
+        [class.text-gray-700]="formData.firma_type !== 'imagen'"
+        [class.dark:text-gray-200]="formData.firma_type !== 'imagen'"
+        [class.text-blue-700]="formData.firma_type === 'imagen'"
+        [class.dark:text-blue-300]="formData.firma_type === 'imagen'"
+      >
+        📷 Subir Imagen
+      </button>
+    </div>
+  </div>
+
+
+                <!-- Opción 1: Canvas de Firma Digital -->
+                <div *ngIf="formData.firma_type === 'digital'" class="space-y-3">
+                  <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Dibuje su firma en el recuadro
+                  </label>
+                  
+                  <!-- ✅ style="touch-action: none;" es CLAVE para que funcione en celular -->
+                  <div class="relative bg-white dark:bg-[#0C121E] rounded-lg border-2 border-gray-300 dark:border-gray-600 overflow-hidden">
+                    <canvas
+                      #firmaCanvas
+                      id="firmaCanvas"
+                      class="w-full h-40 block touch-none cursor-crosshair"
+                      style="touch-action: none;"
+                    ></canvas>
+                    
+                    <div *ngIf="!hasFirmaDigital && !formData.firma_digital" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div class="text-center">
+                        <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                        </svg>
+                        <p class="text-xs text-gray-400">Dibuje su firma aquí</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex gap-2">
+                    <button
+                      type="button"
+                      (click)="clearFirmaCanvas()"
+                      class="flex-1 flex items-center justify-center gap-2 py-2 px-3 bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded-lg text-xs font-semibold hover:bg-rose-200 dark:hover:bg-rose-500/30 transition-colors"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                      Limpiar
+                    </button>
+                    <button
+                      type="button"
+                      (click)="saveFirmaCanvas()"
+                      [disabled]="!hasFirmaDigital"
+                      class="flex-1 flex items-center justify-center gap-2 py-2 px-3 bg-blue-500 text-white rounded-lg text-xs font-semibold hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      Guardar Firma
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Opción 2: Subir Imagen -->
+<div *ngIf="formData.firma_type === 'imagen'" class="space-y-3">
+  <label class="block text-[10px] font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+    Subir Imagen de Firma
+  </label>
+
+  <div class="flex flex-col sm:flex-row items-start gap-4">
+    
+    <!-- Caja de Vista Previa -->
+    <div class="w-32 h-20 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center bg-gray-50 dark:bg-[#121824] overflow-hidden flex-shrink-0">
+      <img *ngIf="formData.firma_digital" [src]="formData.firma_digital" class="w-full h-full object-contain p-1" alt="Firma">
+      <span *ngIf="!formData.firma_digital" class="text-2xl text-gray-400">🖼️</span>
+    </div>
+    
+    <!-- Botones de Acción -->
+    <div class="flex-1 space-y-2 w-full">
+      
+      <!-- ✅ TU BOTÓN MEJORADO PARA TEMA CLARO/OSCURO -->
+      <label class="cursor-pointer flex items-center justify-center gap-2 py-2 px-4 bg-gray-100 dark:bg-[#1C2434] border border-gray-200 dark:border-[#2D313A] hover:bg-gray-200 dark:hover:bg-[#171F2C] rounded-lg text-xs font-semibold text-gray-700 dark:text-gray-200 transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+        </svg>
+        Seleccionar Imagen
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFirmaImageSelected($event)"
+          class="hidden"
+        >
+      </label>
+      
+      <!-- Botón Eliminar (también adaptado a modo oscuro) -->
+      <button
+        *ngIf="formData.firma_digital"
+        type="button"
+        (click)="removeFirmaImage()"
+        class="w-full sm:w-auto flex items-center justify-center gap-2 py-2 px-4 bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-600 dark:text-rose-400 rounded-lg text-xs font-semibold hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-all"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+        Eliminar Imagen
+      </button>
+      
+    </div>
+  </div>
+  
+  <p class="text-[10px] text-gray-500 dark:text-gray-400">Formatos: PNG, JPG. Tamaño máximo: 2MB</p>
+</div>
+
+                <!-- Preview de la firma guardada -->
+                <div *ngIf="formData.firma_digital" class="mt-3 p-3 bg-gray-50 dark:bg-[#121824] rounded-lg border border-gray-200 dark:border-gray-600">
+                  <p class="text-[10px] font-semibold text-gray-500 dark:text-gray-400 mb-2">Firma guardada:</p>
+                  <img [src]="formData.firma_digital" class="h-20 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#0C121E]" alt="Firma">
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ PARA ADMINISTRADOR/SUPERVISOR: Credenciales de Acceso -->
+            <div *ngIf="formData.rol === 'Administrador' || formData.rol === 'Supervisor CC'" class="sm:col-span-2 space-y-4">
+              <div class="bg-purple-50 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/30 rounded-lg p-4">
+                <h3 class="text-xs font-bold text-purple-700 dark:text-purple-400 mb-3 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                  Credenciales de Acceso al Sistema
+                </h3>
+                <p class="text-[10px] text-purple-600 dark:text-purple-400 mb-3">
+                  El nuevo {{ formData.rol }} tendrá acceso a todos los datos de su empresa
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- Email -->
+                  <div>
+                    <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                      Correo Electrónico
+                    </label>
+                    <input
+                      type="email"
+                      [(ngModel)]="formData.email"
+                      name="email"
+                      class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                      style="--tw-ring-color: var(--color-primary); --tw-border-color: var(--color-primary)"
+                      placeholder="usuario@empresa.com"
+                      required
+                    >
+                  </div>
+
+                  <!-- Contraseña -->
+                  <div>
+                    <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                      Contraseña
+                    </label>
+                    <input
+                      type="password"
+                      [(ngModel)]="formData.password"
+                      name="password"
+                      class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                      style="--tw-ring-color: var(--color-primary); --tw-border-color: var(--color-primary)"
+                      placeholder="Mínimo 6 caracteres"
+                      required
+                    >
+                  </div>
+
+                  <!-- Confirmar Contraseña -->
+                  <div class="sm:col-span-2">
+                    <label class="block text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                      Confirmar Contraseña
+                    </label>
+                    <input
+                      type="password"
+                      [(ngModel)]="formData.confirmPassword"
+                      name="confirmPassword"
+                      class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none transition-all"
+                      style="--tw-ring-color: var(--color-primary); --tw-border-color: var(--color-primary)"
+                      placeholder="Repita la contraseña"
+                      required
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="flex items-center gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-[#2D313A]">
+            <button
+              type="button"
+              (click)="cancelarEdicion()"
+              *ngIf="isEditing"
+              class="flex-1 flex items-center justify-center gap-2 bg-gray-100 dark:bg-[#121824] hover:bg-gray-200 dark:hover:bg-[#1C2434] text-gray-700 dark:text-gray-300 font-semibold text-xs py-2.5 px-4 rounded-lg border border-gray-200 dark:border-[#2D313A] transition-all"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              Cancelar
+            </button>
+            <button
+  type="submit"
+  [disabled]="loading"
+  class="flex-1 flex items-center justify-center gap-2 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+  style="background-color: var(--color-primary)"
+>
+  <svg *ngIf="!loading" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+  </svg>
+  <div *ngIf="loading" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+  {{ isEditing ? 'Actualizar' : 'Guardar Empleado' }}
+</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Tabla de Empleados -->
+      <div class="bg-white dark:bg-[#1C2434] rounded-xl border border-gray-200 dark:border-[#2D313A] overflow-hidden shadow-sm">
+        <div class="px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+             style="background: linear-gradient(to right, var(--color-primary), var(--color-primary-hover))">
+          <h3 class="text-white font-bold text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+            Lista de Empleados ({{ empleados.length }})
+          </h3>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50 dark:bg-[#121824] border-b border-gray-200 dark:border-[#2D313A]">
+              <tr>
+                <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">N°</th>
+                <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nombre</th>
+                <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Rol</th>
+                <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Firma</th>
+                <th class="px-3 py-3 text-left text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Fecha Registro</th>
+                <th class="px-3 py-3 text-center text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-32">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-[#2D313A]">
+              <tr *ngFor="let emp of empleados; let i = index" class="hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
+                <td class="px-3 py-3 text-xs text-gray-600 dark:text-gray-300">{{ i + 1 }}</td>
+                <td class="px-3 py-3 text-xs font-medium text-gray-900 dark:text-white">{{ emp.nombre }}</td>
+                <td class="px-3 py-3">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400">
+                    {{ emp.rol }}
+                  </span>
+                </td>
+                <td class="px-3 py-3 text-xs text-gray-600 dark:text-gray-300">
+                  <span *ngIf="emp.firma_type === 'digital'">📷 Digital</span>
+                  <span *ngIf="emp.firma_type === 'imagen'">🖼️ Imagen</span>
+                  <span *ngIf="!emp.firma_type">-</span>
+                </td>
+                <td class="px-3 py-3 text-xs text-gray-600 dark:text-gray-300">{{ emp.fecha_registro | date:'dd/MM/yyyy' }}</td>
+                <td class="px-3 py-3">
+                  <div class="flex items-center justify-center gap-1">
+                    <button
+                      (click)="editarEmpleado(emp)"
+                      class="p-1.5 rounded bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-500/30 transition-colors"
+                      title="Editar"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                      </svg>
+                    </button>
+                    <button
+                      (click)="eliminarEmpleado(emp.id)"
+                      class="p-1.5 rounded bg-rose-100 dark:bg-rose-500/20 text-rose-600 dark:text-rose-400 hover:bg-rose-200 dark:hover:bg-rose-500/30 transition-colors"
+                      title="Eliminar"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="empleados.length === 0">
+                <td colspan="6" class="px-4 py-10 text-center">
+                  <div class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
+                    <svg class="w-10 h-10 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <p class="text-xs font-medium">No hay empleados registrados</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ion-content>

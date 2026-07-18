@@ -4,13 +4,14 @@ android {
     namespace = "com.pandelsur.bpm"
     compileSdk = rootProject.ext.compileSdkVersion
         defaultConfig {
-            applicationId "com.pandelsur.bpm"
-            minSdkVersion 24
-            targetSdkVersion 34
-            versionCode 2
-            versionName "2.0"
-            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        }
+    applicationId "com.tuapp.bpm"  // o el ID que tengas
+    minSdkVersion 24
+    targetSdkVersion 34
+    versionCode 2
+    versionName "1.0.1"
+    
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+}
     buildTypes {
         release {
             minifyEnabled false

@@ -1,8 +1,8 @@
 <ion-content class="ion-no-padding bg-gray-50 dark:bg-[#0C121E]">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-    
-    <!-- Header -->
-    <div class="mb-6 flex items-center justify-between flex-wrap gap-3">
+  
+  <!-- ✅ HEADER A ANCHO COMPLETO -->
+  <div class="sticky top-0 z-40 bg-white/80 dark:bg-[#1C2434]/80 backdrop-blur-xl border-b border-gray-200/60 dark:border-[#2D313A]/60 w-full">
+    <div class="px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <button 
           routerLink="/pages/dashboard"
@@ -14,7 +14,7 @@
         </button>
         <div>
           <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Configuración</h1>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Personaliza completamente la apariencia del sistema</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Personaliza la apariencia y datos de tu sistema</p>
         </div>
       </div>
       <button 
@@ -27,459 +27,264 @@
         Restablecer
       </button>
     </div>
+  </div>
 
-    <!-- Grid de secciones -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <!-- ✅ CONTENIDO CENTRADO CON MAX-WIDTH -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+    
+    <!-- Tabs Navigation -->
+    <div class="flex space-x-1 bg-gray-100 dark:bg-[#1C2434] p-1 rounded-xl mb-6 overflow-x-auto">
+      <button 
+        *ngFor="let tab of tabs"
+        (click)="activeTab = tab.id"
+        class="flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap"
+        [class.bg-white]="activeTab === tab.id"
+        [class.dark:bg-[#2D313A]]="activeTab === tab.id"
+        [class.text-gray-900]="activeTab === tab.id"
+        [class.dark:text-white]="activeTab === tab.id"
+        [class.shadow-sm]="activeTab === tab.id"
+        [class.text-gray-500]="activeTab !== tab.id"
+        [class.dark:text-gray-400]="activeTab !== tab.id"
+        [class.hover:text-gray-700]="activeTab !== tab.id"
+        [class.dark:hover:text-gray-200]="activeTab !== tab.id"
+      >
+        <span [innerHTML]="tab.icon" class="flex items-center"></span>
+        {{ tab.name }}
+      </button>
+    </div>
 
+    <!-- Tab Content -->
+    <div class="space-y-6">
+      
       <!-- ============================================ -->
-      <!-- PRESETS DE COLOR -->
+      <!-- TAB 1: MARCA E IDENTIDAD -->
       <!-- ============================================ -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm lg:col-span-2">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1 flex items-center gap-2">
-          <span class="text-xl">🎨</span>
-          Temas Predefinidos
-        </h2>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-4">Selecciona un preset para aplicar colores del menú, header y primario</p>
-        
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <button 
-            *ngFor="let preset of presets"
-            (click)="onPresetSelect(preset.key)"
-            class="group relative flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all hover:scale-105"
-            [class.border-blue-500]="config.preset === preset.key"
-            [class.border-gray-200]="config.preset !== preset.key"
-            [class.dark:border-gray-700]="config.preset !== preset.key"
-            [class.bg-blue-50]="config.preset === preset.key"
-            [class.dark:bg-blue-500/10]="config.preset === preset.key"
-          >
-            <div *ngIf="config.preset === preset.key" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
-              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            
-            <div 
-              class="w-12 h-12 rounded-full shadow-lg group-hover:shadow-xl transition-shadow"
-              [style.background-color]="preset.color"
-            ></div>
-            
-            <span class="text-[11px] font-semibold text-gray-700 dark:text-gray-300 text-center leading-tight">
-              {{ preset.name }}
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <!-- ============================================ -->
-      <!-- COLOR PRIMARIO -->
-      <!-- ============================================ -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <span class="text-xl">🎯</span>
-          Color Primario
+      <div *ngIf="activeTab === 'marca'" class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+          <span class="text-xl">🏢</span> Identidad de la Empresa
         </h2>
         
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Color Principal
-            </label>
-            <div class="flex items-center gap-3">
-              <input 
-                type="color" 
-                [value]="config.primaryColor"
-                (input)="onColorChange('primaryColor', $any($event.target).value)"
-                class="w-14 h-14 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
-              >
-              <div class="flex-1">
-                <input 
-                  type="text" 
-                  [value]="config.primaryColor"
-                  (input)="onColorChange('primaryColor', $any($event.target).value)"
-                  class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
-                  placeholder="#3C50E0"
-                >
-                <p class="text-[10px] text-gray-400 mt-1">Botones, enlaces y elementos destacados</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Logo / Foto de Marca -->
+          <div class="space-y-3 md:col-span-2">
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Logo o Foto de Marca</label>
+            <div class="flex flex-col sm:flex-row items-start gap-4">
+              
+              <!-- Caja de Vista Previa -->
+              <div class="w-24 h-24 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden bg-gray-50 dark:bg-[#121824] flex-shrink-0 relative group">
+                <img *ngIf="config.brandLogo" [src]="config.brandLogo" class="w-full h-full object-contain p-2" alt="Logo">
+                <span *ngIf="!config.brandLogo" class="text-3xl text-gray-400">🖼️</span>
+              </div>
+              
+              <!-- Botones de Acción -->
+              <div class="flex-1 space-y-3 w-full">
+                <div class="flex flex-wrap gap-2">
+                  <!-- Botón Subir -->
+                  <label class="cursor-pointer flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-sm font-semibold rounded-lg border border-blue-200 dark:border-blue-500/30 hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                    </svg>
+                    Subir Imagen
+                    <input type="file" accept="image/png, image/jpeg, image/svg+xml" class="hidden" (change)="onLogoUpload($event)">
+                  </label>
+                  
+                  <!-- Botón Eliminar (solo si hay logo) -->
+                  <button *ngIf="config.brandLogo" (click)="removeLogo()" class="flex items-center gap-2 px-4 py-2 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 text-sm font-semibold rounded-lg border border-rose-200 dark:border-rose-500/30 hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Eliminar
+                  </button>
+                </div>
+                <p class="text-[10px] text-gray-400">Formatos: PNG, JPG, SVG. Se recomienda fondo transparente. Tamaño máximo: 500KB.</p>
               </div>
             </div>
           </div>
 
-          <!-- Preview -->
-          <div class="p-4 rounded-lg bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A]">
-            <p class="text-[10px] font-semibold text-gray-500 uppercase mb-2">Vista previa</p>
-            <div class="flex gap-2 flex-wrap">
-              <div 
-                class="px-4 py-2 rounded-lg text-white font-semibold text-xs shadow-md"
-                [style.background-color]="config.primaryColor"
-              >
-                Botón Primario
-              </div>
-              <div 
-                class="px-4 py-2 rounded-lg font-semibold text-xs border-2"
-                [style.color]="config.primaryColor"
-                [style.border-color]="config.primaryColor"
-              >
-                Outline
-              </div>
-              <div 
-                class="px-4 py-2 rounded-lg font-semibold text-xs"
-                [style.background-color]="config.primaryLight"
-                [style.color]="config.primaryColor"
-              >
-                Badge Suave
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ============================================ -->
-      <!-- SIDEBAR -->
-      <!-- ============================================ -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <span class="text-xl">📋</span>
-          Barra Lateral (Menú)
-        </h2>
-        
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Fondo del Sidebar
-            </label>
-            <div class="flex items-center gap-3">
-              <input 
-                type="color" 
-                [value]="config.sidebarBg"
-                (input)="onColorChange('sidebarBg', $any($event.target).value)"
-                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
-              >
-              <input 
-                type="text" 
-                [value]="config.sidebarBg"
-                (input)="onColorChange('sidebarBg', $any($event.target).value)"
-                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
-              >
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Color del Texto
-            </label>
-            <div class="flex items-center gap-3">
-              <input 
-                type="color" 
-                [value]="config.sidebarText"
-                (input)="onColorChange('sidebarText', $any($event.target).value)"
-                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
-              >
-              <input 
-                type="text" 
-                [value]="config.sidebarText"
-                (input)="onColorChange('sidebarText', $any($event.target).value)"
-                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
-              >
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Color Hover (al pasar el mouse)
-            </label>
-            <div class="flex items-center gap-3">
-              <input 
-                type="color" 
-                [value]="config.sidebarHover"
-                (input)="onColorChange('sidebarHover', $any($event.target).value)"
-                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
-              >
-              <input 
-                type="text" 
-                [value]="config.sidebarHover"
-                (input)="onColorChange('sidebarHover', $any($event.target).value)"
-                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
-              >
-            </div>
-          </div>
-
-          <!-- Preview del sidebar -->
-          <div class="p-3 rounded-lg border border-gray-200 dark:border-[#2D313A]" [style.background-color]="config.sidebarBg">
-            <p class="text-[10px] font-semibold uppercase mb-2" [style.color]="config.sidebarText" style="opacity: 0.6">Vista previa del menú</p>
-            <div class="space-y-1">
-              <div class="px-3 py-2 rounded text-xs font-medium" [style.color]="config.sidebarText">📊 Dashboard</div>
-              <div class="px-3 py-2 rounded text-xs font-medium" [style.background-color]="config.sidebarHover" [style.color]="config.primaryColor">🛡️ Limpieza (hover)</div>
-              <div class="px-3 py-2 rounded text-xs font-medium" [style.background-color]="config.sidebarActive" [style.color]="config.primaryColor">🔍 Verificación (activo)</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ============================================ -->
-      <!-- HEADER -->
-      <!-- ============================================ -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <span class="text-xl">🔝</span>
-          Barra Superior (Header)
-        </h2>
-        
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Fondo del Header
-            </label>
-            <div class="flex items-center gap-3">
-              <input 
-                type="color" 
-                [value]="config.headerBg"
-                (input)="onColorChange('headerBg', $any($event.target).value)"
-                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
-              >
-              <input 
-                type="text" 
-                [value]="config.headerBg"
-                (input)="onColorChange('headerBg', $any($event.target).value)"
-                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
-              >
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Color del Texto
-            </label>
-            <div class="flex items-center gap-3">
-              <input 
-                type="color" 
-                [value]="config.headerText"
-                (input)="onColorChange('headerText', $any($event.target).value)"
-                class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer"
-              >
-              <input 
-                type="text" 
-                [value]="config.headerText"
-                (input)="onColorChange('headerText', $any($event.target).value)"
-                class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
-              >
-            </div>
-          </div>
-
-          <!-- Preview del header -->
-          <div class="p-3 rounded-lg border border-gray-200 dark:border-[#2D313A] flex items-center justify-between" [style.background-color]="config.headerBg">
-            <div>
-              <p class="text-sm font-bold" [style.color]="config.headerText">Sistema BPM</p>
-              <p class="text-[10px]" [style.color]="config.headerText" style="opacity: 0.7">Vista previa del header</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-lg border" [style.background-color]="config.primaryColor"></div>
-              <div class="w-8 h-8 rounded-lg border" [style.background-color]="config.primaryColor"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ============================================ -->
-      <!-- TIPOGRAFÍA -->
-      <!-- ============================================ -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <span class="text-xl">🔤</span>
-          Tipografía
-        </h2>
-        
-        <div class="space-y-4">
-          <!-- Fuente -->
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Familia de Fuente
-            </label>
-            <select 
-              [value]="config.fontFamily"
-              (change)="onFontChange($any($event.target).value)"
-              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-medium text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+          <!-- Nombre de la Empresa -->
+          <div class="space-y-3">
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nombre de la Empresa</label>
+            <input 
+              type="text" 
+              [value]="config.companyName"
+              (input)="onColorChange('companyName', $any($event.target).value)"
+              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors"
+              placeholder="Ej: Pan del Sur S.A."
             >
+          </div>
+
+          <!-- Establecimiento -->
+          <div class="space-y-3">
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nombre del Establecimiento</label>
+            <input 
+              type="text" 
+              [value]="config.establishmentName"
+              (input)="onColorChange('establishmentName', $any($event.target).value)"
+              class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors"
+              placeholder="Ej: Planta Principal - Bogotá"
+            >
+          </div>
+
+          <!-- Modo de Visualización -->
+          <div class="space-y-3 md:col-span-2">
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Modo de Visualización</label>
+            <div class="grid grid-cols-2 gap-3">
+              <button (click)="setLightMode()" class="flex items-center gap-3 p-4 rounded-xl border-2 transition-all"
+                [class.border-blue-500]="!config.darkMode" [class.bg-blue-50]="!config.darkMode" [class.dark:bg-blue-500/10]="!config.darkMode"
+                [class.border-gray-200]="config.darkMode" [class.dark:border-gray-700]="config.darkMode">
+                <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <div class="text-left">
+                  <p class="text-sm font-bold text-gray-900 dark:text-white">Modo Claro</p>
+                  <p class="text-[10px] text-gray-500">Ideal para ambientes iluminados</p>
+                </div>
+              </button>
+              <button (click)="setDarkMode()" class="flex items-center gap-3 p-4 rounded-xl border-2 transition-all"
+                [class.border-blue-500]="config.darkMode" [class.bg-blue-50]="config.darkMode" [class.dark:bg-blue-500/10]="config.darkMode"
+                [class.border-gray-200]="!config.darkMode" [class.dark:border-gray-700]="!config.darkMode">
+                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                <div class="text-left">
+                  <p class="text-sm font-bold text-gray-900 dark:text-white">Modo Oscuro</p>
+                  <p class="text-[10px] text-gray-500">Reduce la fatiga visual</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 2: COLORES Y TEMAS -->
+      <!-- ============================================ -->
+      <div *ngIf="activeTab === 'colores'" class="space-y-6">
+        <!-- Presets -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <span class="text-xl">🎨</span> Temas Predefinidos
+          </h2>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <button *ngFor="let preset of presets" (click)="onPresetSelect(preset.key)"
+              class="group relative flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all hover:scale-105"
+              [class.border-blue-500]="config.preset === preset.key"
+              [class.border-gray-200]="config.preset !== preset.key"
+              [class.dark:border-gray-700]="config.preset !== preset.key"
+              [class.bg-blue-50]="config.preset === preset.key"
+              [class.dark:bg-blue-500/10]="config.preset === preset.key">
+              <div *ngIf="config.preset === preset.key" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="w-12 h-12 rounded-full shadow-lg group-hover:shadow-xl transition-shadow" [style.background-color]="preset.color"></div>
+              <span class="text-[11px] font-semibold text-gray-700 dark:text-gray-300 text-center leading-tight">{{ preset.name }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Colors Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Primary -->
+          <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3">Color Primario</h3>
+            <div class="flex items-center gap-3 mb-3">
+              <input type="color" [value]="config.primaryColor" (input)="onColorChange('primaryColor', $any($event.target).value)" class="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer">
+              <input type="text" [value]="config.primaryColor" (input)="onColorChange('primaryColor', $any($event.target).value)" class="flex-1 bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2 text-sm font-mono text-gray-900 dark:text-white focus:outline-none">
+            </div>
+            <div class="p-3 rounded-lg bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] flex gap-2 flex-wrap">
+              <div class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white shadow-sm" [style.background-color]="config.primaryColor">Botón Primario</div>
+              <div class="px-3 py-1.5 rounded-lg text-xs font-semibold border" [style.color]="config.primaryColor" [style.border-color]="config.primaryColor">Solo Borde</div>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+            <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3">Barra Lateral (Menú)</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <input type="color" [value]="config.sidebarBg" (input)="onColorChange('sidebarBg', $any($event.target).value)" class="w-10 h-10 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer flex-shrink-0">
+                <div class="flex-1">
+                  <p class="text-xs text-gray-500 mb-1">Fondo del Sidebar</p>
+                  <input type="text" [value]="config.sidebarBg" (input)="onColorChange('sidebarBg', $any($event.target).value)" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-mono text-gray-900 dark:text-white">
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <input type="color" [value]="config.sidebarText" (input)="onColorChange('sidebarText', $any($event.target).value)" class="w-10 h-10 rounded-lg border-2 border-gray-200 dark:border-[#2D313A] cursor-pointer flex-shrink-0">
+                <div class="flex-1">
+                  <p class="text-xs text-gray-500 mb-1">Color del Texto</p>
+                  <input type="text" [value]="config.sidebarText" (input)="onColorChange('sidebarText', $any($event.target).value)" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-2 py-1.5 text-xs font-mono text-gray-900 dark:text-white">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 3: TIPOGRAFÍA Y ESTILO -->
+      <!-- ============================================ -->
+      <div *ngIf="activeTab === 'estilo'" class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+          <span class="text-xl">🔤</span> Tipografía y Bordes
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Font -->
+          <div class="space-y-3">
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Familia de Fuente</label>
+            <select [value]="config.fontFamily" (change)="onFontChange($any($event.target).value)" class="w-full bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 transition-colors">
               <option *ngFor="let font of fontFamilies" [value]="font">{{ font }}</option>
             </select>
           </div>
 
-          <!-- Tamaño base -->
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Tamaño Base: {{ config.fontSizeBase }}px
-            </label>
-            <input 
-              type="range" 
-              [min]="10" 
-              [max]="20" 
-              [value]="config.fontSizeBase"
-              (input)="onNumberChange('fontSizeBase', $any($event.target).value)"
-              class="w-full h-2 bg-gray-200 dark:bg-[#121824] rounded-lg appearance-none cursor-pointer accent-blue-500"
-            >
-            <div class="flex justify-between text-[10px] text-gray-400 mt-1">
-              <span>10px (Pequeño)</span>
-              <span>20px (Grande)</span>
+          <!-- Font Size -->
+          <div class="space-y-3">
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tamaño Base: {{ config.fontSizeBase }}px</label>
+            <input type="range" [min]="12" [max]="18" [value]="config.fontSizeBase" (input)="onNumberChange('fontSizeBase', $any($event.target).value)" class="w-full h-2 bg-gray-200 dark:bg-[#121824] rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="flex justify-between text-[10px] text-gray-400">
+              <span>12px (Compacto)</span>
+              <span>18px (Grande)</span>
             </div>
           </div>
 
-          <!-- Preview -->
-          <div class="p-3 rounded-lg bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] space-y-2">
-            <p class="text-gray-700 dark:text-gray-300" [style.font-size.px]="config.fontSizeLarge" style="font-weight: 700;">
-              Título grande
-            </p>
-            <p class="text-gray-700 dark:text-gray-300" [style.font-size.px]="config.fontSizeBase">
-              Texto normal con tamaño {{ config.fontSizeBase }}px
-            </p>
-            <p class="text-gray-500 dark:text-gray-400" [style.font-size.px]="config.fontSizeSmall">
-              Texto pequeño con tamaño {{ config.fontSizeSmall }}px
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- ============================================ -->
-      <!-- ICONOS Y BORDES -->
-      <!-- ============================================ -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <span class="text-xl">⚙️</span>
-          Iconos y Bordes
-        </h2>
-        
-        <div class="space-y-4">
-          <!-- Tamaño de iconos -->
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Tamaño de Iconos: {{ config.iconSize }}px
-            </label>
-            <input 
-              type="range" 
-              [min]="14" 
-              [max]="32" 
-              [value]="config.iconSize"
-              (input)="onNumberChange('iconSize', $any($event.target).value)"
-              class="w-full h-2 bg-gray-200 dark:bg-[#121824] rounded-lg appearance-none cursor-pointer accent-blue-500"
-            >
-            <div class="flex justify-between text-[10px] text-gray-400 mt-1">
-              <span>14px (Compacto)</span>
-              <span>32px (Grande)</span>
-            </div>
-          </div>
-
-          <!-- Radio de bordes -->
-          <div>
-            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-              Radio de Bordes: {{ config.borderRadius }}px
-            </label>
-            <input 
-              type="range" 
-              [min]="0" 
-              [max]="24" 
-              [value]="config.borderRadius"
-              (input)="onNumberChange('borderRadius', $any($event.target).value)"
-              class="w-full h-2 bg-gray-200 dark:bg-[#121824] rounded-lg appearance-none cursor-pointer accent-blue-500"
-            >
-            <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+          <!-- Border Radius -->
+          <div class="space-y-3">
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Radio de Bordes: {{ config.borderRadius }}px</label>
+            <input type="range" [min]="0" [max]="24" [value]="config.borderRadius" (input)="onNumberChange('borderRadius', $any($event.target).value)" class="w-full h-2 bg-gray-200 dark:bg-[#121824] rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="flex justify-between text-[10px] text-gray-400">
               <span>Cuadrado (0px)</span>
               <span>Muy redondeado (24px)</span>
             </div>
           </div>
 
-          <!-- Preview -->
-          <div class="p-4 rounded-lg bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] flex items-center gap-4 flex-wrap">
-            <div 
-              class="w-12 h-12 flex items-center justify-center text-white font-bold shadow-md"
-              [style.background-color]="config.primaryColor"
-              [style.border-radius.px]="config.borderRadius"
-            >
-              <svg [style.width.px]="config.iconSize" [style.height.px]="config.iconSize" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-            <div 
-              class="px-4 py-2 text-white font-semibold text-xs shadow-md"
-              [style.background-color]="config.primaryColor"
-              [style.border-radius.px]="config.borderRadius"
-            >
-              Botón de ejemplo
-            </div>
-            <div 
-              class="w-12 h-12 border-2 flex items-center justify-center"
-              [style.border-color]="config.primaryColor"
-              [style.border-radius.px]="config.borderRadius"
-              [style.color]="config.primaryColor"
-            >
-              <svg [style.width.px]="config.iconSize" [style.height.px]="config.iconSize" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-              </svg>
+          <!-- Icon Size -->
+          <div class="space-y-3">
+            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tamaño de Iconos: {{ config.iconSize }}px</label>
+            <input type="range" [min]="14" [max]="32" [value]="config.iconSize" (input)="onNumberChange('iconSize', $any($event.target).value)" class="w-full h-2 bg-gray-200 dark:bg-[#121824] rounded-lg appearance-none cursor-pointer accent-blue-500">
+            <div class="flex justify-between text-[10px] text-gray-400">
+              <span>14px (Compacto)</span>
+              <span>32px (Grande)</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- ============================================ -->
-      <!-- MODO DE VISUALIZACIÓN -->
-      <!-- ============================================ -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-6 border border-gray-200 dark:border-[#2D313A] shadow-sm lg:col-span-2">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <span class="text-xl">🌓</span>
-          Modo de Visualización
-        </h2>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          
-          <!-- Modo Claro -->
-          <button 
-            (click)="setLightMode()"
-            class="flex items-center gap-3 p-4 rounded-xl border-2 transition-all"
-            [class.border-blue-500]="!config.darkMode"
-            [class.bg-blue-50]="!config.darkMode"
-            [class.dark:bg-blue-500/10]="!config.darkMode"
-            [class.border-gray-200]="config.darkMode"
-            [class.dark:border-gray-700]="config.darkMode"
-          >
-            <div class="w-12 h-12 rounded-lg bg-white border-2 border-gray-200 flex items-center justify-center">
-              <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-              </svg>
-            </div>
-            <div class="text-left">
-              <p class="text-sm font-bold text-gray-900 dark:text-white">Modo Claro</p>
-              <p class="text-xs text-gray-500">Ideal para ambientes iluminados</p>
-            </div>
-            <div *ngIf="!config.darkMode" class="ml-auto w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
-              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-          </button>
-
-          <!-- Modo Oscuro -->
-          <button 
-            (click)="setDarkMode()"
-            class="flex items-center gap-3 p-4 rounded-xl border-2 transition-all"
-            [class.border-blue-500]="config.darkMode"
-            [class.bg-blue-50]="config.darkMode"
-            [class.dark:bg-blue-500/10]="config.darkMode"
-            [class.border-gray-200]="!config.darkMode"
-            [class.dark:border-gray-700]="!config.darkMode"
-          >
-            <div class="w-12 h-12 rounded-lg bg-gray-800 border-2 border-gray-700 flex items-center justify-center">
-              <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-              </svg>
-            </div>
-            <div class="text-left">
-              <p class="text-sm font-bold text-gray-900 dark:text-white">Modo Oscuro</p>
-              <p class="text-xs text-gray-500">Reduce fatiga visual</p>
-            </div>
-            <div *ngIf="config.darkMode" class="ml-auto w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
-              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-              </svg>
-            </div>
-          </button>
-
+        <!-- Preview -->
+        <div class="mt-6 p-4 rounded-xl bg-gray-50 dark:bg-[#121824] border border-gray-200 dark:border-[#2D313A] flex items-center gap-4 flex-wrap">
+          <div class="w-12 h-12 flex items-center justify-center text-white font-bold shadow-md transition-all"
+            [style.background-color]="config.primaryColor"
+            [style.border-radius.px]="config.borderRadius">
+            <svg [style.width.px]="config.iconSize" [style.height.px]="config.iconSize" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+          <div class="px-5 py-2.5 text-white font-semibold text-sm shadow-md transition-all"
+            [style.background-color]="config.primaryColor"
+            [style.border-radius.px]="config.borderRadius"
+            [style.font-size.px]="config.fontSizeBase">
+            Botón de ejemplo
+          </div>
+          <div class="px-5 py-2.5 font-semibold text-sm border-2 transition-all"
+            [style.color]="config.primaryColor"
+            [style.border-color]="config.primaryColor"
+            [style.border-radius.px]="config.borderRadius"
+            [style.font-size.px]="config.fontSizeBase">
+            Solo borde
+          </div>
         </div>
       </div>
 
@@ -492,7 +297,7 @@
       </svg>
       <div class="text-xs text-blue-700 dark:text-blue-300">
         <p class="font-semibold mb-1">Los cambios se aplican automáticamente</p>
-        <p>Toda la configuración se guarda en tu navegador. Los cambios son instantáneos y no requieren recargar la página. Puedes personalizar colores del menú, header, tipografía, iconos y bordes.</p>
+        <p>Toda la configuración se guarda localmente. La foto de marca y los nombres se reflejarán inmediatamente en el sidebar y los headers del sistema.</p>
       </div>
     </div>
 

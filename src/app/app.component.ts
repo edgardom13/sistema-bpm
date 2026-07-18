@@ -19,9 +19,12 @@ export class AppComponent implements OnInit, OnDestroy {
   userEmail = '';
   userRole = 'Supervisor CC';
   userInitials = 'U';
+  userAvatarUrl = '';
   currentDate = '';
+  showFormatosControl = false;
   
-  // Alertas
+  brandLogo = '';
+  
   alerts: Alert[] = [];
   unreadCount = 0;
   showAlerts = false;
@@ -40,9 +43,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.setupMenuAutoClose();
     this.actualizarFecha();
 
-       this.configService.config$.subscribe(() => {
-          setTimeout(() => this.forceSidebarUpdate(), 50);
-        });
+    this.configService.config$.subscribe((config) => {
+      this.brandLogo = config.brandLogo || '';
+      setTimeout(() => this.forceSidebarUpdate(), 50);
+    });
     
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
@@ -56,18 +60,18 @@ export class AppComponent implements OnInit, OnDestroy {
     await this.cargarInfoUsuario();
   }
 
-
+  toggleFormatosControl() {
+    this.showFormatosControl = !this.showFormatosControl;
+  }
 
   ngOnDestroy() {
     this.limpiarSuscripciones();
   }
 
   toggleDarkMode() {
-  const current = this.configService.getConfig();
-  this.configService.updateConfig({ darkMode: !current.darkMode });
-}
-
-
+    const current = this.configService.getConfig();
+    this.configService.updateConfig({ darkMode: !current.darkMode });
+  }
 
   private limpiarSuscripciones() {
     if (this.alertsSubscription) {
@@ -77,33 +81,47 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   async cargarInfoUsuario() {
-    try {
-      const user = await this.supabaseService.getCurrentUser();
-      if (user) {
-        this.currentUser = user;
-        this.userName = user.user_metadata?.['name'] || user.email?.split('@')[0] || 'Usuario';
-        this.userEmail = user.email || '';
-        this.userRole = user.user_metadata?.['role'] || 'Supervisor CC';
-        
-        const nameParts = this.userName.split(' ');
-        if (nameParts.length >= 2) {
-          this.userInitials = (nameParts[0][0] + nameParts[1][0]).toUpperCase();
-        } else {
-          this.userInitials = this.userName.substring(0, 2).toUpperCase();
-        }
-
-        // Cargar alertas y suscribirse en tiempo real
-        await this.cargarAlertas();
-        this.suscribirseAlertasTiempoReal();
+  try {
+    const user = await this.supabaseService.getCurrentUser();
+    if (user) {
+      this.currentUser = user;
+      this.userName = user.user_metadata?.['name'] || user.email?.split('@')[0] || 'Usuario';
+      this.userEmail = user.email || '';
+      this.userRole = user.user_metadata?.['role'] || 'Supervisor CC';
+      this.userAvatarUrl = user.user_metadata?.['avatar_url'] || '';
+      
+      const nameParts = this.userName.split(' ');
+      if (nameParts.length >= 2) {
+        this.userInitials = (nameParts[0][0] + nameParts[1][0]).toUpperCase();
+      } else {
+        this.userInitials = this.userName.substring(0, 2).toUpperCase();
       }
-    } catch (error) {
-      console.error('Error cargando info usuario:', error);
+
+      const config = this.configService.getConfig();
+      this.brandLogo = config.brandLogo || '';
+
+      await this.cargarAlertas();
+      this.suscribirseAlertasTiempoReal();
+
+      // ✅ VERIFICAR FORMULARIOS FALTANTES DEL DÍA
+      const hoy = new Date().toISOString().split('T')[0];
+      const plantId = '00000000-0000-0000-0000-000000000001';
+      
+      console.log('🔍 Verificando formularios faltantes para:', hoy);
+      await this.notificationService.checkMissingDailyForms(plantId, hoy);
+      
+      // Recargar alertas después de verificar faltantes
+      console.log('🔄 Recargando alertas...');
+      await this.cargarAlertas();
     }
+  } catch (error) {
+    console.error('Error cargando info usuario:', error);
   }
+}
 
   async cargarAlertas() {
     try {
-      this.alerts = await this.notificationService.getAlerts(10);
+      this.alerts = await this.notificationService.getAlerts(15);
       this.unreadCount = this.alerts.filter(a => !a.acknowledged).length;
     } catch (error) {
       console.error('Error cargando alertas:', error);
@@ -113,26 +131,34 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private suscribirseAlertasTiempoReal() {
-    // Suscribirse a cambios en el BehaviorSubject
-    this.alertsSubscription = this.notificationService.alerts$.subscribe(alerts => {
-      this.alerts = alerts;
-      this.unreadCount = alerts.filter(a => !a.acknowledged).length;
-    });
+  console.log('🔔 Suscribiéndose a alertas en tiempo real...');
+  
+  this.alertsSubscription = this.notificationService.alerts$.subscribe(alerts => {
+    console.log('📩 Nuevas alertas recibidas:', alerts.length);
+    this.alerts = alerts;
+    this.unreadCount = alerts.filter(a => !a.acknowledged).length;
+    console.log('🔴 Alertas no leídas:', this.unreadCount);
+  });
+  
+  this.realtimeChannel = this.notificationService.subscribeToAlerts();
+  console.log('✅ Canal de realtime creado');
+}
 
-    // Suscribirse a realtime de Supabase
-    this.realtimeChannel = this.notificationService.subscribeToAlerts();
-  }
-
+  // ✅ Al hacer clic en el cuerpo de la alerta: Reconoce y Redirige
   async alertaClic(alert: Alert) {
-    // Marcar como reconocida
     if (!alert.acknowledged && this.currentUser) {
       await this.notificationService.acknowledgeAlert(alert.id, this.currentUser.id);
     }
-
     this.showAlerts = false;
-
-    // Redirigir según el tipo de alerta
     this.redirigirSegunFormato(alert);
+  }
+
+  // ✅ Al hacer clic en la "X": Solo reconoce (cierra) sin redirigir
+  async cerrarAlertaSinRedirigir(event: Event, alert: Alert) {
+    event.stopPropagation(); // Evita que se dispare alertaClic
+    if (!alert.acknowledged && this.currentUser) {
+      await this.notificationService.acknowledgeAlert(alert.id, this.currentUser.id);
+    }
   }
 
   getCurrentDateForUrl(): string {
@@ -144,29 +170,15 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private redirigirSegunFormato(alert: Alert) {
-  const rutas: { [key: string]: string } = {
-    'limpiezaydesinfeccion': '/pages/limpiezaydesinfeccion',
-    'verificacion': '/pages/verificacion',
-    'hornos': '/pages/hornos',
-    'higienicas': '/pages/higienicas',
-    'residuos': '/pages/residuos',
-    'plagas': '/pages/plagas',
-    'ph-cloro': '/pages/ph-cloro',
-    'devolucion': '/pages/devolucion',
-    'materia-prima': '/pages/materia-prima',
-    'temp-hr': '/pages/temp-hr'
-  };
-
-  const ruta = alert.format_type ? rutas[alert.format_type] : null;
-  
-  if (ruta) {
-    this.router.navigate([ruta]);
-  } else if (alert.checklist_id) {
-    this.router.navigate(['/pages/limpiezaydesinfeccion']);
-  } else {
-    this.router.navigate(['/pages/dashboard']);
+    const routeSlug = this.notificationService.getFormatRoute(alert.format_type);
+    
+    if (routeSlug) {
+      // Redirige al formulario con la fecha de hoy
+      this.router.navigate([`/pages/${routeSlug}`], { queryParams: { date: this.getCurrentDateForUrl() } });
+    } else {
+      this.router.navigate(['/pages/dashboard']);
+    }
   }
-}
 
   async reconocerTodas() {
     if (this.currentUser) {
@@ -190,7 +202,6 @@ export class AppComponent implements OnInit, OnDestroy {
     const auth = localStorage.getItem('auth');
     this.isLoggedIn = auth === 'true';
     
-    // Rutas públicas que no requieren autenticación
     const rutasPublicas = ['/login', '/register', '/forgot-password'];
     const esRutaPublica = rutasPublicas.some(ruta => this.router.url.includes(ruta));
     
@@ -198,14 +209,12 @@ export class AppComponent implements OnInit, OnDestroy {
       this.router.navigate(['/login']);
     }
     
-    // Si está logueado y está en una ruta pública, redirigir al dashboard
     if (this.isLoggedIn && esRutaPublica) {
       this.cargarInfoUsuario();
-      this.router.navigate(['/pages/dashboard']);
+      this.router.navigate(['/pages/home']);
     }
   }
 
- 
   async logout() {
     try {
       this.limpiarSuscripciones();
@@ -214,6 +223,8 @@ export class AppComponent implements OnInit, OnDestroy {
       this.userName = 'Usuario';
       this.userEmail = '';
       this.userInitials = 'U';
+      this.userAvatarUrl = '';
+      this.brandLogo = '';
       this.alerts = [];
       this.unreadCount = 0;
       this.currentUser = null;
@@ -252,92 +263,81 @@ export class AppComponent implements OnInit, OnDestroy {
     return date.toLocaleDateString('es-ES');
   }
 
-  // Manejar hover del menú con colores dinámicos
-onMenuHover(event: MouseEvent, isEnter: boolean) {
-  const element = event.currentTarget as HTMLElement;
-  if (isEnter) {
-    element.style.backgroundColor = 'var(--sidebar-hover)';
-    element.style.color = 'var(--color-primary)';
-  } else {
-    // Solo resetear si NO está activo (router-link-active)
-    if (!element.classList.contains('active-menu-item')) {
-      element.style.backgroundColor = '';
-      element.style.color = 'var(--sidebar-text)';
+  // ✅ MÉTODOS DE HOVER
+  onMenuHover(event: MouseEvent, isEnter: boolean) {
+    const element = event.currentTarget as HTMLElement;
+    if (isEnter) {
+      element.style.backgroundColor = 'var(--sidebar-hover)';
+      element.style.color = 'var(--color-primary)';
+    } else {
+      if (!element.classList.contains('active-menu-item')) {
+        element.style.backgroundColor = '';
+        element.style.color = 'var(--sidebar-text)';
+      }
     }
   }
-}
 
-// Métodos para manejar hovers con variables CSS dinámicas
-onHoverColor(event: Event, color: string) {
-  const el = event.currentTarget as HTMLElement;
-  if (el && !el.classList.contains('active-menu-item')) {
-    el.style.color = color;
+  onHoverColor(event: Event, color: string) {
+    const el = event.currentTarget as HTMLElement;
+    if (el && !el.classList.contains('active-menu-item')) {
+      el.style.color = color;
+    }
   }
-}
 
-onLeaveColor(event: Event, defaultColor: string) {
-  const el = event.currentTarget as HTMLElement;
-  if (el && !el.classList.contains('active-menu-item')) {
-    el.style.color = defaultColor;
+  onLeaveColor(event: Event, defaultColor: string) {
+    const el = event.currentTarget as HTMLElement;
+    if (el && !el.classList.contains('active-menu-item')) {
+      el.style.color = defaultColor;
+    }
   }
-}
 
-onHoverBorder(event: Event, color: string) {
-  const el = event.currentTarget as HTMLElement;
-  if (el) el.style.borderColor = color;
-}
-
-onLeaveBorder(event: Event, defaultColor: string) {
-  const el = event.currentTarget as HTMLElement;
-  if (el) el.style.borderColor = defaultColor;
-}
-
-onHoverBg(event: Event, color: string) {
-  const el = event.currentTarget as HTMLElement;
-  if (el && !el.classList.contains('active-menu-item')) {
-    el.style.backgroundColor = color;
+  onHoverBorder(event: Event, color: string) {
+    const el = event.currentTarget as HTMLElement;
+    if (el) el.style.borderColor = color;
   }
-}
 
-onLeaveBg(event: Event) {
-  const el = event.currentTarget as HTMLElement;
-  if (el && !el.classList.contains('active-menu-item')) {
-    el.style.backgroundColor = '';
+  onLeaveBorder(event: Event, defaultColor: string) {
+    const el = event.currentTarget as HTMLElement;
+    if (el) el.style.borderColor = defaultColor;
   }
-}
 
-
-// Métodos unificados para hover del menú - SOLO si NO está activo
-onMenuEnter(event: Event) {
-  const el = event.currentTarget as HTMLElement;
-  // ✅ Solo aplicar hover si NO tiene la clase active-menu-item
-  if (el && !el.classList.contains('active-menu-item')) {
-    el.style.backgroundColor = 'var(--sidebar-hover)';
-    el.style.color = 'var(--color-primary)';
+  onHoverBg(event: Event, color: string) {
+    const el = event.currentTarget as HTMLElement;
+    if (el && !el.classList.contains('active-menu-item')) {
+      el.style.backgroundColor = color;
+    }
   }
-}
 
-onMenuLeave(event: Event) {
-  const el = event.currentTarget as HTMLElement;
-  // ✅ Solo limpiar hover si NO tiene la clase active-menu-item
-  if (el && !el.classList.contains('active-menu-item')) {
-    el.style.backgroundColor = '';
-    el.style.color = 'var(--sidebar-text)';
+  onLeaveBg(event: Event) {
+    const el = event.currentTarget as HTMLElement;
+    if (el && !el.classList.contains('active-menu-item')) {
+      el.style.backgroundColor = '';
+    }
   }
-}
 
-// Forzar actualización cuando cambie la configuración
-forceSidebarUpdate() {
-  const menuItems = document.querySelectorAll('nav a[routerLink]');
-  menuItems.forEach(link => {
-    const el = link as HTMLElement;
-    // Limpiar TODOS los estilos inline
-    el.style.backgroundColor = '';
-    el.style.color = '';
-    // Forzar reflow
-    void el.offsetWidth;
-  });
-}
+  onMenuEnter(event: Event) {
+    const el = event.currentTarget as HTMLElement;
+    if (el && !el.classList.contains('active-menu-item')) {
+      el.style.backgroundColor = 'var(--sidebar-hover)';
+      el.style.color = 'var(--color-primary)';
+    }
+  }
 
+  onMenuLeave(event: Event) {
+    const el = event.currentTarget as HTMLElement;
+    if (el && !el.classList.contains('active-menu-item')) {
+      el.style.backgroundColor = '';
+      el.style.color = 'var(--sidebar-text)';
+    }
+  }
 
+  forceSidebarUpdate() {
+    const menuItems = document.querySelectorAll('nav a[routerLink]');
+    menuItems.forEach(link => {
+      const el = link as HTMLElement;
+      el.style.backgroundColor = '';
+      el.style.color = '';
+      void el.offsetWidth;
+    });
+  }
 }

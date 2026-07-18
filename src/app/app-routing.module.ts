@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
+  // ✅ Ruta por defecto: Redirige al Login
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
   },
+  
+  // ✅ Autenticación
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
@@ -20,13 +23,21 @@ const routes: Routes = [
     loadChildren: () => import('./pages/forgot-password/forgot-password.module').then(m => m.ForgotPasswordPageModule)
   },
   
-  // ✅ Dashboard
+  // ✅ Rutas Principales del Sistema
+  {
+    path: 'pages/home',
+    loadChildren: () => import('./pages/home/home.module').then(m => m.HomePageModule)
+  },
+  {
+    path: 'pages/empleados',
+    loadChildren: () => import('./pages/empleados/empleados.module').then(m => m.EmpleadosPageModule)
+  },
   {
     path: 'pages/dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardPageModule)
   },
   
-  // ✅ Formularios dinámicos
+  // ✅ Formularios Dinámicos (Todos apuntan al mismo módulo)
   {
     path: 'pages/limpiezaydesinfeccion',
     loadChildren: () => import('./pages/formulario-dinamico/formulario-dinamico.module').then(m => m.FormularioDinamicoPageModule)
@@ -68,22 +79,24 @@ const routes: Routes = [
     loadChildren: () => import('./pages/formulario-dinamico/formulario-dinamico.module').then(m => m.FormularioDinamicoPageModule)
   },
   
-  // ✅ Exportar
+  // ✅ Utilidades y Configuración
   {
     path: 'pages/exportar',
     loadChildren: () => import('./pages/exportar/exportar.module').then(m => m.ExportarPageModule)
   },
-  
-  // ✅ Perfil
   {
     path: 'pages/profile',
     loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule)
   },
-  
-  // ✅ Configuración (LA QUE FALTABA)
   {
     path: 'pages/settings',
     loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule)
+  },
+  
+  // ✅ Ruta comodín: Si la URL no existe, redirige al login
+  {
+    path: '**',
+    redirectTo: 'login'
   }
 ];
 

@@ -19,7 +19,13 @@ export class ExportarPage implements OnInit {
     { value: 'SGI-FT-01', label: 'Temperatura de Hornos', icon: '🔥' },
     { value: 'SGI-FLD-02', label: 'Limpieza y Desinfección', icon: '🧹' },
     { value: 'SGI-FVL-06', label: 'Verificación de Limpieza', icon: '🔍' },
-    { value: 'SGI-FPH-03', label: 'Prácticas Higiénicas', icon: '✨' }
+    { value: 'SGI-FPH-03', label: 'Prácticas Higiénicas', icon: '✨' },
+    { value: 'SGI-FIR-04', label: 'Inspección de Residuos', icon: '️' },
+    { value: 'SGI-FPC-05', label: 'Control de Plagas', icon: '🪲' },
+    { value: 'SGI-FCFA-07', label: 'Seguimiento pH y Cloro', icon: '💧' },
+    { value: 'SGI-TZP-08', label: 'Devolución de Producto', icon: '🔄' },
+    { value: 'SGI-FMP-09', label: 'Control de Materia Prima', icon: '📦' },
+    { value: 'SGI-FTHR-11', label: 'Registro Temp y HR', icon: '🌡️' }
   ];
 
   exporting = false;
@@ -46,11 +52,12 @@ export class ExportarPage implements OnInit {
 
   async cargarEstadisticas() {
     try {
-      const { count } = await this.exportService.getSupabase()
+      const supabase = this.exportService.getSupabase();
+      const { count } = await supabase
         .from('checklists')
         .select('*', { count: 'exact', head: true });
 
-      const { data } = await this.exportService.getSupabase()
+      const { data } = await supabase
         .from('checklists')
         .select('created_at')
         .order('created_at', { ascending: false })
@@ -69,7 +76,6 @@ export class ExportarPage implements OnInit {
     this.loadingPreview = true;
     
     try {
-      // Obtener datos reales para la vista previa
       const data = await this.exportService.getFilteredData(this.filters);
       
       this.previewCount = data.length;
@@ -86,7 +92,6 @@ export class ExportarPage implements OnInit {
     }
   }
 
-  // Mapear registro para mostrar en la vista previa
   private mapRegistro(reg: any): any {
     const data = reg.data || {};
     const formatType = reg.format_type;
@@ -130,8 +135,14 @@ export class ExportarPage implements OnInit {
           { label: 'Responsable', value: data.responsable_checkeo || '-' }
         ];
         break;
+      case 'SGI-FIR-04':
+        resumen = data.area_inspeccionada || '-';
+        detalles = [
+          { label: 'Responsable', value: data.responsable || '-' }
+        ];
+        break;
       default:
-        resumen = 'Registro';
+        resumen = 'Registro completado';
     }
     
     return {
@@ -151,7 +162,13 @@ export class ExportarPage implements OnInit {
       'SGI-FT-01': 'Hornos',
       'SGI-FLD-02': 'Limpieza',
       'SGI-FVL-06': 'Verificación',
-      'SGI-FPH-03': 'Higiénicas'
+      'SGI-FPH-03': 'Higiénicas',
+      'SGI-FIR-04': 'Residuos',
+      'SGI-FPC-05': 'Plagas',
+      'SGI-FCFA-07': 'pH/Cloro',
+      'SGI-TZP-08': 'Devolución',
+      'SGI-FMP-09': 'Materia Prima',
+      'SGI-FTHR-11': 'Temp/HR'
     };
     return map[formatType] || formatType;
   }
@@ -161,7 +178,13 @@ export class ExportarPage implements OnInit {
       'SGI-FT-01': '🔥',
       'SGI-FLD-02': '🧹',
       'SGI-FVL-06': '🔍',
-      'SGI-FPH-03': '✨'
+      'SGI-FPH-03': '✨',
+      'SGI-FIR-04': '🗑️',
+      'SGI-FPC-05': '',
+      'SGI-FCFA-07': '💧',
+      'SGI-TZP-08': '🔄',
+      'SGI-FMP-09': '📦',
+      'SGI-FTHR-11': '🌡️'
     };
     return map[formatType] || '📋';
   }
@@ -171,7 +194,13 @@ export class ExportarPage implements OnInit {
       'SGI-FT-01': 'orange',
       'SGI-FLD-02': 'blue',
       'SGI-FVL-06': 'emerald',
-      'SGI-FPH-03': 'purple'
+      'SGI-FPH-03': 'purple',
+      'SGI-FIR-04': 'amber',
+      'SGI-FPC-05': 'rose',
+      'SGI-FCFA-07': 'cyan',
+      'SGI-TZP-08': 'violet',
+      'SGI-FMP-09': 'fuchsia',
+      'SGI-FTHR-11': 'teal'
     };
     return map[formatType] || 'gray';
   }
@@ -182,7 +211,7 @@ export class ExportarPage implements OnInit {
     if (this.filters.startDate) {
       const label = this.filters.endDate && this.filters.startDate === this.filters.endDate
         ? `📅 Fecha: ${this.formatDate(this.filters.startDate)}`
-        : `📅 Desde: ${this.formatDate(this.filters.startDate)}`;
+        : ` Desde: ${this.formatDate(this.filters.startDate)}`;
       this.activeFilters.push({ key: 'startDate', label });
     }
     
@@ -213,7 +242,7 @@ export class ExportarPage implements OnInit {
     }
 
     const loading = await this.loadingCtrl.create({
-      message: `📊 Exportando ${this.previewCount} registros a Excel...`,
+      message: ` Exportando ${this.previewCount} registros a Excel...`,
       duration: 0
     });
     await loading.present();

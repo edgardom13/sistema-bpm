@@ -51,6 +51,11 @@
   
   /* Ionic */
   --ion-font-family: var(--font-family-base);
+
+   --ion-safe-area-top: env(safe-area-inset-top);
+  --ion-safe-area-bottom: env(safe-area-inset-bottom);
+  --ion-safe-area-left: env(safe-area-inset-left);
+  --ion-safe-area-right: env(safe-area-inset-right);
 }
 
 /* =========================================================================
@@ -396,4 +401,153 @@ html.dark {
 .active-menu-item:hover {
   background-color: var(--sidebar-active) !important;
   color: var(--color-primary) !important;
+}
+
+/* =========================================================================
+   TOASTS GLOBALES - ADAPTADOS AL TEMA (CLARO/OSCURO)
+   ========================================================================= */
+
+/* Toast Base - Modo Claro */
+ion-toast {
+  --background: #FFFFFF;
+  --color: #1F2937;
+  --border-radius: var(--border-radius);
+  --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --border-left: 4px solid var(--color-primary);
+  
+  .toast-message {
+    color: #1F2937;
+    font-size: var(--font-size-small);
+    font-weight: 500;
+  }
+  
+  .toast-button {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-transform: none;
+  }
+}
+
+/* Toast Base - Modo Oscuro */
+html.dark ion-toast {
+  --background: #1C2434;
+  --color: #FFFFFF;
+  --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  
+  .toast-message {
+    color: #FFFFFF;
+  }
+  
+  .toast-button {
+    color: var(--color-primary);
+  }
+}
+
+/* Toast de Éxito (Success) */
+ion-toast.success {
+  --background: #10B981;
+  --color: #FFFFFF;
+  --border-left: 4px solid #059669;
+  
+  .toast-message {
+    color: #FFFFFF;
+  }
+  
+  .toast-button {
+    color: #FFFFFF;
+  }
+}
+
+html.dark ion-toast.success {
+  --background: #10B981;
+  --color: #FFFFFF;
+}
+
+/* Toast de Error (Error/Danger) */
+ion-toast.error,
+ion-toast.danger {
+  --background: #EF4444;
+  --color: #FFFFFF;
+  --border-left: 4px solid #DC2626;
+  
+  .toast-message {
+    color: #FFFFFF;
+  }
+  
+  .toast-button {
+    color: #FFFFFF;
+  }
+}
+
+html.dark ion-toast.error,
+html.dark ion-toast.danger {
+  --background: #EF4444;
+  --color: #FFFFFF;
+}
+
+/* Toast de Advertencia (Warning) */
+ion-toast.warning {
+  --background: #F59E0B;
+  --color: #FFFFFF;
+  --border-left: 4px solid #D97706;
+  
+  .toast-message {
+    color: #FFFFFF;
+  }
+  
+  .toast-button {
+    color: #FFFFFF;
+  }
+}
+
+html.dark ion-toast.warning {
+  --background: #F59E0B;
+  --color: #FFFFFF;
+}
+
+/* Toast Informativo (Info) */
+ion-toast.info {
+  --background: #3B82F6;
+  --color: #FFFFFF;
+  --border-left: 4px solid #2563EB;
+  
+  .toast-message {
+    color: #FFFFFF;
+  }
+  
+  .toast-button {
+    color: #FFFFFF;
+  }
+}
+
+html.dark ion-toast.info {
+  --background: #3B82F6;
+  --color: #FFFFFF;
+}
+
+/* Animación de entrada mejorada */
+ion-toast {
+  animation: toastSlideIn 0.3s ease-out;
+  
+  @keyframes toastSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Posición superior con margen seguro */
+ion-toast.toast-top {
+  top: calc(var(--ion-safe-area-top) + 10px);
+}
+
+/* Borde izquierdo decorativo */
+ion-toast::part(container) {
+  border-left: var(--border-left);
+  border-radius: var(--border-radius);
 }

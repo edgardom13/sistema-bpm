@@ -13,17 +13,18 @@
       <button 
         (click)="refreshData()" 
         [disabled]="loading"
-        class="flex items-center gap-2 px-4 py-2 bg-[#3C50E0] hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50">
+        class="flex items-center gap-2 px-4 py-2 bg-[#3C50E0] hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors disabled:opacity-50 shadow-lg shadow-blue-500/20">
         <svg class="w-4 h-4" [class.animate-spin]="loading" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </svg>
-        Actualizar
+        Actualizar Datos
       </button>
     </div>
 
     <!-- Loading -->
-    <div *ngIf="loading" class="flex items-center justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3C50E0]"></div>
+    <div *ngIf="loading" class="flex flex-col items-center justify-center py-20">
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-[#3C50E0] border-t-transparent"></div>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">Cargando métricas del sistema...</p>
     </div>
 
     <!-- Contenido -->
@@ -32,102 +33,67 @@
       <!-- ============================================ -->
       <!-- KPIs PRINCIPALES -->
       <!-- ============================================ -->
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        
-        <!-- Registros Hoy -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-              <span class="text-xl">📝</span>
-            </div>
-          </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-2"><div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-xl">📝</div></div>
           <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Registros Hoy</p>
           <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.registrosHoy }}</h3>
-          <p class="text-[10px] text-gray-500 mt-1">Total del día</p>
+          <p class="text-[10px] text-gray-500 mt-1">Total de formularios</p>
         </div>
 
-        <!-- Cumplimiento Verificación -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm hover:shadow-md transition-shadow">
           <div class="flex items-center justify-between mb-2">
-            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-              <span class="text-xl">✅</span>
-            </div>
-            <span [class]="kpis.cumplimientoVerificacion >= 80 ? 'text-emerald-500' : kpis.cumplimientoVerificacion >= 60 ? 'text-amber-500' : 'text-rose-500'" 
-                  class="text-[10px] font-bold">
-              {{ kpis.cumplimientoVerificacion >= 80 ? '↑' : kpis.cumplimientoVerificacion >= 60 ? '→' : '↓' }}
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-xl">✅</div>
+            <span [class]="kpis.cumplimientoGeneral >= 80 ? 'text-emerald-500' : kpis.cumplimientoGeneral >= 60 ? 'text-amber-500' : 'text-rose-500'" class="text-[10px] font-bold">
+              {{ kpis.cumplimientoGeneral >= 80 ? '↑' : kpis.cumplimientoGeneral >= 60 ? '→' : '↓' }}
             </span>
           </div>
-          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Cumplimiento Verif.</p>
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.cumplimientoVerificacion }}%</h3>
-          <p class="text-[10px] text-gray-500 mt-1">Limpieza verificada</p>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Cumplimiento Gral.</p>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.cumplimientoGeneral }}%</h3>
+          <p class="text-[10px] text-gray-500 mt-1">Promedio de calidad</p>
         </div>
 
-        <!-- Cumplimiento Higiénicas -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-              <span class="text-xl">✨</span>
-            </div>
-          </div>
-          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Cumplimiento Hig.</p>
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.cumplimientoHigienicas }}%</h3>
-          <p class="text-[10px] text-gray-500 mt-1">18 ítems evaluados</p>
-        </div>
-
-        <!-- Hornos Monitoreados -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
-              <span class="text-xl">🌡️</span>
-            </div>
-          </div>
-          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Hornos</p>
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.hornosMonitoreados }}</h3>
-          <p class="text-[10px] text-gray-500 mt-1">Registros AM/PM</p>
-        </div>
-
-        <!-- Alertas Activas -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm relative overflow-hidden">
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
           <div *ngIf="kpis.alertasActivas > 0" class="absolute top-0 right-0 w-2 h-full bg-rose-500"></div>
-          <div class="flex items-center justify-between mb-2">
-            <div class="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center">
-              <span class="text-xl">🚨</span>
-            </div>
-          </div>
+          <div class="flex items-center justify-between mb-2"><div class="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center text-xl">🚨</div></div>
           <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Alertas</p>
-          <h3 class="text-2xl font-bold mt-1" 
-              [class.text-rose-500]="kpis.alertasActivas > 0"
-              [class.text-emerald-500]="kpis.alertasActivas === 0">
-            {{ kpis.alertasActivas }}
-          </h3>
+          <h3 class="text-2xl font-bold mt-1" [class.text-rose-500]="kpis.alertasActivas > 0" [class.text-emerald-500]="kpis.alertasActivas === 0">{{ kpis.alertasActivas }}</h3>
           <p class="text-[10px] text-gray-500 mt-1">{{ kpis.alertasActivas === 0 ? 'Todo OK' : 'Requieren atención' }}</p>
         </div>
 
-        <!-- Empleados Evaluados -->
-        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
-              <span class="text-xl">👥</span>
-            </div>
-          </div>
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-2"><div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-xl">👥</div></div>
           <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Evaluados</p>
           <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.empleadosEvaluados }}</h3>
           <p class="text-[10px] text-gray-500 mt-1">Empleados hoy</p>
         </div>
 
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-2"><div class="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center text-xl">🔄</div></div>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Devoluciones</p>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.devolucionesHoy }}</h3>
+          <p class="text-[10px] text-gray-500 mt-1">Registros hoy</p>
+        </div>
+
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-4 border border-gray-200 dark:border-[#2D313A] shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between mb-2"><div class="w-10 h-10 rounded-xl bg-fuchsia-500/10 flex items-center justify-center text-xl">📦</div></div>
+          <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">MP Aprobada</p>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mt-1">{{ kpis.mpAprobadasPorcentaje }}%</h3>
+          <p class="text-[10px] text-gray-500 mt-1">Tasa de aprobación</p>
+        </div>
       </div>
 
       <!-- ============================================ -->
-      <!-- GRÁFICOS -->
+      <!-- GRÁFICOS PRINCIPALES -->
       <!-- ============================================ -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         
-        <!-- Tendencia Semanal -->
+        <!-- Tendencia Semanal (TODOS los formularios) -->
         <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <div>
               <h3 class="text-sm font-bold text-gray-900 dark:text-white">📈 Tendencia Semanal</h3>
-              <p class="text-[10px] text-gray-500">Registros por formulario (últimos 7 días)</p>
+              <p class="text-[10px] text-gray-500">Volumen de registros por día (últimos 7 días - 10 formatos)</p>
             </div>
           </div>
           <div class="h-64">
@@ -135,12 +101,12 @@
           </div>
         </div>
 
-        <!-- Distribución por Formulario -->
+        <!-- Distribución por Formulario (TODOS) -->
         <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <div>
               <h3 class="text-sm font-bold text-gray-900 dark:text-white">🍩 Distribución Hoy</h3>
-              <p class="text-[10px] text-gray-500">Registros por tipo de formulario</p>
+              <p class="text-[10px] text-gray-500">Registros por tipo de formulario (10 formatos)</p>
             </div>
           </div>
           <div class="h-64">
@@ -148,19 +114,19 @@
           </div>
         </div>
 
-        <!-- Cumplimiento por Área -->
+        <!-- Cumplimiento por Formato (TODOS los aplicables) -->
         <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h3 class="text-sm font-bold text-gray-900 dark:text-white">🎯 Cumplimiento por Área</h3>
-              <p class="text-[10px] text-gray-500">Verificación de limpieza</p>
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white">🎯 Cumplimiento por Formato</h3>
+              <p class="text-[10px] text-gray-500">% de ítems aprobados (Verif, Higiénicas, Residuos, Plagas, MP)</p>
             </div>
           </div>
           <div class="h-64">
-            <canvas #cumplimientoChart></canvas>
+            <canvas #cumplimientoFormatoChart></canvas>
           </div>
-          <div *ngIf="cumplimientoPorArea.length === 0" class="h-64 flex items-center justify-center text-gray-400 text-xs">
-            No hay datos de verificación
+          <div *ngIf="cumplimientoPorFormato.length === 0" class="h-64 flex items-center justify-center text-gray-400 text-xs">
+            No hay datos de cumplimiento
           </div>
         </div>
 
@@ -176,30 +142,45 @@
             <canvas #hornosChart></canvas>
           </div>
         </div>
-
       </div>
 
       <!-- ============================================ -->
-      <!-- ALERTAS Y ACTIVIDAD -->
+      <!-- GRÁFICOS SECUNDARIOS Y ALERTAS -->
       <!-- ============================================ -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         
-        <!-- Panel de Alertas -->
+        <!-- Causas de Devolución -->
+        <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white">⚠️ Causas de Devolución</h3>
+              <p class="text-[10px] text-gray-500">Distribución acumulada</p>
+            </div>
+          </div>
+          <div class="h-48">
+            <canvas #causasDevolucionChart></canvas>
+          </div>
+          <div *ngIf="causasDevolucion.length === 0" class="h-48 flex items-center justify-center text-gray-400 text-xs">
+            Sin devoluciones registradas
+          </div>
+        </div>
+
+        <!-- Panel de Alertas Inteligentes (INTERACTIVO) -->
         <div class="lg:col-span-2 bg-white dark:bg-[#1C2434] rounded-2xl border border-gray-200 dark:border-[#2D313A] shadow-sm">
           <div class="p-5 border-b border-gray-200 dark:border-[#2D313A] flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="text-xl">🚨</span>
               <h2 class="text-sm font-bold text-gray-900 dark:text-white">Alertas y Notificaciones</h2>
-              <span *ngIf="alertas.length > 0" class="bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                {{ alertas.length }}
-              </span>
+              <span *ngIf="alertas.length > 0" class="bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ alertas.length }}</span>
             </div>
           </div>
           
-          <div class="divide-y divide-gray-200 dark:divide-[#2D313A] max-h-96 overflow-y-auto">
+          <div class="divide-y divide-gray-200 dark:divide-[#2D313A] max-h-80 overflow-y-auto">
+            <!-- ✅ ALERTA INTERACTIVA: Click para validar y redirigir -->
             <div *ngFor="let alerta of alertas" 
-                 class="p-4 border-l-4" 
-                 [class]="getAlertColor(alerta.tipo)">
+                 class="p-4 border-l-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors" 
+                 [class]="getAlertColor(alerta.tipo)"
+                 (click)="resolverYRedirigirAlerta(alerta)">
               <div class="flex items-start gap-3">
                 <span class="text-2xl">{{ alerta.icono }}</span>
                 <div class="flex-1">
@@ -209,6 +190,7 @@
                   </div>
                   <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">{{ alerta.descripcion }}</p>
                   <p class="text-[10px] text-gray-500 mt-0.5">{{ alerta.subtitulo }}</p>
+                  <p class="text-[10px] text-blue-500 mt-1 font-semibold">Click para ir al formulario →</p>
                 </div>
               </div>
             </div>
@@ -222,16 +204,18 @@
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Actividad Reciente -->
+      <!-- ============================================ -->
+      <!-- ACTIVIDAD RECIENTE Y ACCIONES RÁPIDAS -->
+      <!-- ============================================ -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div class="bg-white dark:bg-[#1C2434] rounded-2xl border border-gray-200 dark:border-[#2D313A] shadow-sm">
           <div class="p-5 border-b border-gray-200 dark:border-[#2D313A]">
             <h2 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <span class="text-xl">📋</span>
-              Actividad Reciente
+              <span class="text-xl">📋</span> Actividad Reciente
             </h2>
           </div>
-          
           <div class="divide-y divide-gray-200 dark:divide-[#2D313A] max-h-96 overflow-y-auto">
             <div *ngFor="let reg of registrosRecientes" class="p-3 hover:bg-gray-50 dark:hover:bg-[#171F2C] transition-colors">
               <div class="flex items-start gap-2">
@@ -243,7 +227,6 @@
                 </div>
               </div>
             </div>
-            
             <div *ngIf="registrosRecientes.length === 0" class="p-8 text-center">
               <span class="text-3xl">📭</span>
               <p class="text-xs text-gray-500 mt-2">Sin actividad reciente</p>
@@ -251,49 +234,65 @@
           </div>
         </div>
 
-      </div>
-
-      <!-- ============================================ -->
-      <!-- ACCIONES RÁPIDAS -->
-      <!-- ============================================ -->
-      <div class="bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
-        <h2 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <span class="text-xl">⚡</span>
-          Acciones Rápidas
-        </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          
-          <button routerLink="/pages/limpiezaydesinfeccion" 
-                  class="flex flex-col items-center gap-2 p-4 rounded-xl border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors group">
-            <span class="text-3xl group-hover:scale-110 transition-transform">🧹</span>
-            <span class="text-xs font-semibold text-blue-700 dark:text-blue-400 text-center">Limpieza</span>
-            <span class="text-[10px] text-blue-500">{{ statsPorFormulario.limpieza }} hoy</span>
-          </button>
-
-          <button routerLink="/pages/verificacion" 
-                  class="flex flex-col items-center gap-2 p-4 rounded-xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors group">
-            <span class="text-3xl group-hover:scale-110 transition-transform">🔍</span>
-            <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 text-center">Verificación</span>
-            <span class="text-[10px] text-emerald-500">{{ statsPorFormulario.verificacion }} hoy</span>
-          </button>
-
-          <button routerLink="/pages/hornos" 
-                  class="flex flex-col items-center gap-2 p-4 rounded-xl border border-orange-200 dark:border-orange-500/30 bg-orange-50 dark:bg-orange-500/10 hover:bg-orange-100 dark:hover:bg-orange-500/20 transition-colors group">
-            <span class="text-3xl group-hover:scale-110 transition-transform">🔥</span>
-            <span class="text-xs font-semibold text-orange-700 dark:text-orange-400 text-center">Hornos</span>
-            <span class="text-[10px] text-orange-500">{{ statsPorFormulario.hornos }} hoy</span>
-          </button>
-
-          <button routerLink="/pages/higienicas" 
-                  class="flex flex-col items-center gap-2 p-4 rounded-xl border border-purple-200 dark:border-purple-500/30 bg-purple-50 dark:bg-purple-500/10 hover:bg-purple-100 dark:hover:bg-purple-500/20 transition-colors group">
-            <span class="text-3xl group-hover:scale-110 transition-transform">✨</span>
-            <span class="text-xs font-semibold text-purple-700 dark:text-purple-400 text-center">Higiénicas</span>
-            <span class="text-[10px] text-purple-500">{{ statsPorFormulario.higienicas }} hoy</span>
-          </button>
-
+        <!-- Acciones Rápidas (TODOS LOS FORMULARIOS) -->
+        <div class="lg:col-span-2 bg-white dark:bg-[#1C2434] rounded-2xl p-5 border border-gray-200 dark:border-[#2D313A] shadow-sm">
+          <h2 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <span class="text-xl">⚡</span> Acciones Rápidas (10 Formatos)
+          </h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            <button routerLink="/pages/limpiezaydesinfeccion" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🧹</span>
+              <span class="text-xs font-semibold text-blue-700 dark:text-blue-400 text-center leading-tight">Limpieza y Desinfección</span>
+              <span class="text-[10px] text-blue-500">{{ statsPorFormulario.limpieza }} hoy</span>
+            </button>
+            <button routerLink="/pages/verificacion" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🔍</span>
+              <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 text-center leading-tight">Verificación de Limpieza</span>
+              <span class="text-[10px] text-emerald-500">{{ statsPorFormulario.verificacion }} hoy</span>
+            </button>
+            <button routerLink="/pages/hornos" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-orange-200 dark:border-orange-500/30 bg-orange-50 dark:bg-orange-500/10 hover:bg-orange-100 dark:hover:bg-orange-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🔥</span>
+              <span class="text-xs font-semibold text-orange-700 dark:text-orange-400 text-center leading-tight">Temperatura de Hornos</span>
+              <span class="text-[10px] text-orange-500">{{ statsPorFormulario.hornos }} hoy</span>
+            </button>
+            <button routerLink="/pages/higienicas" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-purple-200 dark:border-purple-500/30 bg-purple-50 dark:bg-purple-500/10 hover:bg-purple-100 dark:hover:bg-purple-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">✨</span>
+              <span class="text-xs font-semibold text-purple-700 dark:text-purple-400 text-center leading-tight">Prácticas Higiénicas</span>
+              <span class="text-[10px] text-purple-500">{{ statsPorFormulario.higienicas }} hoy</span>
+            </button>
+            <button routerLink="/pages/residuos" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 hover:bg-amber-100 dark:hover:bg-amber-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🗑️</span>
+              <span class="text-xs font-semibold text-amber-700 dark:text-amber-400 text-center leading-tight">Inspección de Residuos</span>
+              <span class="text-[10px] text-amber-500">{{ statsPorFormulario.residuos }} hoy</span>
+            </button>
+            <button routerLink="/pages/plagas" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-rose-200 dark:border-rose-500/30 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🪲</span>
+              <span class="text-xs font-semibold text-rose-700 dark:text-rose-400 text-center leading-tight">Control de Plagas</span>
+              <span class="text-[10px] text-rose-500">{{ statsPorFormulario.plagas }} hoy</span>
+            </button>
+            <button routerLink="/pages/ph-cloro" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-cyan-200 dark:border-cyan-500/30 bg-cyan-50 dark:bg-cyan-500/10 hover:bg-cyan-100 dark:hover:bg-cyan-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">💧</span>
+              <span class="text-xs font-semibold text-cyan-700 dark:text-cyan-400 text-center leading-tight">Seguimiento pH y Cloro</span>
+              <span class="text-[10px] text-cyan-500">{{ statsPorFormulario.phCloro }} hoy</span>
+            </button>
+            <button routerLink="/pages/devolucion" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-violet-200 dark:border-violet-500/30 bg-violet-50 dark:bg-violet-500/10 hover:bg-violet-100 dark:hover:bg-violet-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🔄</span>
+              <span class="text-xs font-semibold text-violet-700 dark:text-violet-400 text-center leading-tight">Devolución de Producto</span>
+              <span class="text-[10px] text-violet-500">{{ statsPorFormulario.devolucion }} hoy</span>
+            </button>
+            <button routerLink="/pages/materia-prima" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-fuchsia-200 dark:border-fuchsia-500/30 bg-fuchsia-50 dark:bg-fuchsia-500/10 hover:bg-fuchsia-100 dark:hover:bg-fuchsia-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">📦</span>
+              <span class="text-xs font-semibold text-fuchsia-700 dark:text-fuchsia-400 text-center leading-tight">Control de Materia Prima</span>
+              <span class="text-[10px] text-fuchsia-500">{{ statsPorFormulario.materiaPrima }} hoy</span>
+            </button>
+            <button routerLink="/pages/temp-hr" [queryParams]="{ date: fechaHoy }" class="flex flex-col items-center gap-2 p-4 rounded-xl border border-teal-200 dark:border-teal-500/30 bg-teal-50 dark:bg-teal-500/10 hover:bg-teal-100 dark:hover:bg-teal-500/20 transition-colors group">
+              <span class="text-2xl group-hover:scale-110 transition-transform">🌡️</span>
+              <span class="text-xs font-semibold text-teal-700 dark:text-teal-400 text-center leading-tight">Registro Temp y HR</span>
+              <span class="text-[10px] text-teal-500">{{ statsPorFormulario.tempHr }} hoy</span>
+            </button>
+          </div>
         </div>
       </div>
-
     </div>
   </div>
 </ion-content>

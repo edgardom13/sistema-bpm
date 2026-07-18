@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SupabaseService } from '../../services/supabase.service';
 import { ToastController } from '@ionic/angular';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-formulario-dinamico',
@@ -15,87 +16,25 @@ export class FormularioDinamicoPage implements OnInit {
   checklistData: any = null;
   loading = true;
   isEditing = false;
-
-  // Nuevas propiedades para la tabla y exportación
   registrosDelDia: any[] = [];
   selectedItems: Set<string> = new Set();
+  listaEmpleadosOperativos: string[] = [];
+  listaJefesCalidad: string[] = [];
 
-  // Configuración de cada formato
   formatConfigs: { [key: string]: any } = {
     'limpiezaydesinfeccion': {
       title: 'Limpieza y Desinfección',
-      icon: '',
+      icon: '🧹',
       formatCode: 'SGI-FLD-02',
       fields: [
-        { 
-          key: 'aspecto_evaluar', 
-          label: 'Aspectos a evaluar', 
-          type: 'select', 
-          options: [
-            'Manos del personal manipulador',
-            'Calzado del personal manipulador',
-            'Cuarto de crecimiento',
-            'Area de produccion y Empaque',
-            'Hornos',
-            'Techos, puertas, paredes y Ventanas',
-            'Area de cargue vehiculos',
-            'Equipos y Utensilios',
-            'Canastillas Plasticas',
-            'Bandejas',
-            'Baños'
-          ]
-        },
-        { 
-          key: 'responsable', 
-          label: 'Responsable', 
-          type: 'text' 
-        },
-        { 
-          key: 'actividad', 
-          label: 'Actividad', 
-          type: 'select', 
-          options: ['D', 'L', 'D y L']
-        },
-        { 
-          key: 'cantidad', 
-          label: 'Cantidad', 
-          type: 'select', 
-          options: [
-            'Jabon neutro antibacterial',
-            'Power Quat (Sal de amonio cuaternario 3era Gen.)',
-            '60cc DETERGENTE INDUSTRIAL 25/10 litros de agua',
-            '7 cc HIPOCLORITO DE SODIO/5 litro de agua',
-            '4 cc AMONIO CUATERNARIO/1 litro de agua',
-            '100 g DETERGENTE EN POLVO/10 litros de agua',
-            '20 cc AMONIO CUATERNARIO/1 litro de agua',
-            '3 cc HIPOCLORITO DE SODIO/5 litro de agua',
-            '17 cc HIPOCLORITO DE SODIO/5 litro de agua'
-          ]
-        },
-        { 
-          key: 'concentracion', 
-          label: 'Concentración', 
-          type: 'range',
-          unit: '%',
-          min: 0,
-          max: 100
-        },
-        { 
-          key: 'dia', 
-          label: 'Día', 
-          type: 'date-auto' 
-        },
-        { 
-          key: 'frecuencia', 
-          label: 'Frecuencia', 
-          type: 'select', 
-          options: ['Diurna', 'Nocturna']
-        },
-        { 
-          key: 'observaciones', 
-          label: 'Observaciones', 
-          type: 'textarea' 
-        }
+        { key: 'aspecto_evaluar', label: 'Aspectos a evaluar', type: 'select', options: ['Manos del personal manipulador', 'Calzado del personal manipulador', 'Cuarto de crecimiento', 'Area de produccion y Empaque', 'Hornos', 'Techos, puertas, paredes y Ventanas', 'Area de cargue vehiculos', 'Equipos y Utensilios', 'Canastillas Plasticas', 'Bandejas', 'Baños'] },
+        { key: 'responsable', label: 'Responsable', type: 'select-responsable' },
+        { key: 'actividad', label: 'Actividad', type: 'select', options: ['D', 'L', 'D y L'] },
+        { key: 'cantidad', label: 'Cantidad', type: 'select', options: ['Jabon neutro antibacterial', 'Power Quat', '60cc DETERGENTE INDUSTRIAL', '7 cc HIPOCLORITO DE SODIO', '4 cc AMONIO CUATERNARIO', '100 g DETERGENTE EN POLVO', '20 cc AMONIO CUATERNARIO', '3 cc HIPOCLORITO DE SODIO', '17 cc HIPOCLORITO DE SODIO'] },
+        { key: 'concentracion', label: 'Concentración', type: 'range', unit: '%', min: 0, max: 100 },
+        { key: 'dia', label: 'Día', type: 'date-auto' },
+        { key: 'frecuencia', label: 'Frecuencia', type: 'select', options: ['Diurna', 'Nocturna'] },
+        { key: 'observaciones', label: 'Observaciones', type: 'textarea' }
       ],
     },
     'verificacion': {
@@ -103,100 +42,26 @@ export class FormularioDinamicoPage implements OnInit {
       icon: '🔍',
       formatCode: 'SGI-FVL-06',
       fields: [
-        { 
-          key: 'aspecto_evaluar', 
-          label: 'Aspectos a evaluar', 
-          type: 'select', 
-          options: [
-            'Ambientes /aspersión',
-            'Manos del personal manipulador',
-            'Calzado del personal manipulador',
-            'Hornos, cuartos de crecimiento',
-            'Area de empaque y almacenamiento',
-            'Area de produccion',
-            'Techos, puertas, paredes y Ventanas',
-            'Pisos',
-            'Equipos y utensilios',
-            'Canecas de residuos solidos',
-            'Baños',
-            'Limpiones y traperos',
-            'Area de descargue',
-            'Canastillas Plasticas'
-          ]
-        },
-        { 
-          key: 'responsable', 
-          label: 'Responsable', 
-          type: 'text' 
-        },
-        { 
-          key: 'cumple', 
-          label: 'Cumple', 
-          type: 'select', 
-          options: ['Si', 'No']
-        },
-        { 
-          key: 'dia', 
-          label: 'Día', 
-          type: 'date-auto' 
-        },
-        { 
-          key: 'procedimiento', 
-          label: 'Procedimiento', 
-          type: 'select', 
-          options: ['Repite', 'No Repite']
-        },
-        { 
-          key: 'verificado', 
-          label: 'Verificado', 
-          type: 'select', 
-          options: ['Jefe de Calidad']
-        },
-        { 
-          key: 'observaciones', 
-          label: 'Observaciones', 
-          type: 'text' 
-        }
+        { key: 'aspecto_evaluar', label: 'Aspectos a evaluar', type: 'select', options: ['Ambientes /aspersión', 'Manos del personal manipulador', 'Calzado del personal manipulador', 'Hornos, cuartos de crecimiento', 'Area de empaque y almacenamiento', 'Area de produccion', 'Techos, puertas, paredes y Ventanas', 'Pisos', 'Equipos y utensilios', 'Canecas de residuos solidos', 'Baños', 'Limpiones y traperos', 'Area de descargue', 'Canastillas Plasticas'] },
+        { key: 'responsable', label: 'Responsable', type: 'select-responsable' },
+        { key: 'cumple', label: 'Cumple', type: 'select', options: ['Si', 'No'] },
+        { key: 'dia', label: 'Día', type: 'date-auto' },
+        { key: 'procedimiento', label: 'Procedimiento', type: 'select', options: ['Repite', 'No Repite'] },
+        { key: 'verificado', label: 'Verificado', type: 'select-jefe-calidad' },
+        { key: 'observaciones', label: 'Observaciones', type: 'text' }
       ],
     },
     'hornos': {
       title: 'Temperatura de Hornos',
-      icon: '',
+      icon: '🔥',
       formatCode: 'SGI-FT-01',
       fields: [
-        { 
-          key: 'dia', 
-          label: 'Día', 
-          type: 'date-auto' 
-        },
-        { 
-          key: 'jornada', 
-          label: 'Jornada', 
-          type: 'jornada-auto'
-        },
-        { 
-          key: 'horno_1', 
-          label: 'Horno 1 (°C)', 
-          type: 'number', 
-          unit: '°C' 
-        },
-        { 
-          key: 'horno_2', 
-          label: 'Horno 2 (°C)', 
-          type: 'number', 
-          unit: '°C' 
-        },
-        { 
-          key: 'responsable', 
-          label: 'Responsable', 
-          type: 'select', 
-          options: ['Panadero Líder']
-        },
-        { 
-          key: 'observaciones', 
-          label: 'Observaciones', 
-          type: 'textarea' 
-        }
+        { key: 'dia', label: 'Día', type: 'date-auto' },
+        { key: 'jornada', label: 'Jornada', type: 'jornada-auto' },
+        { key: 'horno_1', label: 'Horno 1 (°C)', type: 'number', unit: '°C' },
+        { key: 'horno_2', label: 'Horno 2 (°C)', type: 'number', unit: '°C' },
+        { key: 'responsable', label: 'Responsable', type: 'select', options: ['Panadero Líder'] },
+        { key: 'observaciones', label: 'Observaciones', type: 'textarea' }
       ],
     },
     'higienicas': {
@@ -205,8 +70,8 @@ export class FormularioDinamicoPage implements OnInit {
       formatCode: 'SGI-FPH-03',
       fields: [
         { key: 'dia', label: 'Día', type: 'date-auto' },
-        { key: 'nombre_evaluado', label: 'Nombre del Evaluado', type: 'text' },
-        { key: 'responsable_checkeo', label: 'Responsable del Checkeo', type: 'text' },
+        { key: 'nombre_evaluado', label: 'Nombre del Evaluado', type: 'select-empleado' },
+        { key: 'responsable_checkeo', label: 'Responsable del Checkeo', type: 'select-responsable' },
         { key: 'firma_evaluado', label: 'Firma del Evaluado', type: 'text' },
         { key: 'cargo', label: 'Cargo', type: 'text' },
         { key: 'recomendaciones', label: 'Recomendaciones', type: 'textarea' }
@@ -217,19 +82,13 @@ export class FormularioDinamicoPage implements OnInit {
         'Delantal plástico atado al cuerpo',
         'Lava y desinfecta sus manos y/o guantes siempre que se requiere',
         'Cabello recogido y cubierto totalmente',
-        'Se afeita diariamente',
-        'Usa maquillaje y/o perfume',
-        'Uñas cortas, limpias y sin esmalte',
-        'Ausencia de anillos, aretes, joyas u otros accesorios',
-        'No come, bebe o mastica ningún objeto o producto',
-        'No habla, tose o estornuda sobre los alimentos',
-        'No se toca ninguna parte del cuerpo con las manos',
-        'No se sienta o reposa sobre las áreas de trabajo',
-        'No fuma en el área de trabajo',
-        'Guantes limpios, sin roturas o desperfectos (en caso de usarlos)',
-        'Usa tapabocas que cubra desde la nariz hasta la boca',
-        'Ausencia de celulares equipos electronicos y objetos ajenos al proceso',
-        'Uso de calzado en buen estado y limpio'
+        'No usa joyas, relojes ni objetos personales durante el proceso',
+        'Mantiene las uñas cortas, limpias y sin esmalte',
+        'No fuma, come ni bebe en las áreas de proceso',
+        'Reporta enfermedades o heridas',
+        'Utiliza correctamente los elementos de protección personal',
+        'Mantiene el área de trabajo ordenada y limpia',
+        'Manipula adecuadamente los alimentos'
       ]
     },
     'residuos': {
@@ -237,12 +96,25 @@ export class FormularioDinamicoPage implements OnInit {
       icon: '🗑️',
       formatCode: 'SGI-FIR-04',
       fields: [
-        { key: 'area', label: 'Área inspeccionada', type: 'text' },
-        { key: 'tipo_residuo', label: 'Tipo de residuo', type: 'select', options: ['Orgánico', 'Inorgánico', 'Peligroso', 'Reciclable'] },
-        { key: 'contenedores_adecuados', label: 'Contenedores adecuados', type: 'select', options: ['Sí', 'No'] },
-        { key: 'senalizacion', label: 'Señalización correcta', type: 'select', options: ['Sí', 'No'] },
-        { key: 'frecuencia_recoleccion', label: 'Frecuencia de recolección', type: 'text' },
-        { key: 'observaciones', label: 'Observaciones', type: 'textarea' }
+        { key: 'dia', label: 'Día', type: 'date-auto' },
+        { key: 'responsable', label: 'Responsable de la inspección', type: 'select-responsable' },
+        { key: 'area_inspeccionada', label: 'Área inspeccionada', type: 'text' },
+        { key: 'observaciones_generales', label: 'Observaciones generales', type: 'textarea' }
+      ],
+      itemsEvaluacion: [
+        'El área de almacenamiento de residuos se encuentra debidamente aislada de las demás áreas',
+        'Las canecas se encuentran en buen estado, con tapa y pedal',
+        'Las canecas están debidamente identificadas según el tipo de residuo',
+        'Se realiza la separación adecuada de residuos orgánicos e inorgánicos',
+        'Las canecas se encuentran limpias y desinfectadas',
+        'Los residuos se retiran diariamente del área de producción',
+        'Existe un cronograma de recolección de residuos',
+        'El personal utiliza guantes para manejar residuos',
+        'Las bolsas de residuos están debidamente cerradas',
+        'No hay acumulación excesiva de residuos en el área',
+        'Las canecas de residuos orgánicos se limpian diariamente',
+        'Las canecas de residuos inorgánicos se limpian semanalmente',
+        'Las rejillas de protección de los drenajes se encuentran bien ubicadas y libres de residuos'
       ]
     },
     'plagas': {
@@ -250,13 +122,25 @@ export class FormularioDinamicoPage implements OnInit {
       icon: '🪲',
       formatCode: 'SGI-FPC-05',
       fields: [
+        { key: 'dia', label: 'Día', type: 'date-auto' },
+        { key: 'responsable', label: 'Responsable', type: 'select-responsable' },
         { key: 'area_inspeccionada', label: 'Área inspeccionada', type: 'text' },
-        { key: 'evidencia_plagas', label: 'Evidencia de plagas', type: 'select', options: ['Sí', 'No'] },
-        { key: 'tipo_plaga', label: 'Tipo de plaga detectada', type: 'select', options: ['Ninguna', 'Roedores', 'Insectos voladores', 'Insectos rastreros', 'Aves'] },
-        { key: 'trampas_colocadas', label: 'Trampas colocadas', type: 'select', options: ['Sí', 'No'] },
-        { key: 'cantidad_trampas', label: 'Cantidad de trampas', type: 'number' },
-        { key: 'fumigacion_reciente', label: 'Fumigación reciente', type: 'select', options: ['Sí', 'No'] },
+        { key: 'medidas_preventivas', label: 'Medidas Preventivas', type: 'textarea' },
+        { key: 'medidas_correctivas', label: 'Medidas Correctivas', type: 'textarea' },
         { key: 'observaciones', label: 'Observaciones', type: 'textarea' }
+      ],
+      itemsEvaluacion: [
+        'Se realiza inspección de plagas en el área',
+        'No hay evidencia de roedores (heces, roeduras, huellas)',
+        'No hay evidencia de insectos (cucarachas, hormigas, moscas)',
+        'Las trampas de luz se encuentran funcionando correctamente',
+        'Las cebaderas están debidamente ubicadas y señalizadas',
+        'No hay acumulación de agua estancada',
+        'Las puertas y ventanas están en buen estado (sin huecos)',
+        'Las mallas de protección están en buen estado',
+        'Se controla la presencia de plagas en las diferentes áreas de proceso, almacenamiento y empaque',
+        'Se deja soporte del último servicio de fumigación y control de roedores',
+        'Se hace rotación de los productos utilizados para el control de plagas y roedores'
       ]
     },
     'ph-cloro': {
@@ -264,14 +148,10 @@ export class FormularioDinamicoPage implements OnInit {
       icon: '💧',
       formatCode: 'SGI-FCFA-07',
       fields: [
-        { key: 'punto_muestreo', label: 'Punto de muestreo', type: 'text' },
-        { key: 'ph', label: 'pH medido', type: 'number', unit: 'pH' },
-        { key: 'ph_min', label: 'pH mínimo aceptable', type: 'number', unit: 'pH' },
-        { key: 'ph_max', label: 'pH máximo aceptable', type: 'number', unit: 'pH' },
-        { key: 'cloro_libre', label: 'Cloro libre', type: 'number', unit: 'ppm' },
-        { key: 'cloro_min', label: 'Cloro mínimo', type: 'number', unit: 'ppm' },
-        { key: 'cloro_max', label: 'Cloro máximo', type: 'number', unit: 'ppm' },
-        { key: 'responsable', label: 'Responsable', type: 'text' },
+        { key: 'dia', label: 'Fecha', type: 'date-auto' },
+        { key: 'punto_toma_de', label: 'Punto de Toma', type: 'select', options: ['Grifo de produccion', 'Tanque almacenamiento', 'Linea envasado'] },
+        { key: 'ph', label: 'pH', type: 'number', unit: 'pH' },
+        { key: 'cloro', label: 'Cloro (ppm)', type: 'number', unit: 'ppm' },
         { key: 'observaciones', label: 'Observaciones', type: 'textarea' }
       ]
     },
@@ -280,46 +160,31 @@ export class FormularioDinamicoPage implements OnInit {
       icon: '🔄',
       formatCode: 'SGI-TZP-08',
       fields: [
-        { key: 'producto', label: 'Producto', type: 'text' },
-        { key: 'lote', label: 'Lote', type: 'text' },
-        { key: 'cantidad', label: 'Cantidad devuelta', type: 'number' },
-        { key: 'motivo', label: 'Motivo de devolución', type: 'select', options: ['Producto dañado', 'Vencido', 'Error en pedido', 'Rechazo de cliente', 'Otro'] },
-        { key: 'origen', label: 'Origen de la devolución', type: 'text' },
-        { key: 'estado_producto', label: 'Estado del producto', type: 'select', options: ['Apto para reventa', 'Apto para reproceso', 'Desechar'] },
-        { key: 'responsable', label: 'Responsable', type: 'text' },
+        { key: 'dia', label: 'Fecha', type: 'date-auto' },
+        { key: 'nombre_producto', label: 'Nombre del Producto', type: 'text' },
+        { key: 'cantidad', label: 'Cantidad', type: 'text' },
+        { key: 'fecha_devolucion', label: 'Fecha de Devolución', type: 'text' },
+        { key: 'cliente', label: 'Cliente', type: 'text' },
+        { key: 'causa_devolucion', label: 'Causa de la Devolución', type: 'select', options: ['PRESENTA MOHO', 'VENCIDO', 'DANADO', 'ERROR_PEDIDO', 'OTRO'] },
         { key: 'observaciones', label: 'Observaciones', type: 'textarea' }
       ]
     },
     'materia-prima': {
       title: 'Control de Materia Prima',
-      icon: '',
+      icon: '📦',
       formatCode: 'SGI-FMP-09',
       fields: [
-        { key: 'proveedor', label: 'Proveedor', type: 'text' },
-        { key: 'producto', label: 'Producto/Materia prima', type: 'text' },
-        { key: 'lote', label: 'Lote', type: 'text' },
-        { key: 'fecha_vencimiento', label: 'Fecha de vencimiento', type: 'text' },
-        { key: 'cantidad_recibida', label: 'Cantidad recibida', type: 'number' },
-        { key: 'unidad_medida', label: 'Unidad de medida', type: 'select', options: ['kg', 'L', 'unidades', 'cajas'] },
-        { key: 'temperatura_recepcion', label: 'Temperatura de recepción', type: 'number', unit: '°C' },
-        { key: 'inspeccion_organoleptica', label: 'Inspección organoléptica', type: 'select', options: ['Aprobado', 'Rechazado'] },
-        { key: 'observaciones', label: 'Observaciones', type: 'textarea' }
+        { key: 'observaciones_generales', label: 'Observaciones Generales', type: 'textarea' },
+        { key: 'operario_responsable', label: 'Operario Responsable', type: 'select-empleado' },
+        { key: 'jefe_calidad', label: 'Jefe de Calidad', type: 'select-jefe-calidad' }
       ]
     },
     'temp-hr': {
       title: 'Registro Temp y HR CC',
-      icon: '🌡️',
+      icon: '️',
       formatCode: 'SGI-FTHR-11',
       fields: [
-        { key: 'area', label: 'Área/Cuarto', type: 'text' },
-        { key: 'temperatura_manana', label: 'Temperatura mañana', type: 'number', unit: '°C' },
-        { key: 'hr_manana', label: 'Humedad relativa mañana', type: 'number', unit: '%' },
-        { key: 'temperatura_tarde', label: 'Temperatura tarde', type: 'number', unit: '°C' },
-        { key: 'hr_tarde', label: 'Humedad relativa tarde', type: 'number', unit: '%' },
-        { key: 'temp_min_permitida', label: 'Temp. mínima permitida', type: 'number', unit: '°C' },
-        { key: 'temp_max_permitida', label: 'Temp. máxima permitida', type: 'number', unit: '°C' },
-        { key: 'responsable', label: 'Responsable', type: 'text' },
-        { key: 'observaciones', label: 'Observaciones', type: 'textarea' }
+        { key: 'jefe_calidad', label: 'Jefe de Calidad', type: 'select-jefe-calidad' }
       ]
     }
   };
@@ -331,26 +196,49 @@ export class FormularioDinamicoPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private supabaseService: SupabaseService,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    private notificationService: NotificationService
   ) {}
 
   async ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.selectedDate = params['date'] || this.formatDate(new Date());
     });
-
+    
     const urlSegments = this.router.url.split('/');
     this.formatType = urlSegments[urlSegments.length - 1].split('?')[0];
-
     this.currentConfig = this.formatConfigs[this.formatType];
-
+    
     if (!this.currentConfig) {
       this.presentToast('Formato no configurado', 'error');
       this.router.navigate(['/pages/dashboard']);
       return;
     }
-
+    
+    await this.cargarEmpleados();
     await this.cargarDatosDelDia();
+  }
+
+  async cargarEmpleados() {
+    try {
+      const { data, error } = await this.supabaseService
+        .from('empleados')
+        .select('nombre, rol');
+      
+      if (error) throw error;
+      
+      if (data) {
+        this.listaEmpleadosOperativos = data
+          .filter((e: any) => e.rol === 'Operario' || e.rol === 'Panadero' || e.rol === 'Auxiliar')
+          .map((e: any) => e.nombre);
+        
+        this.listaJefesCalidad = data
+          .filter((e: any) => e.rol === 'Jefe de Calidad')
+          .map((e: any) => e.nombre);
+      }
+    } catch (error) {
+      console.error('Error cargando empleados:', error);
+    }
   }
 
   formatDate(date: Date): string {
@@ -363,11 +251,6 @@ export class FormularioDinamicoPage implements OnInit {
   async cargarDatosDelDia() {
     try {
       this.loading = true;
-
-      console.log('🔍 Buscando registros con filtros:');
-      console.log('  - format_type:', this.currentConfig.formatCode);
-      console.log('  - selectedDate:', this.selectedDate);
-
       const { data, error } = await this.supabaseService
         .from('checklists')
         .select('*')
@@ -376,22 +259,17 @@ export class FormularioDinamicoPage implements OnInit {
         .eq('data->>dia', this.selectedDate)
         .order('created_at', { ascending: false });
 
-      console.log('📦 Datos recibidos:', data);
-      console.log('❌ Error:', error);
-
       if (error) throw error;
-
+      
       this.registrosDelDia = data || [];
-      console.log('✅ Total de registros encontrados:', this.registrosDelDia.length);
-
       this.formData = {};
+      
       this.currentConfig.fields.forEach((field: any) => {
         this.formData[field.key] = '';
       });
       
       this.formData['dia'] = this.selectedDate;
       
-      // ✅ Inicializar estructura de items para prácticas higiénicas
       if (this.formatType === 'higienicas' && this.currentConfig?.itemsEvaluacion) {
         this.formData['items'] = this.currentConfig.itemsEvaluacion.map(() => ({
           cumple: '',
@@ -399,18 +277,54 @@ export class FormularioDinamicoPage implements OnInit {
         }));
       }
       
-      // ✅ Calcular jornada automáticamente para hornos
+      if (this.formatType === 'residuos' && this.currentConfig?.itemsEvaluacion) {
+        this.formData['items_solidos'] = this.getResiduosSolidosItems().map(() => ({
+          verificacion: '',
+          observaciones: ''
+        }));
+        this.formData['items_liquidos'] = this.getResiduosLiquidosItems().map(() => ({
+          verificacion: '',
+          observaciones: ''
+        }));
+      }
+      
+      if (this.formatType === 'plagas' && this.currentConfig?.itemsEvaluacion) {
+        this.formData['items_plagas'] = this.getPlagasItems().map(() => ({
+          verificacion: '',
+          observaciones: ''
+        }));
+      }
+      
+      if (this.formatType === 'materia-prima') {
+        this.formData['items_mp'] = [{
+          fecha: this.selectedDate,
+          proveedor: '',
+          producto: '',
+          fecha_vencimiento: '',
+          temperatura: '',
+          aprobado: '',
+          observaciones: ''
+        }];
+      }
+      
+      if (this.formatType === 'temp-hr') {
+        this.formData['items_temp_hr'] = [{
+          fecha: this.selectedDate,
+          hora: '',
+          temperatura: '',
+          hr: '',
+          observaciones: ''
+        }];
+      }
+      
       if (this.formatType === 'hornos') {
         this.formData['jornada'] = this.calcularJornada();
       }
       
       this.isEditing = false;
       this.checklistData = null;
-
-      console.log('✅ Formulario listo para NUEVO registro');
-
     } catch (error) {
-      console.error('❌ Error cargando datos:', error);
+      console.error('Error cargando datos:', error);
       this.presentToast('Error al cargar datos', 'error');
     } finally {
       this.loading = false;
@@ -419,30 +333,135 @@ export class FormularioDinamicoPage implements OnInit {
 
   calcularJornada(): string {
     const ahora = new Date();
-    const hora = ahora.getHours();
-    return hora < 12 ? 'AM' : 'PM';
-  }
-
-  getHoraActual(): string {
-    const ahora = new Date();
-    return ahora.toLocaleTimeString('es-ES', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
+    return ahora.getHours() < 12 ? 'AM' : 'PM';
   }
 
   async guardarFormulario() {
     try {
-      console.log('💾 Guardando formulario...');
-      console.log('  - isEditing:', this.isEditing);
-      console.log('  - checklistData:', this.checklistData);
-      console.log('  - formData:', this.formData);
-
-      const user = await this.supabaseService.getCurrentUser();
-      if (!user) {
-        await this.presentToast('Debes iniciar sesión', 'error');
-        return;
+      // ==========================================
+      // 1. VALIDACIONES COMPLETAS PARA LOS 10 FORMULARIOS
+      // ==========================================
+      
+      // 1. Limpieza y Desinfección
+      if (this.formatType === 'limpiezaydesinfeccion') {
+        if (!this.formData['aspecto_evaluar']) return this.presentToast('❌ Seleccione el aspecto a evaluar', 'error');
+        if (!this.formData['responsable']?.trim()) return this.presentToast('❌ Seleccione el responsable', 'error');
+        if (!this.formData['actividad']) return this.presentToast('❌ Seleccione la actividad', 'error');
+        if (!this.formData['cantidad']) return this.presentToast('❌ Seleccione la cantidad', 'error');
+        if (this.formData['concentracion'] === '' || this.formData['concentracion'] === null || this.formData['concentracion'] === undefined) return this.presentToast('❌ Ingrese la concentración', 'error');
+        if (!this.formData['frecuencia']) return this.presentToast('❌ Seleccione la frecuencia', 'error');
       }
+
+      // 2. Verificación de Limpieza
+      if (this.formatType === 'verificacion') {
+        if (!this.formData['aspecto_evaluar']) return this.presentToast('❌ Seleccione el aspecto a evaluar', 'error');
+        if (!this.formData['responsable']?.trim()) return this.presentToast('❌ Seleccione el responsable', 'error');
+        if (!this.formData['cumple']) return this.presentToast('❌ Seleccione si cumple o no', 'error');
+        if (!this.formData['procedimiento']) return this.presentToast('❌ Seleccione el procedimiento', 'error');
+        if (!this.formData['verificado']) return this.presentToast(' Seleccione quién verificó', 'error');
+      }
+
+      // 3. Temperatura de Hornos - CON ALERTAS
+      if (this.formatType === 'hornos') {
+        if (this.formData['horno_1'] === '' || this.formData['horno_1'] === null || this.formData['horno_1'] === undefined) 
+          return this.presentToast('❌ Ingrese la temperatura del Horno 1', 'error');
+        if (this.formData['horno_2'] === '' || this.formData['horno_2'] === null || this.formData['horno_2'] === undefined) 
+          return this.presentToast('❌ Ingrese la temperatura del Horno 2', 'error');
+        if (!this.formData['responsable']) return this.presentToast('❌ Seleccione el responsable', 'error');
+        
+        // ✅ VERIFICAR TEMPERATURAS Y CREAR ALERTAS
+        const temp1 = parseFloat(this.formData['horno_1']);
+        const temp2 = parseFloat(this.formData['horno_2']);
+        
+        if (temp1 < 120 || temp1 > 180) {
+          await this.crearAlertaTemperatura('horno_1', temp1);
+        }
+        
+        if (temp2 < 120 || temp2 > 180) {
+          await this.crearAlertaTemperatura('horno_2', temp2);
+        }
+      }
+
+      // 4. Prácticas Higiénicas
+      if (this.formatType === 'higienicas') {
+        if (!this.formData['nombre_evaluado']?.trim()) return this.presentToast('❌ Seleccione el evaluado', 'error');
+        if (!this.formData['responsable_checkeo']?.trim()) return this.presentToast('❌ Seleccione el responsable', 'error');
+        const sinVerificar = this.formData['items']?.filter((i: any) => !i.cumple).length || 0;
+        if (sinVerificar > 0) return this.presentToast(`❌ Faltan ${sinVerificar} aspectos por verificar`, 'error');
+      }
+
+      // 5. Inspección de Residuos
+      if (this.formatType === 'residuos') {
+        if (!this.formData['responsable']?.trim()) return this.presentToast('❌ Seleccione el responsable', 'error');
+        if (!this.formData['area_inspeccionada']?.trim()) return this.presentToast('❌ Ingrese el área', 'error');
+        const sinVerificarSolidos = this.formData['items_solidos']?.filter((i: any) => !i.verificacion).length || 0;
+        const sinVerificarLiquidos = this.formData['items_liquidos']?.filter((i: any) => !i.verificacion).length || 0;
+        if (sinVerificarSolidos > 0 || sinVerificarLiquidos > 0) 
+          return this.presentToast('❌ Faltan aspectos por verificar', 'error');
+      }
+
+      // 6. Control de Plagas
+      if (this.formatType === 'plagas') {
+        if (!this.formData['responsable']?.trim()) return this.presentToast('❌ Seleccione el responsable', 'error');
+        if (!this.formData['area_inspeccionada']?.trim()) return this.presentToast('❌ Ingrese el área', 'error');
+        if (!this.formData['jefe_calidad']?.trim()) return this.presentToast('❌ Seleccione el Jefe de Calidad', 'error');
+        const sinVerificar = this.formData['items_plagas']?.filter((i: any) => !i.verificacion).length || 0;
+        if (sinVerificar > 0) return this.presentToast(`❌ Faltan ${sinVerificar} aspectos por verificar`, 'error');
+      }
+
+      // 7. Seguimiento pH y Cloro
+      if (this.formatType === 'ph-cloro') {
+        if (!this.formData['punto_toma_de']) return this.presentToast('❌ Seleccione el punto de toma', 'error');
+        if (this.formData['ph'] === '' || this.formData['ph'] === null || this.formData['ph'] === undefined) 
+          return this.presentToast('❌ Ingrese el pH', 'error');
+        if (this.formData['cloro'] === '' || this.formData['cloro'] === null || this.formData['cloro'] === undefined) 
+          return this.presentToast('❌ Ingrese el cloro', 'error');
+      }
+
+      // 8. Devolución de Producto
+      if (this.formatType === 'devolucion') {
+        if (!this.formData['nombre_producto']?.trim()) return this.presentToast('❌ Ingrese el nombre del producto', 'error');
+        if (!this.formData['cantidad']?.trim()) return this.presentToast('❌ Ingrese la cantidad', 'error');
+        if (!this.formData['fecha_devolucion']?.trim()) return this.presentToast('❌ Ingrese la fecha de devolución', 'error');
+        if (!this.formData['cliente']?.trim()) return this.presentToast('❌ Ingrese el cliente', 'error');
+        if (!this.formData['causa_devolucion']) return this.presentToast('❌ Seleccione la causa', 'error');
+      }
+
+      // 9. Control de Materia Prima
+      if (this.formatType === 'materia-prima') {
+        if (!this.formData['operario_responsable']?.trim()) return this.presentToast('❌ Seleccione el operario responsable', 'error');
+        if (!this.formData['jefe_calidad']?.trim()) return this.presentToast('❌ Seleccione el jefe de calidad', 'error');
+        const itemsMP = this.formData['items_mp'] || [];
+        for (let i = 0; i < itemsMP.length; i++) {
+          const item = itemsMP[i];
+          if (!item.proveedor?.trim()) return this.presentToast(`❌ Faltan datos en el producto ${i + 1} (Proveedor)`, 'error');
+          if (!item.producto?.trim()) return this.presentToast(`❌ Faltan datos en el producto ${i + 1} (Producto)`, 'error');
+          if (!item.fecha_vencimiento) return this.presentToast(`❌ Faltan datos en el producto ${i + 1} (Fecha Vencimiento)`, 'error');
+          if (item.temperatura === '' || item.temperatura === null || item.temperatura === undefined) 
+            return this.presentToast(`❌ Faltan datos en el producto ${i + 1} (Temperatura)`, 'error');
+          if (!item.aprobado) return this.presentToast(`❌ Faltan datos en el producto ${i + 1} (Aprobado)`, 'error');
+        }
+      }
+
+      // 10. Registro Temp y HR CC
+      if (this.formatType === 'temp-hr') {
+        if (!this.formData['jefe_calidad']?.trim()) return this.presentToast(' Seleccione el jefe de calidad', 'error');
+        const itemsTempHR = this.formData['items_temp_hr'] || [];
+        for (let i = 0; i < itemsTempHR.length; i++) {
+          const item = itemsTempHR[i];
+          if (!item.hora) return this.presentToast(`❌ Faltan datos en el registro ${i + 1} (Hora)`, 'error');
+          if (item.temperatura === '' || item.temperatura === null || item.temperatura === undefined) 
+            return this.presentToast(`❌ Faltan datos en el registro ${i + 1} (Temperatura)`, 'error');
+          if (item.hr === '' || item.hr === null || item.hr === undefined) 
+            return this.presentToast(`❌ Faltan datos en el registro ${i + 1} (Humedad Relativa)`, 'error');
+        }
+      }
+
+      // ==========================================
+      // 2. PROCESO DE GUARDADO
+      // ==========================================
+      const user = await this.supabaseService.getCurrentUser();
+      if (!user) return this.presentToast('Debes iniciar sesión', 'error');
 
       const checklistData = {
         format_type: this.currentConfig.formatCode,
@@ -454,32 +473,27 @@ export class FormularioDinamicoPage implements OnInit {
         updated_at: new Date().toISOString()
       };
 
-      console.log('📦 Datos a guardar:', checklistData);
-
-      let result;
+      let result: any;
       if (this.isEditing && this.checklistData?.id) {
-        console.log('🔄 Actualizando registro ID:', this.checklistData.id);
         result = await this.supabaseService
           .from('checklists')
           .update(checklistData)
-          .eq('id', this.checklistData.id);
+          .eq('id', this.checklistData.id)
+          .select();
       } else {
-        console.log('➕ Insertando nuevo registro');
         result = await this.supabaseService
           .from('checklists')
-          .insert([checklistData]);
+          .insert([checklistData])
+          .select();
       }
 
-      if (result.error) {
-        console.error('❌ Error al guardar:', result.error);
-        throw result.error;
-      }
+      if (result.error) throw result.error;
 
       await this.presentToast(
-        this.isEditing ? 'Registro actualizado correctamente' : 'Registro guardado exitosamente', 
+        this.isEditing ? '✅ Registro actualizado' : '✅ Registro guardado exitosamente',
         'success'
       );
-
+      
       this.formData = {};
       this.currentConfig.fields.forEach((field: any) => {
         this.formData[field.key] = '';
@@ -487,16 +501,64 @@ export class FormularioDinamicoPage implements OnInit {
       this.formData['dia'] = this.selectedDate;
       this.isEditing = false;
       this.checklistData = null;
-      
       await this.cargarDatosDelDia();
-
-    } catch (error) {
+      
+    } catch (error: any) {
       console.error('Error guardando:', error);
-      await this.presentToast('Error: ' + (error as any).message, 'error');
+      await this.presentToast('Error: ' + error.message, 'error');
     }
   }
 
-  async presentToast(message: string, color: 'success' | 'error') {
+  // ✅ MÉTODO PARA CREAR ALERTAS DE TEMPERATURA
+  async crearAlertaTemperatura(parametro: string, valor: number) {
+    try {
+      const mensaje = parametro === 'horno_1' 
+        ? `🚨 Horno 1: ${valor}°C está fuera de rango (120-180°C)`
+        : `🚨 Horno 2: ${valor}°C está fuera de rango (120-180°C)`;
+      
+      console.log('📝 Creando alerta crítica:', {
+        parametro,
+        valor,
+        severity: 'critical'
+      });
+      
+      const { data, error } = await this.supabaseService
+        .from('alerts')
+        .insert({
+          plant_id: '00000000-0000-0000-0000-000000000001',
+          checklist_id: this.checklistData?.id || null,
+          format_type: 'SGI-FT-01',
+          parameter: parametro,
+          value: valor,
+          min_value: 120,
+          max_value: 180,
+          severity: 'critical',
+          message: mensaje,
+          acknowledged: false,
+          acknowledged_by: null,
+          acknowledged_at: null,
+          created_at: new Date().toISOString()
+        })
+        .select();
+
+      if (error) {
+        console.error('❌ Error creando alerta de temperatura:', error);
+        return false;
+      } else {
+        console.log('✅ Alerta crítica creada exitosamente:', data);
+        
+        // Notificar al servicio de notificaciones
+        await this.notificationService.getAlerts(15);
+        
+        return true;
+      }
+    } catch (error) {
+      console.error('❌ Error en crearAlertaTemperatura:', error);
+      return false;
+    }
+  }
+
+  async presentToast(message: string, color: 'success' | 'error' | 'warning') {
     const toast = await this.toastCtrl.create({
       message,
       duration: 3000,
@@ -518,7 +580,6 @@ export class FormularioDinamicoPage implements OnInit {
     });
     this.formData['dia'] = this.selectedDate;
     
-    // Re-inicializar items para higiénicas
     if (this.formatType === 'higienicas' && this.currentConfig?.itemsEvaluacion) {
       this.formData['items'] = this.currentConfig.itemsEvaluacion.map(() => ({
         cumple: '',
@@ -526,7 +587,46 @@ export class FormularioDinamicoPage implements OnInit {
       }));
     }
     
-    // Re-calcular jornada para hornos
+    if (this.formatType === 'residuos' && this.currentConfig?.itemsEvaluacion) {
+      this.formData['items_solidos'] = this.getResiduosSolidosItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+      this.formData['items_liquidos'] = this.getResiduosLiquidosItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+    }
+    
+    if (this.formatType === 'plagas' && this.currentConfig?.itemsEvaluacion) {
+      this.formData['items_plagas'] = this.getPlagasItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+    }
+    
+    if (this.formatType === 'materia-prima') {
+      this.formData['items_mp'] = [{
+        fecha: this.selectedDate,
+        proveedor: '',
+        producto: '',
+        fecha_vencimiento: '',
+        temperatura: '',
+        aprobado: '',
+        observaciones: ''
+      }];
+    }
+    
+    if (this.formatType === 'temp-hr') {
+      this.formData['items_temp_hr'] = [{
+        fecha: this.selectedDate,
+        hora: '',
+        temperatura: '',
+        hr: '',
+        observaciones: ''
+      }];
+    }
+    
     if (this.formatType === 'hornos') {
       this.formData['jornada'] = this.calcularJornada();
     }
@@ -536,13 +636,10 @@ export class FormularioDinamicoPage implements OnInit {
   }
 
   editarRegistro(registro: any) {
-    console.log('✏️ Editando registro:', registro);
-    
     this.checklistData = registro;
     this.formData = { ...registro.data };
     this.isEditing = true;
     
-    // Asegurar que items exista para higiénicas
     if (this.formatType === 'higienicas' && !this.formData.items) {
       this.formData.items = this.currentConfig.itemsEvaluacion.map(() => ({
         cumple: '',
@@ -550,511 +647,451 @@ export class FormularioDinamicoPage implements OnInit {
       }));
     }
     
+    if (this.formatType === 'residuos') {
+      if (!this.formData.items_solidos) 
+        this.formData.items_solidos = this.getResiduosSolidosItems().map(() => ({
+          verificacion: '',
+          observaciones: ''
+        }));
+      if (!this.formData.items_liquidos) 
+        this.formData.items_liquidos = this.getResiduosLiquidosItems().map(() => ({
+          verificacion: '',
+          observaciones: ''
+        }));
+    }
+    
+    if (this.formatType === 'plagas' && !this.formData.items_plagas) {
+      this.formData.items_plagas = this.getPlagasItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+    }
+    
+    if (this.formatType === 'materia-prima' && !this.formData.items_mp) {
+      this.formData.items_mp = registro.data.items_mp || [{
+        fecha: this.selectedDate,
+        proveedor: '',
+        producto: '',
+        fecha_vencimiento: '',
+        temperatura: '',
+        aprobado: '',
+        observaciones: ''
+      }];
+    }
+    
+    if (this.formatType === 'temp-hr' && !this.formData.items_temp_hr) {
+      this.formData.items_temp_hr = registro.data.items_temp_hr || [{
+        fecha: this.selectedDate,
+        hora: '',
+        temperatura: '',
+        hr: '',
+        observaciones: ''
+      }];
+    }
+    
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.presentToast('Editando registro. Modifica y haz clic en Actualizar', 'success');
+    this.presentToast('Editando registro', 'success');
   }
 
   async eliminarRegistro(id: string) {
-    console.log('🗑️ Eliminando registro ID:', id);
-    
     const confirm = await this.toastCtrl.create({
       message: '¿Estás seguro de eliminar este registro?',
       duration: 0,
       position: 'top',
       color: 'warning',
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
+        { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Eliminar',
           handler: async () => {
             try {
-              const { data, error, count } = await this.supabaseService
+              const { error } = await this.supabaseService
                 .from('checklists')
-                .delete({ count: 'exact' })
-                .eq('id', id)
-                .select();
+                .delete()
+                .eq('id', id);
 
               if (error) throw error;
-
-              if (count === 0) {
-                await this.presentToast('No se pudo eliminar el registro. Verifica permisos.', 'error');
-                return;
-              }
-
-              await this.presentToast('Registro eliminado correctamente', 'success');
+              await this.presentToast('Registro eliminado', 'success');
               await this.cargarDatosDelDia();
-            } catch (error) {
-              await this.presentToast('Error al eliminar: ' + (error as any).message, 'error');
+            } catch (error: any) {
+              await this.presentToast('Error: ' + error.message, 'error');
             }
           }
         }
       ]
     });
-    
     await confirm.present();
   }
 
+  getResiduosSolidosItems(): string[] {
+    return this.formatType === 'residuos' ? this.currentConfig.itemsEvaluacion.slice(0, 12) : [];
+  }
+
+  getResiduosLiquidosItems(): string[] {
+    return this.formatType === 'residuos' ? this.currentConfig.itemsEvaluacion.slice(12) : [];
+  }
+
+  getResiduoValue(index: number): string {
+    if (!this.formData['items_solidos']) 
+      this.formData['items_solidos'] = this.getResiduosSolidosItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+    return this.formData['items_solidos'][index]?.verificacion || '';
+  }
+
+  setResiduoValue(index: number, value: string) {
+    if (!this.formData['items_solidos']) 
+      this.formData['items_solidos'] = this.getResiduosSolidosItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+    this.formData['items_solidos'][index] = {
+      ...this.formData['items_solidos'][index],
+      verificacion: value
+    };
+  }
+
+  getResiduoLiquidoValue(index: number): string {
+    if (!this.formData['items_liquidos']) 
+      this.formData['items_liquidos'] = this.getResiduosLiquidosItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+    return this.formData['items_liquidos'][index]?.verificacion || '';
+  }
+
+  setResiduoLiquidoValue(index: number, value: string) {
+    if (!this.formData['items_liquidos']) 
+      this.formData['items_liquidos'] = this.getResiduosLiquidosItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+    this.formData['items_liquidos'][index] = {
+      ...this.formData['items_liquidos'][index],
+      verificacion: value
+    };
+  }
+
+  getPlagasItems(): string[] {
+    return this.formatType === 'plagas' ? this.currentConfig.itemsEvaluacion : [];
+  }
+
+  getPlagasValue(index: number): string {
+    if (!this.formData['items_plagas']) 
+      this.formData['items_plagas'] = this.getPlagasItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+    return this.formData['items_plagas'][index]?.verificacion || '';
+  }
+
+  setPlagasValue(index: number, value: string) {
+    if (!this.formData['items_plagas']) 
+      this.formData['items_plagas'] = this.getPlagasItems().map(() => ({
+        verificacion: '',
+        observaciones: ''
+      }));
+    this.formData['items_plagas'][index] = {
+      ...this.formData['items_plagas'][index],
+      verificacion: value
+    };
+  }
+
+  getMPItems(): any[] {
+    if (!this.formData['items_mp']) {
+      this.formData['items_mp'] = [{
+        fecha: this.selectedDate,
+        proveedor: '',
+        producto: '',
+        fecha_vencimiento: '',
+        temperatura: '',
+        aprobado: '',
+        observaciones: ''
+      }];
+    }
+    return this.formData['items_mp'];
+  }
+
+  getMPValue(index: number): string {
+    if (!this.formData['items_mp']) 
+      this.formData['items_mp'] = [{
+        fecha: this.selectedDate,
+        proveedor: '',
+        producto: '',
+        fecha_vencimiento: '',
+        temperatura: '',
+        aprobado: '',
+        observaciones: ''
+      }];
+    return this.formData['items_mp'][index]?.aprobado || '';
+  }
+
+  setMPValue(index: number, value: string) {
+    if (!this.formData['items_mp']) 
+      this.formData['items_mp'] = [{
+        fecha: this.selectedDate,
+        proveedor: '',
+        producto: '',
+        fecha_vencimiento: '',
+        temperatura: '',
+        aprobado: '',
+        observaciones: ''
+      }];
+    this.formData['items_mp'][index] = {
+      ...this.formData['items_mp'][index],
+      aprobado: value
+    };
+  }
+
+  agregarItemMP() {
+    if (!this.formData['items_mp']) this.formData['items_mp'] = [];
+    this.formData['items_mp'].push({
+      fecha: this.selectedDate,
+      proveedor: '',
+      producto: '',
+      fecha_vencimiento: '',
+      temperatura: '',
+      aprobado: '',
+      observaciones: ''
+    });
+  }
+
+  getTempHRItems(): any[] {
+    if (!this.formData['items_temp_hr']) {
+      this.formData['items_temp_hr'] = [{
+        fecha: this.selectedDate,
+        hora: '',
+        temperatura: '',
+        hr: '',
+        observaciones: ''
+      }];
+    }
+    return this.formData['items_temp_hr'];
+  }
+
+  agregarItemTempHR() {
+    if (!this.formData['items_temp_hr']) this.formData['items_temp_hr'] = [];
+    this.formData['items_temp_hr'].push({
+      fecha: this.selectedDate,
+      hora: '',
+      temperatura: '',
+      hr: '',
+      observaciones: ''
+    });
+  }
+
   async exportarRegistroIndividual(registro: any) {
-    let datosExportar: any = {};
+    let datos: any = {};
     
-    if (this.formatType === 'limpiezaydesinfeccion') {
-      datosExportar = {
-        'Aspecto a Evaluar': registro.data?.aspecto_evaluar || '',
-        'Responsable': registro.data?.responsable || '',
-        'Actividad': registro.data?.actividad || '',
-        'Cantidad': registro.data?.cantidad || '',
-        'Concentración': (registro.data?.concentracion || 0) + '%',
-        'Frecuencia': registro.data?.frecuencia || '',
-        'Día': registro.data?.dia || '',
-        'Observaciones': registro.data?.observaciones || ''
+    if (this.formatType === 'ph-cloro') {
+      datos = {
+        'Fecha': registro.data?.dia,
+        'Punto': registro.data?.punto_toma_de,
+        'pH': registro.data?.ph,
+        'Cloro': registro.data?.cloro,
+        'Observaciones': registro.data?.observaciones
       };
-    } else if (this.formatType === 'verificacion') {
-      datosExportar = {
-        'Aspecto a Evaluar': registro.data?.aspecto_evaluar || '',
-        'Responsable': registro.data?.responsable || '',
-        'Cumple': registro.data?.cumple || '',
-        'Día': registro.data?.dia || '',
-        'Observaciones': registro.data?.observaciones || '',
-        'Procedimiento': registro.data?.procedimiento || '',
-        'Verificado': registro.data?.verificado || ''
+    } else if (this.formatType === 'devolucion') {
+      datos = {
+        'Fecha': registro.data?.dia,
+        'Producto': registro.data?.nombre_producto,
+        'Cantidad': registro.data?.cantidad,
+        'Fecha Devolucion': registro.data?.fecha_devolucion,
+        'Cliente': registro.data?.cliente,
+        'Causa': registro.data?.causa_devolucion,
+        'Observaciones': registro.data?.observaciones
       };
-    } else if (this.formatType === 'hornos') {
-      datosExportar = {
-        'Día': registro.data?.dia || '',
-        'Jornada': registro.data?.jornada || '',
-        'Horno 1 (°C)': registro.data?.horno_1 || '',
-        'Horno 2 (°C)': registro.data?.horno_2 || '',
-        'Responsable': registro.data?.responsable || '',
-        'Observaciones': registro.data?.observaciones || ''
+    } else if (this.formatType === 'materia-prima') {
+      datos = {
+        'Observaciones': registro.data?.observaciones_generales,
+        'Operario': registro.data?.operario_responsable,
+        'Jefe Calidad': registro.data?.jefe_calidad
       };
-    } else if (this.formatType === 'higienicas') {
-      datosExportar = {
-        'Día': registro.data?.dia || '',
-        'Nombre Evaluado': registro.data?.nombre_evaluado || '',
-        'Responsable Checkeo': registro.data?.responsable_checkeo || '',
-        'Firma Evaluado': registro.data?.firma_evaluado || '',
-        'Cargo': registro.data?.cargo || '',
-        'Recomendaciones': registro.data?.recomendaciones || ''
-      };
-      
-      // Agregar cada ítem de evaluación
-      if (registro.data?.items && this.currentConfig.itemsEvaluacion) {
-        this.currentConfig.itemsEvaluacion.forEach((item: string, idx: number) => {
-          const itemData = registro.data.items[idx] || {};
-          datosExportar[`Ítem ${idx + 1}: ${item.substring(0, 40)}`] = itemData.cumple || '';
-          datosExportar[`Obs Ítem ${idx + 1}`] = itemData.observaciones || '';
-        });
-      }
+      registro.data?.items_mp?.forEach((item: any, i: number) => {
+        datos[`MP ${i+1} Proveedor`] = item.proveedor;
+        datos[`MP ${i+1} Producto`] = item.producto;
+        datos[`MP ${i+1} Temp`] = item.temperatura;
+        datos[`MP ${i+1} Aprobado`] = item.aprobado;
+      });
+    } else if (this.formatType === 'temp-hr') {
+      datos = { 'Jefe Calidad': registro.data?.jefe_calidad };
+      registro.data?.items_temp_hr?.forEach((item: any, i: number) => {
+        datos[`Reg ${i+1} Hora`] = item.hora;
+        datos[`Reg ${i+1} Temp`] = item.temperatura;
+        datos[`Reg ${i+1} HR`] = item.hr;
+      });
     } else {
-      this.currentConfig.fields.forEach((field: any) => {
-        const label = field.label;
-        let value = registro.data?.[field.key] || '';
-        if (field.type === 'range' && value) {
-          value = `${value}${field.unit || '%'}`;
-        }
-        datosExportar[label] = value;
+      this.currentConfig.fields.forEach((f: any) => {
+        datos[f.label] = registro.data?.[f.key] || '';
       });
     }
 
-    const csvContent = [
-      Object.keys(datosExportar).join(','),
-      Object.values(datosExportar).map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')
+    const csv = [
+      Object.keys(datos).join(','),
+      Object.values(datos).map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')
     ].join('\n');
-
-    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    const formatName = this.currentConfig?.title || 'registro';
-    link.setAttribute('download', `${formatName.replace(/\s+/g, '_')}_${registro.data?.dia || 'individual'}.csv`);
-    link.style.visibility = 'hidden';
+    link.setAttribute('download', `${this.formatType}_${registro.data?.dia}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
 
-    await this.presentToast('Registro exportado correctamente', 'success');
+  async exportarRegistroIndividualPDF(registro: any) {
+    this.presentToast('Exportación PDF en desarrollo', 'warning');
   }
 
   async exportarTodoExcel() {
     if (this.registrosDelDia.length === 0) {
-      await this.presentToast('No hay datos para exportar', 'error');
-      return;
+      return this.presentToast('No hay registros para exportar', 'error');
     }
 
-    let datosExportar: any[] = [];
-
-    if (this.formatType === 'limpiezaydesinfeccion') {
-      datosExportar = this.registrosDelDia.map(reg => ({
-        'Aspecto a Evaluar': reg.data?.aspecto_evaluar || '',
-        'Responsable': reg.data?.responsable || '',
-        'Actividad': reg.data?.actividad || '',
-        'Cantidad': reg.data?.cantidad || '',
-        'Concentración': (reg.data?.concentracion || 0) + '%',
-        'Frecuencia': reg.data?.frecuencia || '',
-        'Día': reg.data?.dia || '',
-        'Observaciones': reg.data?.observaciones || ''
-      }));
-    } else if (this.formatType === 'verificacion') {
-      datosExportar = this.registrosDelDia.map(reg => ({
-        'Aspecto a Evaluar': reg.data?.aspecto_evaluar || '',
-        'Responsable': reg.data?.responsable || '',
-        'Cumple': reg.data?.cumple || '',
-        'Día': reg.data?.dia || '',
-        'Observaciones': reg.data?.observaciones || '',
-        'Procedimiento': reg.data?.procedimiento || '',
-        'Verificado': reg.data?.verificado || ''
-      }));
-    } else if (this.formatType === 'hornos') {
-      datosExportar = this.registrosDelDia.map(reg => ({
-        'Día': reg.data?.dia || '',
-        'Jornada': reg.data?.jornada || '',
-        'Horno 1 (°C)': reg.data?.horno_1 || '',
-        'Horno 2 (°C)': reg.data?.horno_2 || '',
-        'Responsable': reg.data?.responsable || '',
-        'Observaciones': reg.data?.observaciones || ''
-      }));
-    } else if (this.formatType === 'higienicas') {
-      datosExportar = this.registrosDelDia.map(reg => {
-        const row: any = {
-          'Día': reg.data?.dia || '',
-          'Nombre Evaluado': reg.data?.nombre_evaluado || '',
-          'Responsable Checkeo': reg.data?.responsable_checkeo || '',
-          'Firma Evaluado': reg.data?.firma_evaluado || '',
-          'Cargo': reg.data?.cargo || '',
-          'Recomendaciones': reg.data?.recomendaciones || ''
-        };
-        
-        if (reg.data?.items && this.currentConfig.itemsEvaluacion) {
-          this.currentConfig.itemsEvaluacion.forEach((item: string, idx: number) => {
-            const itemData = reg.data.items[idx] || {};
-            row[`Ítem ${idx + 1}: ${item.substring(0, 30)}...`] = itemData.cumple || '';
-            row[`Obs Ítem ${idx + 1}`] = itemData.observaciones || '';
+    try {
+      let datos: any[] = [];
+      
+      if (this.formatType === 'ph-cloro') {
+        datos = this.registrosDelDia.map(r => ({
+          'Fecha': r.data?.dia,
+          'Punto': r.data?.punto_toma_de,
+          'pH': r.data?.ph,
+          'Cloro': r.data?.cloro,
+          'Observaciones': r.data?.observaciones
+        }));
+      } else if (this.formatType === 'devolucion') {
+        datos = this.registrosDelDia.map(r => ({
+          'Fecha': r.data?.dia,
+          'Producto': r.data?.nombre_producto,
+          'Cantidad': r.data?.cantidad,
+          'Fecha Devolucion': r.data?.fecha_devolucion,
+          'Cliente': r.data?.cliente,
+          'Causa': r.data?.causa_devolucion,
+          'Observaciones': r.data?.observaciones
+        }));
+      } else if (this.formatType === 'materia-prima') {
+        datos = this.registrosDelDia.map(r => {
+          const row: any = {
+            'Fecha': r.data?.dia,
+            'Operario': r.data?.operario_responsable,
+            'Jefe Calidad': r.data?.jefe_calidad
+          };
+          r.data?.items_mp?.forEach((item: any, i: number) => {
+            row[`MP ${i+1} Proveedor`] = item.proveedor;
+            row[`MP ${i+1} Producto`] = item.producto;
+            row[`MP ${i+1} Temp`] = item.temperatura;
+            row[`MP ${i+1} Aprobado`] = item.aprobado;
           });
-        }
-        
-        return row;
-      });
-    } else {
-      datosExportar = this.registrosDelDia.map(reg => {
-        const row: any = {
-          'Día': reg.data?.dia || ''
-        };
-        
-        this.currentConfig.fields.forEach((field: any) => {
-          if (field.type !== 'date-auto' && field.type !== 'textarea') {
-            let value = reg.data?.[field.key] || '';
-            if (field.type === 'range' && value) {
-              value = `${value}${field.unit || '%'}`;
-            }
-            row[field.label] = value;
-          }
+          return row;
         });
-        
-        row['Observaciones'] = reg.data?.observaciones || '';
-        return row;
-      });
+      } else if (this.formatType === 'temp-hr') {
+        datos = this.registrosDelDia.map(r => {
+          const row: any = { 'Jefe Calidad': r.data?.jefe_calidad };
+          r.data?.items_temp_hr?.forEach((item: any, i: number) => {
+            row[`Reg ${i+1} Hora`] = item.hora;
+            row[`Reg ${i+1} Temp`] = item.temperatura;
+            row[`Reg ${i+1} HR`] = item.hr;
+          });
+          return row;
+        });
+      } else if (this.formatType === 'hornos') {
+        datos = this.registrosDelDia.map(r => ({
+          'Fecha': r.data?.dia,
+          'Jornada': r.data?.jornada,
+          'Horno 1 (°C)': r.data?.horno_1,
+          'Horno 2 (°C)': r.data?.horno_2,
+          'Responsable': r.data?.responsable,
+          'Observaciones': r.data?.observaciones
+        }));
+      } else if (this.formatType === 'limpiezaydesinfeccion') {
+        datos = this.registrosDelDia.map(r => ({
+          'Fecha': r.data?.dia,
+          'Aspecto': r.data?.aspecto_evaluar,
+          'Responsable': r.data?.responsable,
+          'Actividad': r.data?.actividad,
+          'Cantidad': r.data?.cantidad,
+          'Concentración': r.data?.concentracion,
+          'Frecuencia': r.data?.frecuencia,
+          'Observaciones': r.data?.observaciones
+        }));
+      } else if (this.formatType === 'verificacion') {
+        datos = this.registrosDelDia.map(r => ({
+          'Fecha': r.data?.dia,
+          'Aspecto': r.data?.aspecto_evaluar,
+          'Responsable': r.data?.responsable,
+          'Cumple': r.data?.cumple,
+          'Procedimiento': r.data?.procedimiento,
+          'Verificado': r.data?.verificado,
+          'Observaciones': r.data?.observaciones
+        }));
+      } else if (this.formatType === 'higienicas') {
+        datos = this.registrosDelDia.map(r => ({
+          'Fecha': r.data?.dia,
+          'Nombre Evaluado': r.data?.nombre_evaluado,
+          'Responsable Checkeo': r.data?.responsable_checkeo,
+          'Cargo': r.data?.cargo,
+          'Recomendaciones': r.data?.recomendaciones
+        }));
+      } else if (this.formatType === 'residuos') {
+        datos = this.registrosDelDia.map(r => ({
+          'Fecha': r.data?.dia,
+          'Responsable': r.data?.responsable,
+          'Área': r.data?.area_inspeccionada,
+          'Observaciones': r.data?.observaciones_generales
+        }));
+      } else if (this.formatType === 'plagas') {
+        datos = this.registrosDelDia.map(r => ({
+          'Fecha': r.data?.dia,
+          'Responsable': r.data?.responsable,
+          'Área': r.data?.area_inspeccionada,
+          'Medidas Preventivas': r.data?.medidas_preventivas,
+          'Medidas Correctivas': r.data?.medidas_correctivas,
+          'Observaciones': r.data?.observaciones
+        }));
+      }
+
+      const headers = Object.keys(datos[0]);
+      const csv = [
+        headers.join(','),
+        ...datos.map(row => headers.map(h => `"${String((row as any)[h] || '').replace(/"/g, '""')}"`).join(','))
+      ].join('\n');
+
+      const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `${this.currentConfig?.title}_${this.selectedDate}.csv`;
+      link.click();
+      
+      this.presentToast('✅ Exportado correctamente', 'success');
+    } catch (error) {
+      console.error('Error exportando:', error);
+      this.presentToast('Error al exportar', 'error');
     }
-
-    const headers = Object.keys(datosExportar[0]);
-    const csvContent = [
-      headers.join(','),
-      ...datosExportar.map(row => 
-        headers.map(header => {
-          const value = (row as any)[header];
-          return `"${String(value).replace(/"/g, '""')}"`;
-        }).join(',')
-      )
-    ].join('\n');
-
-    const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${this.currentConfig?.title?.replace(/\s+/g, '_') || 'export'}_${this.selectedDate}_COMPLETO.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    await this.presentToast('Todos los registros exportados a Excel', 'success');
   }
 
   async exportarTodoPDF() {
     if (this.registrosDelDia.length === 0) {
-      await this.presentToast('No hay datos para exportar', 'error');
-      return;
+      return this.presentToast('No hay registros para exportar', 'error');
     }
-
-    const formatTitle = this.currentConfig?.title || 'Reporte';
-    
-    let headers: string[] = [];
-    let rows: string[][] = [];
-
-    if (this.formatType === 'limpiezaydesinfeccion') {
-      headers = ['Aspecto a Evaluar', 'Responsable', 'Actividad', 'Cantidad', 'Concentración', 'Frecuencia', 'Día', 'Observaciones'];
-      rows = this.registrosDelDia.map(reg => [
-        reg.data?.aspecto_evaluar || '',
-        reg.data?.responsable || '',
-        reg.data?.actividad || '',
-        reg.data?.cantidad || '',
-        (reg.data?.concentracion || 0) + '%',
-        reg.data?.frecuencia || '',
-        reg.data?.dia || '',
-        reg.data?.observaciones || ''
-      ]);
-    } else if (this.formatType === 'verificacion') {
-      headers = ['Aspecto a Evaluar', 'Responsable', 'Cumple', 'Día', 'Observaciones', 'Procedimiento', 'Verificado'];
-      rows = this.registrosDelDia.map(reg => [
-        reg.data?.aspecto_evaluar || '',
-        reg.data?.responsable || '',
-        reg.data?.cumple || '',
-        reg.data?.dia || '',
-        reg.data?.observaciones || '',
-        reg.data?.procedimiento || '',
-        reg.data?.verificado || ''
-      ]);
-    } else if (this.formatType === 'hornos') {
-      headers = ['Día', 'Jornada', 'Horno 1 (°C)', 'Horno 2 (°C)', 'Responsable', 'Observaciones'];
-      rows = this.registrosDelDia.map(reg => [
-        reg.data?.dia || '',
-        reg.data?.jornada || '',
-        reg.data?.horno_1 || '',
-        reg.data?.horno_2 || '',
-        reg.data?.responsable || '',
-        reg.data?.observaciones || ''
-      ]);
-    } else if (this.formatType === 'higienicas') {
-      headers = ['Día', 'Nombre Evaluado', 'Responsable', 'Cargo', 'Recomendaciones'];
-      rows = this.registrosDelDia.map(reg => [
-        reg.data?.dia || '',
-        reg.data?.nombre_evaluado || '',
-        reg.data?.responsable_checkeo || '',
-        reg.data?.cargo || '',
-        reg.data?.recomendaciones || ''
-      ]);
-    } else {
-      headers = this.currentConfig.fields
-        .filter((f: any) => f.type !== 'date-auto' && f.type !== 'textarea')
-        .map((f: any) => f.label);
-      headers.push('Día', 'Observaciones');
-      
-      rows = this.registrosDelDia.map(reg => {
-        const row: string[] = [];
-        this.currentConfig.fields.forEach((field: any) => {
-          if (field.type !== 'date-auto' && field.type !== 'textarea') {
-            let value = reg.data?.[field.key] || '';
-            if (field.type === 'range' && value) {
-              value = `${value}${field.unit || '%'}`;
-            }
-            row.push(value);
-          }
-        });
-        row.push(reg.data?.dia || '', reg.data?.observaciones || '');
-        return row;
-      });
-    }
-
-    let htmlContent = `
-      <html>
-      <head>
-        <title>${formatTitle} - ${this.selectedDate}</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 20px; }
-          h1 { color: #3C50E0; text-align: center; }
-          h2 { color: #666; margin-top: 20px; }
-          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-          th { background-color: #FF6B35; color: white; padding: 10px; text-align: left; font-size: 12px; }
-          td { border: 1px solid #ddd; padding: 8px; font-size: 11px; }
-          tr:nth-child(even) { background-color: #f9f9f9; }
-          .footer { margin-top: 30px; text-align: center; font-size: 10px; color: #666; }
-        </style>
-      </head>
-      <body>
-        <h1>${formatTitle}</h1>
-        <h2>Fecha: ${this.selectedDate}</h2>
-        <p><strong>Total de registros:</strong> ${this.registrosDelDia.length}</p>
-        <table>
-          <thead>
-            <tr>
-              ${headers.map(h => `<th>${h}</th>`).join('')}
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(row => `
-              <tr>
-                ${row.map(cell => `<td>${cell}</td>`).join('')}
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-        <div class="footer">
-          <p>Generado el: ${new Date().toLocaleString()}</p>
-          <p>Sistema BPM - Pan del Sur</p>
-        </div>
-      </body>
-      </html>
-    `;
-
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(htmlContent);
-      printWindow.document.close();
-      setTimeout(() => {
-        printWindow.print();
-      }, 500);
-    }
-
-    await this.presentToast('PDF generado correctamente', 'success');
-  }
-
-  async exportarRegistroIndividualPDF(registro: any) {
-    const formatTitle = this.currentConfig?.title || 'Registro';
-    
-    let contenidoHTML = '';
-    
-    if (this.formatType === 'higienicas') {
-      contenidoHTML = `
-        <h1>✨ ${formatTitle}</h1>
-        <h2>Sistema BPM - Pan del Sur</h2>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Día</div>
-            <div class="info-value">${registro.data?.dia || 'N/A'}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Nombre del Evaluado</div>
-            <div class="info-value">${registro.data?.nombre_evaluado || 'N/A'}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Responsable del Checkeo</div>
-            <div class="info-value">${registro.data?.responsable_checkeo || 'N/A'}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Cargo</div>
-            <div class="info-value">${registro.data?.cargo || 'N/A'}</div>
-          </div>
-        </div>
-        ${registro.data?.recomendaciones ? `
-        <div class="observaciones">
-          <div class="info-label">Recomendaciones</div>
-          <div class="info-value">${registro.data.recomendaciones}</div>
-        </div>
-        ` : ''}
-        <h3 style="margin-top: 30px; color: #FF6B35;">Evaluación de Ítems</h3>
-        <table style="margin-top: 15px;">
-          <thead>
-            <tr>
-              <th>N°</th>
-              <th>Ítem</th>
-              <th>Cumple</th>
-              <th>Observaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this.currentConfig.itemsEvaluacion.map((item: string, idx: number) => {
-              const itemData = registro.data?.items?.[idx] || {};
-              return `
-                <tr>
-                  <td>${idx + 1}</td>
-                  <td>${item}</td>
-                  <td><span class="badge ${itemData.cumple === 'Si' ? 'badge-green' : itemData.cumple === 'No' ? 'badge-red' : 'badge-gray'}">${itemData.cumple || '-'}</span></td>
-                  <td>${itemData.observaciones || '-'}</td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
-      `;
-    } else {
-      contenidoHTML = `
-        <h1>🧹 ${formatTitle}</h1>
-        <h2>Sistema BPM - Pan del Sur</h2>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Fecha de Registro</div>
-            <div class="info-value">${registro.data?.dia || 'N/A'}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Registrado el</div>
-            <div class="info-value">${new Date(registro.created_at).toLocaleString()}</div>
-          </div>
-        </div>
-        ${registro.data?.observaciones ? `
-        <div class="observaciones">
-          <div class="info-label">Observaciones</div>
-          <div class="info-value">${registro.data.observaciones}</div>
-        </div>
-        ` : ''}
-      `;
-    }
-    
-    const htmlContent = `
-      <html>
-      <head>
-        <title>${formatTitle} - ${registro.data?.dia || 'Individual'}</title>
-        <style>
-          body { font-family: Arial, sans-serif; padding: 40px; background: white; }
-          .header { text-align: center; border-bottom: 3px solid #FF6B35; padding-bottom: 20px; margin-bottom: 30px; }
-          h1 { color: #3C50E0; margin: 0; font-size: 24px; }
-          h2 { color: #666; margin: 10px 0; font-size: 16px; }
-          h3 { color: #FF6B35; margin: 20px 0 10px 0; }
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-          .info-item { background: #f9f9f9; padding: 12px; border-left: 4px solid #FF6B35; }
-          .info-label { font-size: 11px; color: #666; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
-          .info-value { font-size: 14px; color: #333; font-weight: 600; }
-          .observaciones { background: #fff5f0; border-left: 4px solid #FF6B35; padding: 15px; margin-top: 20px; }
-          table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-          th { background-color: #FF6B35; color: white; padding: 10px; text-align: left; font-size: 11px; }
-          td { border: 1px solid #ddd; padding: 8px; font-size: 10px; }
-          tr:nth-child(even) { background-color: #f9f9f9; }
-          .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd; text-align: center; font-size: 10px; color: #999; }
-          .badge { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-          .badge-green { background: #d1fae5; color: #065f46; }
-          .badge-red { background: #fee2e2; color: #991b1b; }
-          .badge-gray { background: #f3f4f6; color: #6b7280; }
-        </style>
-      </head>
-      <body>
-        ${contenidoHTML}
-        <div class="footer">
-          <p>Documento generado el ${new Date().toLocaleString()}</p>
-          <p>Sistema BPM - Control de Calidad | Pan del Sur</p>
-        </div>
-      </body>
-      </html>
-    `;
-
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(htmlContent);
-      printWindow.document.close();
-      setTimeout(() => {
-        printWindow.print();
-      }, 500);
-    }
-
-    await this.presentToast('PDF del registro generado correctamente', 'success');
+    await this.presentToast('📄 Función PDF en desarrollo', 'warning');
   }
 
   getTableColumns(): string[] {
     switch (this.formatType) {
-      case 'limpiezaydesinfeccion':
-        return ['Aspecto', 'Responsable', 'Actividad', 'Cantidad', 'Concentración', 'Frecuencia', 'Día', 'Acciones'];
-      case 'verificacion':
-        return ['Aspecto', 'Responsable', 'Cumple', 'Procedimiento', 'Verificado', 'Día', 'Acciones'];
-      case 'hornos':
-        return ['Día', 'Jornada', 'Horno 1 (°C)', 'Horno 2 (°C)', 'Responsable', 'Acciones'];
-      case 'higienicas':
-        return ['Día', 'Nombre Evaluado', 'Responsable', 'Cargo', 'Acciones'];
-      default:
-        const fields = this.currentConfig?.fields || [];
-        const cols = fields
-          .filter((f: any) => f.type !== 'date-auto' && f.type !== 'textarea')
-          .map((f: any) => f.label);
-        return [...cols, 'Día', 'Acciones'];
+      case 'ph-cloro': return ['Fecha', 'Punto', 'pH', 'Cloro', 'Acciones'];
+      case 'devolucion': return ['Fecha', 'Producto', 'Cantidad', 'Cliente', 'Causa', 'Acciones'];
+      case 'materia-prima': return ['Fecha', 'Operario', 'Jefe Calidad', 'Acciones'];
+      case 'temp-hr': return ['Fecha', 'Jefe Calidad', 'Registros', 'Acciones'];
+      case 'hornos': return ['Día', 'Jornada', 'Horno 1', 'Horno 2', 'Acciones'];
+      case 'limpiezaydesinfeccion': return ['Día', 'Aspecto', 'Responsable', 'Actividad', 'Acciones'];
+      case 'verificacion': return ['Día', 'Aspecto', 'Responsable', 'Cumple', 'Acciones'];
+      case 'higienicas': return ['Día', 'Nombre', 'Responsable', 'Acciones'];
+      case 'residuos': return ['Día', 'Responsable', 'Área', 'Acciones'];
+      case 'plagas': return ['Día', 'Responsable', 'Área', 'Acciones'];
+      default: return ['Día', 'Acciones'];
     }
   }
 
@@ -1062,72 +1099,73 @@ export class FormularioDinamicoPage implements OnInit {
     const data = registro.data || {};
     
     switch (this.formatType) {
-      case 'limpiezaydesinfeccion':
-        switch (columnName) {
-          case 'Aspecto': return data.aspecto_evaluar;
-          case 'Responsable': return data.responsable;
-          case 'Actividad': return data.actividad;
-          case 'Cantidad': return data.cantidad;
-          case 'Concentración': return data.concentracion ? `${data.concentracion}%` : '0%';
-          case 'Frecuencia': return data.frecuencia;
-          case 'Día': return data.dia;
-          default: return '-';
-        }
-      case 'verificacion':
-        switch (columnName) {
-          case 'Aspecto': return data.aspecto_evaluar;
-          case 'Responsable': return data.responsable;
-          case 'Cumple': return data.cumple;
-          case 'Procedimiento': return data.procedimiento;
-          case 'Verificado': return data.verificado;
-          case 'Día': return data.dia;
-          default: return '-';
-        }
+      case 'ph-cloro':
+        if (columnName === 'Fecha') return data.dia;
+        if (columnName === 'Punto') return data.punto_toma_de;
+        if (columnName === 'pH') return data.ph;
+        if (columnName === 'Cloro') return data.cloro;
+        break;
+      case 'devolucion':
+        if (columnName === 'Fecha') return data.dia;
+        if (columnName === 'Producto') return data.nombre_producto;
+        if (columnName === 'Cantidad') return data.cantidad;
+        if (columnName === 'Cliente') return data.cliente;
+        if (columnName === 'Causa') return data.causa_devolucion;
+        break;
+      case 'materia-prima':
+        if (columnName === 'Fecha') return data.dia;
+        if (columnName === 'Operario') return data.operario_responsable;
+        if (columnName === 'Jefe Calidad') return data.jefe_calidad;
+        break;
+      case 'temp-hr':
+        if (columnName === 'Fecha') return data.dia;
+        if (columnName === 'Jefe Calidad') return data.jefe_calidad;
+        if (columnName === 'Registros') return data.items_temp_hr?.length || 0;
+        break;
       case 'hornos':
-        switch (columnName) {
-          case 'Día': return data.dia;
-          case 'Jornada': return data.jornada;
-          case 'Horno 1 (°C)': return data.horno_1 ? `${data.horno_1}°C` : '-';
-          case 'Horno 2 (°C)': return data.horno_2 ? `${data.horno_2}°C` : '-';
-          case 'Responsable': return data.responsable;
-          default: return '-';
-        }
+        if (columnName === 'Día') return data.dia;
+        if (columnName === 'Jornada') return data.jornada;
+        if (columnName === 'Horno 1') return data.horno_1 ? `${data.horno_1}°C` : '-';
+        if (columnName === 'Horno 2') return data.horno_2 ? `${data.horno_2}°C` : '-';
+        break;
+      case 'limpiezaydesinfeccion':
+        if (columnName === 'Día') return data.dia;
+        if (columnName === 'Aspecto') return data.aspecto_evaluar;
+        if (columnName === 'Responsable') return data.responsable;
+        if (columnName === 'Actividad') return data.actividad;
+        break;
+      case 'verificacion':
+        if (columnName === 'Día') return data.dia;
+        if (columnName === 'Aspecto') return data.aspecto_evaluar;
+        if (columnName === 'Responsable') return data.responsable;
+        if (columnName === 'Cumple') return data.cumple;
+        break;
       case 'higienicas':
-        switch (columnName) {
-          case 'Día': return data.dia;
-          case 'Nombre Evaluado': return data.nombre_evaluado;
-          case 'Responsable': return data.responsable_checkeo;
-          case 'Cargo': return data.cargo;
-          default: return '-';
-        }
-      default:
-        const field = this.currentConfig?.fields?.find((f: any) => f.label === columnName);
-        if (field) {
-          return data[field.key] ?? '-';
-        }
-        return '-';
+        if (columnName === 'Día') return data.dia;
+        if (columnName === 'Nombre') return data.nombre_evaluado;
+        if (columnName === 'Responsable') return data.responsable_checkeo;
+        break;
+      case 'residuos':
+      case 'plagas':
+        if (columnName === 'Día') return data.dia;
+        if (columnName === 'Responsable') return data.responsable;
+        if (columnName === 'Área') return data.area_inspeccionada;
+        break;
     }
+    return '-';
   }
 
   isBadgeValue(columnName: string): boolean {
-    const badgeColumns = ['Actividad', 'Frecuencia', 'Cumple', 'Procedimiento', 'Verificado', 'Concentración', 'Jornada'];
-    return badgeColumns.includes(columnName);
+    return ['Actividad', 'Cumple', 'Jornada'].includes(columnName);
   }
 
   getBadgeColor(columnName: string, value: any): string {
-    if (columnName === 'Cumple') {
-      return value === 'Si' 
-        ? 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400'
-        : 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400';
-    }
-    if (columnName === 'Concentración') {
-      return 'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400';
+    if (columnName === 'Cumple' || columnName === 'Actividad') {
+      return value === 'Si' || value === 'D' ? 'bg-green-100 text-green-700' : 'bg-rose-100 text-rose-700';
     }
     if (columnName === 'Jornada') {
-      return value === 'AM'
-        ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400'
-        : 'bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400';
+      return value === 'AM' ? 'bg-amber-100 text-amber-700' : 'bg-indigo-100 text-indigo-700';
     }
-    return 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400';
+    return 'bg-blue-100 text-blue-700';
   }
 }

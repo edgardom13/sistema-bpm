@@ -117,3 +117,22 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
+
+ion-app {
+  height: 100%;
+  
+  ion-content {
+    --background: var(--ion-background-color, #f9fafb);
+  }
+}
+
+// Soporte para safe areas (notch, home indicator)
+@supports (padding-top: env(safe-area-inset-top)) {
+  ion-header {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  ion-footer {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

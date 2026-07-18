@@ -76,7 +76,7 @@ export class LoginPage implements OnInit {
       }
 
       await this.showToast('Bienvenido', 'success');
-      this.router.navigate(['/pages/dashboard']);
+      this.router.navigate(['/pages/home']);
 
     } catch (error: any) {
       console.error('Error login:', error);
