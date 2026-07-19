@@ -58,6 +58,11 @@ export class AppComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.verificarAutenticacion();
     await this.cargarInfoUsuario();
+    // ✅ Iniciar polling SIEMPRE (funciona en Vercel)
+  this.notificationService.startPolling();
+  
+  // ✅ Y también suscribirse a realtime (funciona en localhost)
+  this.suscribirseAlertasTiempoReal();
   }
 
   toggleFormatosControl() {
@@ -66,6 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.limpiarSuscripciones();
+    this.notificationService.stopPolling(); // ✅ Detener polling al salir
   }
 
   toggleDarkMode() {

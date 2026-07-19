@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+// notification.service.ts
+import { Injectable, OnDestroy } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { BehaviorSubject } from 'rxjs';
 import { RealtimeChannel } from '@supabase/supabase-js';
@@ -18,17 +19,20 @@ export interface Alert {
   acknowledged_by: string | null;
   acknowledged_at: string | null;
   created_at: string;
-  dia?: string; // ✅ Nueva propiedad
+  dia?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotificationService {
+export class NotificationService implements OnDestroy {
   private alertsSubject = new BehaviorSubject<Alert[]>([]);
   public alerts$ = this.alertsSubject.asObservable();
   public unreadCount$ = new BehaviorSubject<number>(0);
+  
   private realtimeChannel?: RealtimeChannel;
+  private pollingInterval?: any; // ✅ NUEVO: Para polling
+  private POLLING_TIME = 10000; // ✅ Consultar cada 10 segundos
 
   private formatToRoute: { [key: string]: string } = {
     'SGI-FLD-02': 'limpiezaydesinfeccion',
@@ -45,12 +49,39 @@ export class NotificationService {
 
   constructor(private supabaseService: SupabaseService) {}
 
+  ngOnDestroy() {
+    this.stopPolling(); // ✅ Limpiar al destruir
+    this.unsubscribeFromAlerts();
+  }
+
+  // ✅ NUEVO MÉTODO: Polling como respaldo
+  startPolling() {
+    this.stopPolling(); // Evitar duplicados
+    
+    // Carga inicial inmediata
+    this.getAlerts(20);
+    
+    // Luego cada 10 segundos
+    this.pollingInterval = setInterval(() => {
+      this.getAlerts(20);
+    }, this.POLLING_TIME);
+    
+    console.log('✅ Polling iniciado (cada 10s)');
+  }
+
+  stopPolling() {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = undefined;
+      console.log('️ Polling detenido');
+    }
+  }
+
   async checkMissingDailyForms(plantId: string, today: string) {
     try {
-      console.log('📋 Iniciando verificación de formularios faltantes para el día:', today);
+      console.log('📋 Verificando formularios faltantes para:', today);
       
       for (const [formatCode, formatName] of Object.entries(this.formatToRoute)) {
-        // 1. Verificar si ya existe el registro HOY
         const { data: checklists, error: checkError } = await this.supabaseService
           .from('checklists')
           .select('id')
@@ -59,12 +90,8 @@ export class NotificationService {
           .eq('data->>dia', today)
           .limit(1);
 
-        if (checkError) {
-          console.error('❌ Error verificando checklists:', checkError);
-          continue;
-        }
+        if (checkError) continue;
 
-        // 2. Si YA existe el formulario HOY, RESOLVER cualquier alerta pendiente de "falta_diligenciar"
         if (checklists && checklists.length > 0) {
           const { data: alertsToUpdate } = await this.supabaseService
             .from('alerts')
@@ -86,37 +113,33 @@ export class NotificationService {
                 .eq('id', alert.id);
             }
           }
-        } 
-        // 3. Si NO existe el formulario HOY, verificar si YA creamos la alerta PARA HOY
-        else {
-          const { data: existingAlert, error: alertCheckError } = await this.supabaseService
+        } else {
+          const { data: existingAlert } = await this.supabaseService
             .from('alerts')
             .select('id')
             .eq('plant_id', plantId)
             .eq('format_type', formatCode)
             .eq('parameter', 'falta_diligenciar')
-            .eq('dia', today) // ✅ FILTRAMOS EXPLÍCITAMENTE POR EL DÍA DE HOY
+            .eq('dia', today) // ✅ Filtrar por día
             .eq('acknowledged', false)
             .limit(1);
 
-          // Si no hay alerta para HOY, la creamos
-          if (!alertCheckError && (!existingAlert || existingAlert.length === 0)) {
+          if (!existingAlert || existingAlert.length === 0) {
             await this.supabaseService
               .from('alerts')
               .insert({
                 plant_id: plantId,
                 format_type: formatCode,
                 parameter: 'falta_diligenciar',
-                dia: today, // ✅ GUARDAMOS EL DÍA AL QUE PERTENECE
+                dia: today, // ✅ Guardar el día
                 severity: 'warning',
-                message: `El formulario de ${formatName} no ha sido diligenciado hoy (${today}).`,
+                message: `El formulario de ${formatName} no ha sido diligenciado hoy.`,
                 acknowledged: false,
                 created_at: new Date().toISOString()
               });
           }
         }
       }
-      console.log('✅ Verificación de formularios faltantes completada');
     } catch (error) {
       console.error('❌ Error en checkMissingDailyForms:', error);
     }
@@ -156,11 +179,10 @@ export class NotificationService {
       if (error) throw error;
 
       const current = this.alertsSubject.getValue();
-      const updated = current.filter(a => a['id'] !== alertId); 
+      const updated = current.filter(a => a.id !== alertId); 
       
       this.alertsSubject.next(updated);
       this.updateUnreadCount(updated);
-
     } catch (error) {
       console.error('Error reconociendo alerta:', error);
     }
@@ -181,7 +203,6 @@ export class NotificationService {
 
       this.alertsSubject.next([]);
       this.updateUnreadCount([]);
-
     } catch (error) {
       console.error('Error reconociendo todas las alertas:', error);
     }
@@ -195,7 +216,11 @@ export class NotificationService {
     this.realtimeChannel = this.supabaseService
       .getSupabase()
       .channel('alerts-channel')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'alerts' }, (payload) => {
+      .on('postgres_changes', { 
+        event: 'INSERT', 
+        schema: 'public', 
+        table: 'alerts' 
+      }, (payload) => {
         const current = this.alertsSubject.getValue();
         const newAlert = payload.new as Alert;
         if (!newAlert.acknowledged) {
@@ -203,13 +228,30 @@ export class NotificationService {
           this.updateUnreadCount([newAlert, ...current]);
         }
       })
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'alerts' }, (payload) => {
+      .on('postgres_changes', { 
+        event: 'UPDATE', 
+        schema: 'public', 
+        table: 'alerts' 
+      }, (payload) => {
         const current = this.alertsSubject.getValue();
-        const updated = current.filter(a => a['id'] !== payload.new['id']); 
+        const updated = current.filter(a => a.id !== payload.new['id']);
         this.alertsSubject.next(updated);
         this.updateUnreadCount(updated);
       })
-      .subscribe();
+      .subscribe((status) => {
+        console.log(' Estado del canal realtime:', status);
+        
+        // ✅ Si falla la conexión realtime, activar polling automáticamente
+        if (status === 'CLOSED' || status === 'TIMED_OUT' || status === 'CHANNEL_ERROR') {
+          console.warn('⚠️ Realtime falló, activando polling como respaldo...');
+          this.startPolling();
+        }
+        
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Realtime conectado correctamente');
+          this.stopPolling(); // Detener polling si realtime funciona
+        }
+      });
 
     return this.realtimeChannel;
   }
@@ -227,7 +269,7 @@ export class NotificationService {
 
   getAlertIcon(severity: string): string {
     const icons: { [key: string]: string } = { 
-      'info': 'ℹ️',
+      'info': '️',
       'warning': '⚠️',
       'critical': '🚨'
     };
