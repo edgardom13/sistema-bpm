@@ -1,4 +1,3 @@
-// notification.service.ts
 import { Injectable, OnDestroy } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { BehaviorSubject } from 'rxjs';
@@ -31,8 +30,8 @@ export class NotificationService implements OnDestroy {
   public unreadCount$ = new BehaviorSubject<number>(0);
   
   private realtimeChannel?: RealtimeChannel;
-  private pollingInterval?: any; // ✅ NUEVO: Para polling
-  private POLLING_TIME = 10000; // ✅ Consultar cada 10 segundos
+  private pollingInterval?: any;
+  private POLLING_TIME = 10000; // Consultar cada 10 segundos
 
   private formatToRoute: { [key: string]: string } = {
     'SGI-FLD-02': 'limpiezaydesinfeccion',
@@ -50,22 +49,17 @@ export class NotificationService implements OnDestroy {
   constructor(private supabaseService: SupabaseService) {}
 
   ngOnDestroy() {
-    this.stopPolling(); // ✅ Limpiar al destruir
+    this.stopPolling();
     this.unsubscribeFromAlerts();
   }
 
-  // ✅ NUEVO MÉTODO: Polling como respaldo
+  // ✅ NUEVO: Polling como respaldo para Vercel
   startPolling() {
-    this.stopPolling(); // Evitar duplicados
-    
-    // Carga inicial inmediata
+    this.stopPolling();
     this.getAlerts(20);
-    
-    // Luego cada 10 segundos
     this.pollingInterval = setInterval(() => {
       this.getAlerts(20);
     }, this.POLLING_TIME);
-    
     console.log('✅ Polling iniciado (cada 10s)');
   }
 
@@ -73,13 +67,13 @@ export class NotificationService implements OnDestroy {
     if (this.pollingInterval) {
       clearInterval(this.pollingInterval);
       this.pollingInterval = undefined;
-      console.log('️ Polling detenido');
+      console.log('⏹️ Polling detenido');
     }
   }
 
   async checkMissingDailyForms(plantId: string, today: string) {
     try {
-      console.log('📋 Verificando formularios faltantes para:', today);
+      console.log(' Verificando formularios faltantes para:', today);
       
       for (const [formatCode, formatName] of Object.entries(this.formatToRoute)) {
         const { data: checklists, error: checkError } = await this.supabaseService
@@ -120,7 +114,7 @@ export class NotificationService implements OnDestroy {
             .eq('plant_id', plantId)
             .eq('format_type', formatCode)
             .eq('parameter', 'falta_diligenciar')
-            .eq('dia', today) // ✅ Filtrar por día
+            .eq('dia', today)
             .eq('acknowledged', false)
             .limit(1);
 
@@ -131,7 +125,7 @@ export class NotificationService implements OnDestroy {
                 plant_id: plantId,
                 format_type: formatCode,
                 parameter: 'falta_diligenciar',
-                dia: today, // ✅ Guardar el día
+                dia: today,
                 severity: 'warning',
                 message: `El formulario de ${formatName} no ha sido diligenciado hoy.`,
                 acknowledged: false,
@@ -234,22 +228,22 @@ export class NotificationService implements OnDestroy {
         table: 'alerts' 
       }, (payload) => {
         const current = this.alertsSubject.getValue();
-        const updated = current.filter(a => a.id !== payload.new['id']);
+        // ✅ CORREGIDO: Usar notación de corchetes ['id']
+        const updated = current.filter(a => a.id !== payload.new['id']); 
         this.alertsSubject.next(updated);
         this.updateUnreadCount(updated);
       })
       .subscribe((status) => {
-        console.log(' Estado del canal realtime:', status);
+        console.log('📡 Estado del canal realtime:', status);
         
-        // ✅ Si falla la conexión realtime, activar polling automáticamente
         if (status === 'CLOSED' || status === 'TIMED_OUT' || status === 'CHANNEL_ERROR') {
-          console.warn('⚠️ Realtime falló, activando polling como respaldo...');
+          console.warn('️ Realtime falló, activando polling como respaldo...');
           this.startPolling();
         }
         
         if (status === 'SUBSCRIBED') {
           console.log('✅ Realtime conectado correctamente');
-          this.stopPolling(); // Detener polling si realtime funciona
+          this.stopPolling();
         }
       });
 
@@ -269,7 +263,7 @@ export class NotificationService implements OnDestroy {
 
   getAlertIcon(severity: string): string {
     const icons: { [key: string]: string } = { 
-      'info': '️',
+      'info': 'ℹ️',
       'warning': '⚠️',
       'critical': '🚨'
     };
